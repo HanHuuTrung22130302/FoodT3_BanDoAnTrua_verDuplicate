@@ -4,7 +4,7 @@ public class Account {
     private int idAcc;
     private int idRole;
     private String pass;
-    private String userName;
+    private String name;
     private String email;
     private AccDetail accDetail;
 
@@ -15,7 +15,7 @@ public class Account {
         this.idAcc = idAcc;
         this.idRole = idRole;
         this.pass = pass;
-        this.userName = userName;
+        this.name = userName;
         this.email = email;
     }
 
@@ -25,7 +25,7 @@ public class Account {
                 "idAcc=" + idAcc +
                 ", idRole=" + idRole +
                 ", pass='" + pass + '\'' +
-                ", userName='" + userName + '\'' +
+                ", userName='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accDetail=" + accDetail +
                 '}';
@@ -56,11 +56,11 @@ public class Account {
     }
 
     public String getUserName() {
-        return userName;
+        return name;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.name = userName;
     }
 
     public String getEmail() {

@@ -78,4 +78,28 @@ public class AccountDAO {
             e.printStackTrace();
         }
     }
+
+    public void insertAccount(Account account) {
+        String query = "INSERT INTO account (idRole, pass, userName, email) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, account.getIdRole());
+            ps.setString(2, account.getPass()); // Có thể để trống hoặc tạo ngẫu nhiên
+            ps.setString(3, account.getUserName());
+            ps.setString(4, account.getEmail());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
