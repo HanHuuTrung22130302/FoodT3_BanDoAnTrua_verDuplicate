@@ -24,12 +24,12 @@ public class LoginController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
-        String username = request.getParameter("user");
+        String name = request.getParameter("user");
         String password = request.getParameter("pass");
 
         PrintWriter out = response.getWriter();
 
-        if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+        if (name == null || password == null || name.trim().isEmpty() || password.trim().isEmpty()) {
             if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
                 out.print("{\"status\": \"error\", \"message\": \"Tên người dùng và mật khẩu không được để trống\"}");
             } else {
@@ -40,7 +40,7 @@ public class LoginController extends HttpServlet {
         }
 
         LoginDAO dao = new LoginDAO();
-        Account account = dao.login(username, password);
+        Account account = dao.login(name, password);
 
         if (account == null) {
             if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {

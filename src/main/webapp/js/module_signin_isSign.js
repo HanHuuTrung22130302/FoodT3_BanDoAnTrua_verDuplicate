@@ -14,9 +14,9 @@ function login() {
     const input = inputField ? inputField.value.trim() : '';
     const password = passwordInput ? passwordInput.value : '';
 
-    // Tìm tài khoản phù hợp dựa trên username hoặc email
+    // Tìm tài khoản phù hợp dựa trên name hoặc email
     const userAccount = Object.keys(accounts).find(
-        (username) => (username === input || accounts[username].email === input) && accounts[username].password === password
+        (name) => (name === input || accounts[name].email === input) && accounts[name].password === password
     );
 
     if (userAccount) {
@@ -24,7 +24,7 @@ function login() {
 
         // Lưu trạng thái đăng nhập vào localStorage
         const loggedInUser = {
-            username: userAccount,
+            name: userAccount,
             email: account.email,
             role: account.role,
             password: account.password,

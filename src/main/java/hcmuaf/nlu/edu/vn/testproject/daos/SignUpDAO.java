@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 public class SignUpDAO {
 
 
-    public static void signUp(String userName, String password, String email) {
-        String query = "INSERT INTO account (userName, pass, idRole,email) VALUES (?, ?, 2,?)";
+    public static void signUp(String name, String password, String email) {
+        String query = "INSERT INTO account (name, pass, idRole,email) VALUES (?, ?, 2,?)";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -22,7 +22,7 @@ public class SignUpDAO {
             con = new DbContext().getConnection();
 
             ps = con.prepareStatement(query,PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, userName);
+            ps.setString(1, name);
             ps.setString(2, hashedPassword);
             ps.setString(3, email);
             ps.executeUpdate();
@@ -46,15 +46,15 @@ public class SignUpDAO {
 
 
 
-    public static Account checkUserExist(String username, String email) {
-        String query = "SELECT * FROM Account WHERE userName = ? OR email = ?";
+    public static Account checkUserExist(String name, String email) {
+        String query = "SELECT * FROM Account WHERE name = ? OR email = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
-            ps.setString(1, username);
+            ps.setString(1, name);
             ps.setString(2, email);
 
             rs = ps.executeQuery();
@@ -63,23 +63,13 @@ public class SignUpDAO {
                         rs.getInt("idAcc"),
                         rs.getInt("idRole"),
                         rs.getString("pass"),
-                        rs.getString("userName"),
+                        rs.getString("name"),
                         rs.getString("email")
                 );
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
         return null;
-    }
-
-    public static void main(String[] args) {
-        String userName = "anhtuan";
-        String password = "123456789";
-        String email = "anhtuan@123.com";
-        SignUpDAO.signUp(userName, password, email);
-        System.out.println("Đăng ký thành công!");
     }
 }

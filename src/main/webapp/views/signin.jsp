@@ -36,7 +36,7 @@
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
             <span>hoặc sử dụng email của bạn</span>
-            <input name="username" type="text" placeholder="Tên đăng nhập"/>
+            <input name="name" type="text" placeholder="Tên đăng nhập"/>
             <input name="email" type="email" placeholder="Email"/>
             <input name="pass" type="password" placeholder="Mật khẩu"/>
             <button type="submit">Đăng ký</button>
@@ -52,8 +52,9 @@
 
             <h1>Đăng nhập</h1>
             <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-6d1nlac2njdv62d00nb7gmulg64k1bjg.apps.googleusercontent.com&approval_prompt=force"
+                <a href="https://www.facebook.com/v22.0/dialog/oauth?client_id=624822650411926&redirect_uri=http://localhost:8080/testProject/loginFacebook&scope=public_profile,email"
+                   class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-c32ercvpjs2kccueb3mjj7l3nd2ksqk7.apps.googleusercontent.com&approval_prompt=force"
                    class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>

@@ -25,7 +25,7 @@
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="usernamediv">Thông tin</div>
+        <div class="namediv">Thông tin</div>
         <div class="linename"></div>
         <ul>
             <li>
@@ -57,13 +57,13 @@
             <form action="AccDetail" method="post">
                 <div class="form-group">
                     <label> Tên đăng nhập </label>
-                    <input id="username" name="userName" type="text" value="${sessionScope.currentUser.userName}" readonly/>
+                    <input id="name" name="name" type="text" value="${sessionScope.currentUser.name}" readonly/>
 
 
                 </div>
                 <div class="form-group">
                     <label> Tên </label>
-                    <input id="name" name="fullName" type="text" value="${accDetail != null ? accDetail.fullName : ''}"/>
+                    <input id="fullName" name="fullName" type="text" value="${accDetail != null ? accDetail.fullName : ''}"/>
                 </div>
                 <div class="form-group">
                     <label> Email </label>

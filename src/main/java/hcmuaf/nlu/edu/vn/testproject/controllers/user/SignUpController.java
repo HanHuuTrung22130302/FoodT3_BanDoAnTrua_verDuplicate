@@ -25,27 +25,27 @@ public class SignUpController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8"); // Đảm bảo trả về JSON
 
-        String username = request.getParameter("username");
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("pass");
 
         PrintWriter out = response.getWriter();
 
         // Kiểm tra nếu có thông tin thiếu
-        if (username == null || password == null || email == null || username.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty()) {
+        if (name == null || password == null || email == null || name.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty()) {
             out.print("{\"status\": \"error\", \"message\": \"Vui lòng nhập đầy đủ thông tin\"}");
             return;
         }
 
-        Account account = SignUpDAO.checkUserExist(username, email);
+        Account account = SignUpDAO.checkUserExist(name, email);
         // Nếu chưa có tên người dùng hoặc email đã tồn tại
         if (account == null) {
             // Đăng ký người dùng mới
-            SignUpDAO.signUp(username, password, email);
+            SignUpDAO.signUp(name, password, email);
             out.print("{\"status\": \"success\", \"message\": \"Đăng ký thành công, vui lòng đăng nhập.\"}");
         } else {
             String errorMessage;
-            if (account.getUserName().equals(username)) {
+            if (account.getName().equals(name)) {
                 errorMessage = "Tên người dùng đã tồn tại.";
             } else {
                 errorMessage = "Email đã được sử dụng.";

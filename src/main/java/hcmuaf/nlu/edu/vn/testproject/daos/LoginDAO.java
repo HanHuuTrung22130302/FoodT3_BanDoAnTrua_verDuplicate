@@ -9,8 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class LoginDAO {
-    public Account login(String username, String password) {
-        String query = "SELECT * FROM Account WHERE userName = ? AND pass = ?";
+    public Account login(String name, String password) {
+        String query = "SELECT * FROM Account WHERE name = ? AND pass = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -18,7 +18,7 @@ public class LoginDAO {
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
-            ps.setString(1, username);
+            ps.setString(1, name);
             ps.setString(2, hashedPassword);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -26,7 +26,7 @@ public class LoginDAO {
                         rs.getInt("idAcc"),
                         rs.getInt("idRole"),
                         rs.getString("pass"),
-                        rs.getString("userName"),
+                        rs.getString("name"),
                         rs.getString("email")
                 );
             }

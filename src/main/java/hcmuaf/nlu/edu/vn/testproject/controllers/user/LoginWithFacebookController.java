@@ -2,18 +2,15 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
-import hcmuaf.nlu.edu.vn.testproject.services.GoogleLogin;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.annotation.WebServlet;
+import hcmuaf.nlu.edu.vn.testproject.services.FacebookLogin;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "LoginWithGoogleController", value = "/loginGoogle")
-public class LoginWithGoogleController extends HttpServlet {
+@WebServlet(name = "LoginWithFacebookController", value = "/loginFacebook")
+public class LoginWithFacebookController extends HttpServlet {
 
     private AccountDAO accountDAO;
 
@@ -32,7 +29,7 @@ public class LoginWithGoogleController extends HttpServlet {
         processRequest(request, response);
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String code = request.getParameter("code");
         if (code == null || code.isEmpty()) {
             response.sendRedirect("login?error=missing_code");
@@ -41,16 +38,16 @@ public class LoginWithGoogleController extends HttpServlet {
 
         try {
             // Lấy access token và thông tin người dùng từ Google
-            String accessToken = GoogleLogin.getToken(code);
-            Account googleAccount = GoogleLogin.getUserInfo(accessToken);
+            String accessToken = FacebookLogin.getToken(code);
+            Account fbAccount = FacebookLogin.getUserInfo(accessToken);
 
-            if (googleAccount == null || googleAccount.getEmail() == null) {
+            if (fbAccount == null || fbAccount.getEmail() == null) {
                 response.sendRedirect("login?error=google_auth_failed");
                 return;
             }
 
             // Kiểm tra xem email đã tồn tại trong hệ thống chưa
-            Account existingAccount = accountDAO.getUserByEmail(googleAccount.getEmail());
+            Account existingAccount = accountDAO.getUserByEmail(fbAccount.getEmail());
 
             HttpSession session = request.getSession();
             if (existingAccount != null) {
@@ -58,7 +55,7 @@ public class LoginWithGoogleController extends HttpServlet {
                 session.setAttribute("currentUser", existingAccount);
             } else {
                 // Nếu chưa tồn tại, tạo tài khoản mới (idRole mặc định là 1, pass để trống hoặc random)
-                Account newAccount = new Account(0, 2, "", googleAccount.getName(), googleAccount.getEmail());
+                Account newAccount = new Account(0, 2, "", fbAccount.getName(), fbAccount.getEmail());
                 // Lưu vào database (cần thêm hàm insert vào AccountDAO)
                 accountDAO.insertAccount(newAccount); // Bạn cần tự viết hàm này
                 session.setAttribute("currentUser", newAccount);

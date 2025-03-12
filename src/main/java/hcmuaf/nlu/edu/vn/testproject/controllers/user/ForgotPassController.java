@@ -45,7 +45,7 @@ public class ForgotPassController extends HttpServlet {
             return;
         }
 
-        boolean isSend = service.sendEmail(email, linkReset, account.getUserName());
+        boolean isSend = service.sendEmail(email, linkReset, account.getName());
         if (!isSend) {
             request.setAttribute("mess", "Không thể gửi yêu cầu");
             request.getRequestDispatcher("views/forgot_pass.jsp").forward(request, response);

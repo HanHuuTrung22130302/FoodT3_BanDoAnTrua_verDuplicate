@@ -11,11 +11,11 @@ public class Account {
     public Account() {
     }
 
-    public Account(int idAcc, int idRole, String pass, String userName, String email) {
+    public Account(int idAcc, int idRole, String pass, String name, String email) {
         this.idAcc = idAcc;
         this.idRole = idRole;
         this.pass = pass;
-        this.name = userName;
+        this.name = name;
         this.email = email;
     }
 
@@ -25,7 +25,7 @@ public class Account {
                 "idAcc=" + idAcc +
                 ", idRole=" + idRole +
                 ", pass='" + pass + '\'' +
-                ", userName='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accDetail=" + accDetail +
                 '}';
@@ -55,12 +55,12 @@ public class Account {
         this.pass = pass;
     }
 
-    public String getUserName() {
+    public String getName() {
         return name;
     }
 
-    public void setUserName(String userName) {
-        this.name = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

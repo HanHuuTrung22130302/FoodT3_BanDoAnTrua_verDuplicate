@@ -3,15 +3,15 @@ package hcmuaf.nlu.edu.vn.testproject.models;
 import java.util.Date;
 
 public class ReviewFood {
-    private  String userName;
+    private  String name;
     private int idReview;
     private int idFood;
     private int rating;
     private int idAcc;
     private Date date;
 
-    public ReviewFood(String userName, int idReview, int idFood, int rating, int idAcc, Date date) {
-        this.userName = userName;
+    public ReviewFood(String name, int idReview, int idFood, int rating, int idAcc, Date date) {
+        this.name = name;
         this.idReview = idReview;
         this.idFood = idFood;
         this.rating = rating;
@@ -22,7 +22,7 @@ public class ReviewFood {
     @Override
     public String toString() {
         return "ReviewFood{" +
-                "userName='" + userName + '\'' +
+                "name='" + name + '\'' +
                 ", idReview=" + idReview +
                 ", idFood=" + idFood +
                 ", rating=" + rating +
@@ -31,12 +31,12 @@ public class ReviewFood {
                 '}';
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getIdReview() {

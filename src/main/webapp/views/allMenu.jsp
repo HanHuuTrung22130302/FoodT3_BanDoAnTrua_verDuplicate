@@ -45,7 +45,7 @@
                         <div class="user-menu" id="user-menu">
                             <i class="fa-solid fa-user"></i>
                             <a href="#" class=" user-name" id="user-name">
-                                    ${sessionScope.currentUser.userName}
+                                    ${sessionScope.currentUser.name}
                             </a>
                             <div class="submenu" id="submenu">
                                 <c:if test="${sessionScope.currentUser.idRole == 1}">

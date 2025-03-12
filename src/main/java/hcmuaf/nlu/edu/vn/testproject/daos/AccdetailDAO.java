@@ -50,7 +50,7 @@ public class AccdetailDAO {
     }
 
     public Account getAccountById(int idAcc) {
-        String query = "SELECT userName, email FROM account WHERE idAcc = ?";
+        String query = "SELECT name, email FROM account WHERE idAcc = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -62,7 +62,7 @@ public class AccdetailDAO {
             rs = ps.executeQuery();
             if (rs.next()) {
                 account = new Account();
-                account.setUserName(rs.getString("userName"));
+                account.setName(rs.getString("name"));
                 account.setEmail(rs.getString("email"));
             }
         } catch (Exception e) {

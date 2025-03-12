@@ -26,7 +26,7 @@ public class AccountDAO {
                         rs.getInt("idAcc"),
                         rs.getInt("idRole"),
                         rs.getString("pass"),
-                        rs.getString("userName"),
+                        rs.getString("name"),
                         rs.getString("email")
                 );
             }
@@ -52,7 +52,7 @@ public class AccountDAO {
                         rs.getInt("idAcc"),
                         rs.getInt("idRole"),
                         rs.getString("pass"),
-                        rs.getString("userName"),
+                        rs.getString("name"),
                         rs.getString("email")
                 );
             }
@@ -80,7 +80,7 @@ public class AccountDAO {
     }
 
     public void insertAccount(Account account) {
-        String query = "INSERT INTO account (idRole, pass, userName, email) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO account (idRole, pass, name, email) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -88,7 +88,7 @@ public class AccountDAO {
             ps = conn.prepareStatement(query);
             ps.setInt(1, account.getIdRole());
             ps.setString(2, account.getPass()); // Có thể để trống hoặc tạo ngẫu nhiên
-            ps.setString(3, account.getUserName());
+            ps.setString(3, account.getName());
             ps.setString(4, account.getEmail());
             ps.executeUpdate();
         } catch (Exception e) {
