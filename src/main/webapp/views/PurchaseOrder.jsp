@@ -77,12 +77,15 @@
                             Trạng thái:
                             <c:choose>
                                 <c:when test="${iorder.orderSt == 1}">
-                                    Đang giao
+                                    Đang chuẩn bị
                                 </c:when>
                                 <c:when test="${iorder.orderSt == 2}">
-                                    Đã giao
+                                    Đang giao
                                 </c:when>
                                 <c:when test="${iorder.orderSt == 3}">
+                                    Đã giao
+                                </c:when>
+                                <c:when test="${iorder.orderSt == 4}">
                                     Đã hủy
                                 </c:when>
 

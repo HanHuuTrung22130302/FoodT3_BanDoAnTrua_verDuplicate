@@ -65,7 +65,39 @@
     </div>
 
     <div class="tracking">
+
         <c:if test="${order.orderSt == 1}">
+            <!-- Thẻ "Đang chuẩn bị" -->
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang chuẩn bị đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="description">Đang giao</p>
+                    <p class="description">Xin hãy chú ý điện thoại</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đã giao</p>
+                    <p class="description">Giao hàng thành công</p>
+                    <p class="description">Người nhận hàng: ${order.recipientName}</p>
+                </div>
+            </div>
+        </c:if>
+
+        <c:if test="${order.orderSt == 2}">
             <!-- Thẻ "Đang giao" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -88,7 +120,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 2}">
+        <c:if test="${order.orderSt == 3}">
             <!-- Thẻ "Đang giao" và "Đã giao" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -112,7 +144,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 3}">
+        <c:if test="${order.orderSt == 4}">
             <!-- Thẻ "Đã hủy" -->
             <div class="tracking-item">
                 <div class="status completed">
