@@ -12,6 +12,8 @@
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="them view">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/CheckoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/CheckoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/check-out.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/check-out.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/check-out.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/check-out.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
