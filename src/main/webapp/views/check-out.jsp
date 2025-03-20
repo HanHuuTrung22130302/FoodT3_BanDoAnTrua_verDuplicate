@@ -93,6 +93,7 @@
                   <div class="checkout-type-order">
                     <div class="type-wallet-btn active" id="google-pay-icon">
                       <i class="fa-brands fa-google-pay"></i>
+                        <p>VNPAY</p>
                     </div>
                     <div class="type-wallet-btn" id="paypal-icon">
                       <i class="fa-brands fa-paypal"></i>
@@ -207,22 +208,31 @@
   </form>
 </div>
 
-<div id="order-success-modal" class="modal" style="display: none">
+<!-- Thay phần modal hiện tại bằng đoạn này -->
+<div id="order-success-modal" class="modal" style="display: <%= session.getAttribute("paymentSuccessMessage") != null ? "block" : "none" %>">
   <div class="modal-content">
     <div class="modal-check">
       <i class="fa-solid fa-check fa-2xl"></i>
     </div>
     <p>
-      Đặt hàng thành công! <br />
+      <%= session.getAttribute("paymentSuccessMessage") != null ? session.getAttribute("paymentSuccessMessage") : "Đặt hàng thành công!" %><br />
       Đơn hàng của bạn đang được xử lý
     </p>
-    <form action="checkout" method="POST">
-      <button>
-        <a href="home">Đóng</a>
-      </button>
+    <form action="cart" method="get">
+      <button type="submit">Đóng</button>
     </form>
   </div>
 </div>
+
+<!-- Thêm script để tự động ẩn modal sau 5 giây -->
+<script>
+  <% if (session.getAttribute("paymentSuccessMessage") != null) { %>
+  setTimeout(() => {
+    document.getElementById("order-success-modal").style.display = "none";
+    <% session.removeAttribute("paymentSuccessMessage"); %>
+  }, 5000);
+  <% } %>
+</script>
 
 <script src="${pageContext.request.contextPath}/js/check-out.js"></script>
 </body>
