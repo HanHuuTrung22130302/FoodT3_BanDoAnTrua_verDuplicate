@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodDAO;
@@ -46,77 +47,80 @@ public class ChatbotWebhook extends HttpServlet {
 
         // Lấy tham số
         String taste = parameters.has("taste") && !parameters.get("taste").isJsonNull() ? parameters.get("taste").getAsString() : null;
-        String restriction = parameters.has("restriction") && !parameters.get("restriction").isJsonNull() ? parameters.get("restriction").getAsString() : null;
+        JsonArray restrictionsArray = parameters.has("restrictions") && !parameters.get("restrictions").isJsonNull() ? parameters.getAsJsonArray("restrictions") : new JsonArray();
         String category = parameters.has("category") && !parameters.get("category").isJsonNull() ? parameters.get("category").getAsString() : null;
+
+        // Chuyển JsonArray thành danh sách String
+        List<String> restrictions = restrictionsArray.size() > 0 ?
+                restrictionsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
+                List.of();
 
         // Logic gợi ý món ăn
         List<Food> foods = foodDAO.getAll();
         String reply;
 
-        // Xử lý theo từng trường hợp
         if (taste != null) {
             foods = foods.stream()
                     .filter(food -> food.getDescription().toLowerCase().contains(taste) || food.getFoodName().toLowerCase().contains(taste))
                     .limit(3)
                     .collect(Collectors.toList());
             reply = "Bạn thích món " + taste + "? Tôi gợi ý: " + formatFoodList(foods, request);
-        } else if (restriction != null) {
-            switch (restriction) {
-                case "thịt bò":
-                    foods = foods.stream()
-                            .filter(food -> !food.getDescription().toLowerCase().contains("thịt bò") && !food.getFoodName().toLowerCase().contains("thịt bò"))
-                            .limit(3)
-                            .collect(Collectors.toList());
-                    reply = "Bạn không ăn được thịt bò? Tôi gợi ý: " + formatFoodList(foods, request);
-                    break;
-                case "hải sản":
-                    foods = foods.stream()
-                            .filter(food -> !food.getDescription().toLowerCase().contains("hải sản") && !food.getFoodName().toLowerCase().contains("hải sản"))
-                            .limit(3)
-                            .collect(Collectors.toList());
-                    reply = "Bạn dị ứng với hải sản? Tôi gợi ý: " + formatFoodList(foods, request);
-                    break;
-                case "tôm":
-                    foods = foods.stream()
-                            .filter(food -> !food.getDescription().toLowerCase().contains("tôm") && !food.getFoodName().toLowerCase().contains("tôm"))
-                            .limit(3)
-                            .collect(Collectors.toList());
-                    reply = "Bạn không ăn được tôm? Tôi gợi ý: " + formatFoodList(foods, request);
-                    break;
-                default:
-                    foods = foods.stream()
-                            .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains(restriction))
-                            .limit(3)
-                            .collect(Collectors.toList());
-                    reply = "Bạn không ăn được " + restriction + "? Tôi gợi ý: " + formatFoodList(foods, request);
-                    break;
+        } else if (!restrictions.isEmpty()) {
+            // Lọc món ăn dựa trên tất cả các restrictions
+            for (String restriction : restrictions) {
+                switch (restriction) {
+                    case "thịt bò":
+                    case "bò":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("bò") && !food.getFoodName().toLowerCase().contains("bò"))
+                                .collect(Collectors.toList());
+                        break;
+                    case "hải sản":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("hải sản") && !food.getFoodName().toLowerCase().contains("hải sản"))
+                                .collect(Collectors.toList());
+                        break;
+                    case "tôm":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("tôm") && !food.getFoodName().toLowerCase().contains("tôm"))
+                                .collect(Collectors.toList());
+                        break;
+                    default:
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains(restriction))
+                                .collect(Collectors.toList());
+                        break;
+                }
             }
+            // Giới hạn 3 món sau khi lọc
+            foods = foods.stream().limit(3).collect(Collectors.toList());
+            reply = "Bạn không ăn được " + String.join(" và ", restrictions) + "? Tôi gợi ý: " + formatFoodList(foods, request);
         } else if (category != null) {
             switch (category) {
                 case "nước":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 4) // 4 là món nước
+                            .filter(food -> food.getIdCategory() == 4)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn khát nước à? Tôi gợi ý vài món nước: " + formatFoodList(foods, request);
                     break;
                 case "cơm":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 1) // 1 là món cơm
+                            .filter(food -> food.getIdCategory() == 1)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món cơm? Tôi gợi ý: " + formatFoodList(foods, request);
                     break;
                 case "bún":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 2) // 2 là món bún
+                            .filter(food -> food.getIdCategory() == 2)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món bún? Tôi gợi ý: " + formatFoodList(foods, request);
                     break;
                 case "phở":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 3) // 3 là món phở
+                            .filter(food -> food.getIdCategory() == 3)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món phở? Tôi gợi ý: " + formatFoodList(foods, request);

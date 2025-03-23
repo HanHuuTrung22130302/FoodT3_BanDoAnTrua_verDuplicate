@@ -1,3 +1,6 @@
+// Danh sách lưu trữ tất cả các hạn chế trong phiên trò chuyện
+let restrictionsList = [];
+
 // Hiển thị/Ẩn chatbox
 function toggleChatbox() {
     const chatbox = document.getElementById('chatbox');
@@ -19,6 +22,12 @@ function sendMessage() {
     input.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
+    // Trích xuất restriction mới và thêm vào danh sách nếu có
+    const newRestriction = extractRestriction(message);
+    if (newRestriction && !restrictionsList.includes(newRestriction)) {
+        restrictionsList.push(newRestriction);
+    }
+
     fetch(contextPath + '/webhook', {
         method: 'POST',
         headers: {
@@ -29,7 +38,7 @@ function sendMessage() {
                 queryText: message,
                 parameters: {
                     taste: extractTaste(message),
-                    restriction: extractRestriction(message),
+                    restrictions: restrictionsList, // Gửi toàn bộ danh sách restrictions
                     category: extractCategory(message)
                 }
             }
@@ -68,14 +77,16 @@ function extractTaste(message) {
 function extractRestriction(message) {
     const restrictions = [
         { keyword: 'thịt bò', value: 'thịt bò' },
+        { keyword: 'bò', value: 'bò' },
         { keyword: 'hải sản', value: 'hải sản' },
+        { keyword: 'tôm', value: 'tôm' },
         { keyword: 'cay', value: 'cay' },
         { keyword: 'dầu mỡ', value: 'dầu mỡ' },
         { keyword: 'mặn', value: 'mặn' },
         { keyword: 'chay', value: 'chay' }
     ];
     return restrictions.find(r =>
-        (message.includes('không ăn được') || message.includes('dị ứng')) &&
+        (message.includes('không ăn được') || message.includes('dị ứng') || message.includes('ghét')) &&
         message.includes(r.keyword)
     )?.value || null;
 }
@@ -87,7 +98,7 @@ function extractCategory(message) {
         { keyword: 'bún', value: 'bún' },
         { keyword: 'phở', value: 'phở' },
         { keyword: 'nước', value: 'nước' },
-        { keyword: 'khát nước', value: 'nước' } // Thêm "khát nước" để gợi ý món nước
+        { keyword: 'khát nước', value: 'nước' }
     ];
     return categories.find(category => message.includes(category.keyword))?.value || null;
 }
