@@ -17,7 +17,6 @@ public class ReviewDAO {
 
     private Map<Integer, ReviewFood> dataReviewFood = new HashMap<>();
 
-
     public ReviewDAO() {
         this.dataReviewFood = new HashMap<>();
         getAllReview();
@@ -29,7 +28,7 @@ public class ReviewDAO {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllReview() {
-        String query="SELECT  name,rv.idAcc,idReview, idFood,rating,createdAt from review rv join Account ac on rv.idAcc=ac.idAcc ";
+        String query = "SELECT  name, rv.account_id, review_id, food_id, rating, rv.created_at from review rv join account ac on rv.account_id = ac.account_id ";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -52,14 +51,14 @@ public class ReviewDAO {
 
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
-                dataReviewFood.put(rs.getInt("idReview"),new ReviewFood(
+                dataReviewFood.put(rs.getInt("review_id"), new ReviewFood(
                         rs.getString("name"),
-                        rs.getInt("idReview"),
-                        rs.getInt("idFood"),
+                        rs.getInt("review_id"),
+                        rs.getInt("food_id"),
                         rs.getInt("rating"),
-                        rs.getInt("idAcc"),
-                        rs.getDate("createdAt")
-                ) );
+                        rs.getInt("account_id"),
+                        rs.getDate("created_at")
+                ));
             }
 
         } catch (SQLException e) {
@@ -82,18 +81,16 @@ public class ReviewDAO {
             System.err.println("Lỗi khi đóng tài nguyên: " + e.getMessage());
         }
     }
-    public List<Integer> getTop4FoodRate(){
-        Map<Integer, Long> countStarLS= dataReviewFood.values().stream().filter(rv -> rv.getRating()==5).collect(Collectors.groupingBy(ReviewFood::getIdFood,Collectors.counting()));
-        List<Integer> lsIdFood= countStarLS.entrySet().stream().sorted((e1,e2)->Long.compare(e2.getValue(),e1.getValue())).limit(4).map(Map.Entry::getKey).collect(Collectors.toList());
-        return lsIdFood;
-    }
-    public List<Integer> getTopFoodRate(){
-        Map<Integer, Long> countStarLS= dataReviewFood.values().stream().filter(rv -> rv.getRating()==5).collect(Collectors.groupingBy(ReviewFood::getIdFood,Collectors.counting()));
-        List<Integer> lsIdFood= countStarLS.entrySet().stream().sorted((e1,e2)->Long.compare(e2.getValue(),e1.getValue())).map(Map.Entry::getKey).collect(Collectors.toList());
+
+    public List<Integer> getTop4FoodRate() {
+        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getIdFood, Collectors.counting()));
+        List<Integer> lsIdFood = countStarLS.entrySet().stream().sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())).limit(4).map(Map.Entry::getKey).collect(Collectors.toList());
         return lsIdFood;
     }
 
-
-
-
+    public List<Integer> getTopFoodRate() {
+        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getIdFood, Collectors.counting()));
+        List<Integer> lsIdFood = countStarLS.entrySet().stream().sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())).map(Map.Entry::getKey).collect(Collectors.toList());
+        return lsIdFood;
+    }
 }

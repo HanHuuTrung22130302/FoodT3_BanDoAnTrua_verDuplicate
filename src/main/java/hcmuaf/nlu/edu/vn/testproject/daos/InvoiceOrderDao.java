@@ -31,7 +31,7 @@ public class InvoiceOrderDao {
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllInvoice(int id) {
 
-        String query = "SELECT * FROM invoice inv join orderstatus os ON inv.idInvoice = os.idInvoice where idAcc = ?;";
+        String query = "SELECT * FROM invoice inv join order_status os ON inv.invoice_id = os.invoice_id where account_id = ?;";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -44,21 +44,21 @@ public class InvoiceOrderDao {
 
             while (rs.next()) {
                 data.add(new OrderInvoice(
-                                rs.getInt("idInvoice"),
-                                rs.getInt("idAcc"),
-                                rs.getString("recipientName"),
-                                rs.getString("phoneNumber"),
-                                rs.getString("deliveryAddress"),
-                                rs.getString("note"),
-                                rs.getString("orderDate"),
-                                rs.getInt("totalAmount"),
-                                rs.getInt("idCode"),
-                                rs.getInt("paymentMethod"),
-                                rs.getInt("isPaid"),
-                                rs.getInt("orderSt"),
-                                InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("idInvoice"))
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
 
-                        ));
+                ));
             }
 
         } catch (SQLException e) {
@@ -73,15 +73,13 @@ public class InvoiceOrderDao {
 
     public void canclInvoice(int id) {
 
-        String query = "UPDATE orderstatus SET orderSt = 3 WHERE idInvoice = ?;";
+        String query = "UPDATE order_status SET order_status = 3 WHERE invoice_id = ?;";
         Connection con = null;
         PreparedStatement ps = null;
-
-
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -106,45 +104,46 @@ public class InvoiceOrderDao {
         return data;
     }
 
-
-
-    public List <OrderInvoice> getInvoiceShipping(){
+    public List<OrderInvoice> getInvoiceShipping() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt()==1) {
-               ois.add(oi);
-            }
-        }
-        return ois;
-    }
-    public List <OrderInvoice> getInvoiceDelivered(){
-        List<OrderInvoice> ois = new ArrayList<>();
-        for (OrderInvoice oi : data) {
-            if (oi.getOrderSt()==2) {
+            if (oi.getOrderSt() == 1) {
                 ois.add(oi);
             }
         }
         return ois;
     }
-    public List <OrderInvoice> getInvoiceCancelled(){
+
+    public List<OrderInvoice> getInvoiceDelivered() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt()==3) {
+            if (oi.getOrderSt() == 2) {
                 ois.add(oi);
             }
         }
         return ois;
     }
+
+    public List<OrderInvoice> getInvoiceCancelled() {
+        List<OrderInvoice> ois = new ArrayList<>();
+        for (OrderInvoice oi : data) {
+            if (oi.getOrderSt() == 3) {
+                ois.add(oi);
+            }
+        }
+        return ois;
+    }
+
     public OrderInvoice getInvoiceOrder(int id) {
         for (OrderInvoice oi : data) {
-            if (oi.getIdInvoice()==id) {
+            if (oi.getIdInvoice() == id) {
                 return oi;
             }
         }
         return null;
     }
 
-    public List<OrderInvoice> filterOrderByFoodName( String foodName) {
+    public List<OrderInvoice> filterOrderByFoodName(String foodName) {
         List<OrderInvoice> filteredOrders = new ArrayList<>();
         for (OrderInvoice order : data) {
             for (OrderInvoiceDetail detail : order.getOrderInvoiceDetail()) {
@@ -163,8 +162,4 @@ public class InvoiceOrderDao {
                 .filter(order -> order.getOrderSt() == 1)
                 .count();
     }
-
-
-
-
 }

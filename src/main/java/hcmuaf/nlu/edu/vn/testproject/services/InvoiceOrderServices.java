@@ -13,6 +13,7 @@ import java.util.List;
 public class InvoiceOrderServices {
     public InvoiceOrderDao invoiceOrderDao;
     private int id;
+
     public InvoiceOrderServices(int id) {
         this.id = id;
         this.invoiceOrderDao = new InvoiceOrderDao(id);
@@ -34,7 +35,7 @@ public class InvoiceOrderServices {
                 ois = invoiceOrderDao.getInvoiceCancelled();
                 break;
             default:
-                ois= invoiceOrderDao.filterOrderByFoodName(option);
+                ois = invoiceOrderDao.filterOrderByFoodName(option);
                 break;
 
         }
@@ -51,9 +52,8 @@ public class InvoiceOrderServices {
         int id = Integer.parseInt(orderId);
         invoiceOrderDao.canclInvoice(id);
     }
+
     public int getTotalDonHang() {
         return invoiceOrderDao.getTotalShippingInvoices();
     }
-
-
 }

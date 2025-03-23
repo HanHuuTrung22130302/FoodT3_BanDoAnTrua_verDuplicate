@@ -28,7 +28,7 @@ public class AdminInvoiceOrderDao {
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllInvoice() {
 
-        String query = "SELECT * FROM invoice inv join orderstatus os ON inv.idInvoice = os.idInvoice ;";
+        String query = "SELECT * FROM invoice inv join order_status os ON inv.invoice_id = os.invoice_id ;";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -40,19 +40,19 @@ public class AdminInvoiceOrderDao {
 
             while (rs.next()) {
                 data.add(new OrderInvoice(
-                        rs.getInt("idInvoice"),
-                        rs.getInt("idAcc"),
-                        rs.getString("recipientName"),
-                        rs.getString("phoneNumber"),
-                        rs.getString("deliveryAddress"),
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
                         rs.getString("note"),
-                        rs.getString("orderDate"),
-                        rs.getInt("totalAmount"),
-                        rs.getInt("idCode"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
                         rs.getInt("paymentMethod"),
-                        rs.getInt("isPaid"),
-                        rs.getInt("orderSt"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("idInvoice"))
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
 
                 ));
             }
@@ -132,7 +132,6 @@ public class AdminInvoiceOrderDao {
         return result; // Trả về danh sách các OrderInvoice tìm được
     }
 
-
     private boolean isNumeric(String str) {
         try {
             Integer.parseInt(str);
@@ -170,9 +169,6 @@ public class AdminInvoiceOrderDao {
                 result.add(oi);
             }
         }
-
         return result;
     }
-
-
 }
