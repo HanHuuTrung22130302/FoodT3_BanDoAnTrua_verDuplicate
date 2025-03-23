@@ -67,21 +67,32 @@
     <div class="tracking">
 
         <c:if test="${order.orderSt == 1}">
-            <!-- Thẻ "Đang chuẩn bị" -->
+            <!-- Thẻ "xác nhận" -->
             <div class="tracking-item">
-                <div class="status completed">
+                <div class="status waiti">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Xác nhận đơn hàng</p>
+                    <p class="description">Đang chờ xác nhận đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status">
                     <i class="fas fa-check"></i>
                 </div>
                 <div class="details">
                     <p class="status-text">Đang chuẩn bị đơn hàng</p>
+                    <p class="description">Bếp đang chuẩn bị đơn hàng</p>
                 </div>
             </div>
             <div class="tracking-item">
-                <div class="status completed">
+                <div class="status">
                     <i class="fas fa-check"></i>
                 </div>
                 <div class="details">
-                    <p class="description">Đang giao</p>
+                    <p class="status-text">Đang giao hàng</p>
+                    <p class="description">Đơn của quý khách đang được giao</p>
                     <p class="description">Xin hãy chú ý điện thoại</p>
                 </div>
             </div>
@@ -98,13 +109,32 @@
         </c:if>
 
         <c:if test="${order.orderSt == 2}">
-            <!-- Thẻ "Đang giao" -->
+            <!-- Thẻ "đang chuẩn bị" -->
             <div class="tracking-item">
                 <div class="status completed">
                     <i class="fas fa-check"></i>
                 </div>
                 <div class="details">
-                    <p class="status-text">Đang giao</p>
+                    <p class="status-text">Xác nhận đơn hàng</p>
+                    <p class="description">Đang chờ xác nhận đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status waiti">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang chuẩn bị đơn hàng</p>
+                    <p class="description">Bếp đang chuẩn bị đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang giao hàng</p>
+                    <p class="description">Đơn của quý khách đang được giao</p>
                     <p class="description">Xin hãy chú ý điện thoại</p>
                 </div>
             </div>
@@ -121,17 +151,77 @@
         </c:if>
 
         <c:if test="${order.orderSt == 3}">
-            <!-- Thẻ "Đang giao" và "Đã giao" -->
+            <!-- Thẻ "đang giao" -->
             <div class="tracking-item">
                 <div class="status completed">
                     <i class="fas fa-check"></i>
                 </div>
                 <div class="details">
-                    <p class="status-text">Đang giao</p>
+                    <p class="status-text">Xác nhận đơn hàng</p>
+                    <p class="description">Đang chờ xác nhận đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang chuẩn bị đơn hàng</p>
+                    <p class="description">Bếp đang chuẩn bị đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status waiti">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang giao hàng</p>
+                    <p class="description">Đơn của quý khách đang được giao</p>
                     <p class="description">Xin hãy chú ý điện thoại</p>
                 </div>
             </div>
+            <div class="tracking-item">
+                <div class="status">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đã giao</p>
+                    <p class="description">Giao hàng thành công</p>
+                    <p class="description">Người nhận hàng: ${order.recipientName}</p>
+                </div>
+            </div>
+        </c:if>
 
+        <c:if test="${order.orderSt == 4}">
+            <!-- Thẻ "đã giao" -->
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Xác nhận đơn hàng</p>
+                    <p class="description">Đang chờ xác nhận đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang chuẩn bị đơn hàng</p>
+                    <p class="description">Bếp đang chuẩn bị đơn hàng</p>
+                </div>
+            </div>
+            <div class="tracking-item">
+                <div class="status completed">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="details">
+                    <p class="status-text">Đang giao hàng</p>
+                    <p class="description">Đơn của quý khách đang được giao</p>
+                    <p class="description">Xin hãy chú ý điện thoại</p>
+                </div>
+            </div>
             <div class="tracking-item">
                 <div class="status completed">
                     <i class="fas fa-check"></i>
@@ -144,7 +234,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 4}">
+        <c:if test="${order.orderSt == 5}">
             <!-- Thẻ "Đã hủy" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -152,44 +242,11 @@
                 </div>
                 <div class="details">
                     <p class="status-text">Đã hủy</p>
-                    <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với  chúng tôi</p>
+                    <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với chúng tôi</p>
                 </div>
 
             </div>
         </c:if>
-
-        <%--        <div class="tracking-item">--%>
-        <%--          <div class="status"></div>--%>
-        <%--          <div class="details">--%>
-        <%--            <p class="time">11:30 20-11-2024</p>--%>
-        <%--            <p class="status-text">Đang vận chuyển</p>--%>
-        <%--            <p class="description">Đã giao hàng cho tài xế</p>--%>
-        <%--          </div>--%>
-        <%--        </div>--%>
-        <%--        <div class="tracking-item">--%>
-        <%--          <div class="status"></div>--%>
-        <%--          <div class="details">--%>
-        <%--            <p class="time">11:23 20-11-2024</p>--%>
-        <%--            <p class="status-text">Đang vận chuyển</p>--%>
-        <%--            <p class="description">Đơn hàng đã được đầu bếp xử lý</p>--%>
-        <%--          </div>--%>
-        <%--        </div>--%>
-        <%--        <div class="tracking-item">--%>
-        <%--          <div class="status"></div>--%>
-        <%--          <div class="details">--%>
-        <%--            <p class="time">11:15 20-11-2024</p>--%>
-        <%--            <p class="status-text">Đang vận chuyển</p>--%>
-        <%--            <p class="description">Đơn hàng đã được xác nhận</p>--%>
-        <%--          </div>--%>
-        <%--        </div>--%>
-        <%--        <div class="tracking-item">--%>
-        <%--          <div class="status"></div>--%>
-        <%--          <div class="details">--%>
-        <%--            <p class="time">11:10 20-11-2024</p>--%>
-        <%--            <p class="status-text">Đang vận chuyển</p>--%>
-        <%--            <p class="description">Đang xác thực đơn hàng</p>--%>
-        <%--          </div>--%>
-        <%--        </div>--%>
     </div>
 </div>
 
