@@ -1,0 +1,152 @@
+
+
+/* Xử lý Pop up */
+.popup {
+  display: none; /* Ẩn pop-up lúc đầu */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  
+}
+
+.popup-content {
+  background-color: white;
+  max-height: calc(100vh - 60px);
+  box-shadow: 0px 4px 30px rgb(0 0 0 / 25%);
+  border-radius: 5px;
+  width: 600px;
+  padding: 10px;
+  text-align: left;
+  overflow-y: auto;
+  display: block;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.popup-content::-webkit-scrollbar {
+  width: 8px; /* Chiều rộng thanh cuộn */
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+  background: #b12704; /* Màu của thanh cuộn */
+  border-radius: 4px; /* Bo góc */
+}
+
+.close {
+  background-color: rgb(0 0 0 / 40%);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  font-size: 28px;
+  color: white;
+  border: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content img {
+  width: 100%;
+  object-fit: cover;
+  max-height: 375px;
+}
+
+.popup-content h2 {
+  margin-left: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.popup-content p {
+  color: #b5292f;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.popup-content span {
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.popup-content .button-cart {
+  background-color: #b5292f;
+  color: white;
+  padding: 10px 40px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 30px;
+  width: 100%;
+  height: max-content;
+
+}
+
+.popup-content .button-cart .linktocart {
+  text-decoration: none;
+  color: white;
+}
+
+
+.popup-content .button-cart:hover {
+  background-color: #c0392b;
+  color: white;
+}
+
+/* Xử lý comment  */
+/* Xử lý popup của đánh giá món ăn */
+.popup-content  .user-reviews {
+  margin-top: 20px;
+}
+
+.popup-content .user-reviews h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.popup-content .user-reviews .review-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.popup-content .user-reviews .review-item:last-child {
+  border-bottom: none;
+}
+
+.popup-content .user-reviews .review-item .user-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.popup-content .user-reviews .review-item .review-date{
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.popup-content .user-reviews .review-item .review-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.popup-content .user-reviews .review-item .info-review{
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}

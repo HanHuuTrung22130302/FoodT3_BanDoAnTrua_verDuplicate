@@ -1,0 +1,204 @@
+/* Xử lý container */
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+.content_dis {
+  width: 100%;
+  display: flex;
+  background-color: #b5292f;
+  border-radius: 10px;
+}
+.left_content {
+  width: 200px;
+  height: 550px;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.left_content p {
+  font-size: 22px;
+  color: white;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.right_content video {
+  max-width: 1000px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.allInfo {
+  margin: 30px 0;
+}
+
+.text2 {
+  font-size: 25px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  margin-top: 90px;
+  margin-bottom: 50px;
+}
+.text2::before,.text2::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid #b5292f; /* Độ dày và màu của đường kẻ */
+  margin: 0 10px;
+}
+
+.showtm {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+.card-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+
+
+.card-info {
+  flex: 1;
+  max-width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-info img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-bottom: 1px solid #ccc;
+}
+
+.card-info.info {
+  padding: 15px;
+}
+
+.card-info .info h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.card-info .info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+#container-monban {
+  max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 50px;
+}
+#container-monban .content_section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  padding: 20px;
+}
+
+#container-monban .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 230px;
+  text-align: center;
+}
+
+#container-monban .card img {
+  width: auto;
+  height: 180px;
+}
+
+#container-monban .card_content {
+  padding: 12px;
+}
+
+#container-monban .card_content h3 {
+  margin: 10px 0;
+  font-size: 15px;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#container-monban .card_content p {
+  margin: 5px 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: darkred;
+}
+
+#container-monban .card_content .btn {
+  display: block;
+  margin: 10px 0;
+  padding: 4px;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  background-color: #b12704;
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+#container-monban .tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 18px;
+}
+#container-monban .tag::before,
+#container-monban .tag::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid #b5292f; /* Độ dày và màu của đường kẻ */
+  margin: 0 10px;
+}
+
+#container-monban .content_section_bottom {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+  justify-items: center;
+  padding: 20px;
+}
+
+#container-monban .card_bottom {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 250px;
+  text-align: center;
+}
+
+#container-monban .card_bottom img {
+  width: auto;
+  height: 180px;
+}
+#container-monban .card_bottom .text {
+  font-weight: 300;
+  color: #948170;
+}
+
