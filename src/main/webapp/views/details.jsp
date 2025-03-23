@@ -237,11 +237,10 @@
         <c:if test="${order.orderSt == 5}">
             <!-- Thẻ "Đã hủy" -->
             <div class="tracking-item">
-                <div class="status completed">
-                    <i class="fas fa-check"></i>
-                </div>
+
                 <div class="details">
-                    <p class="status-text">Đã hủy</p>
+                    <p class="status-text" style="color: #b5292f ; font-size: 50px ">Đơn hàng đã hủy</p>
+                    <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với chúng tôi</p>
                     <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với chúng tôi</p>
                 </div>
 
