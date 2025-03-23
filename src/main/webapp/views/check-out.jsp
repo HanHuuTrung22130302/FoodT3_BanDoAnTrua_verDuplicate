@@ -9,11 +9,6 @@
   <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/x-icon" />
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/check-out.css" />
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css"/>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-duotone-solid.css"/>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-thin.css"/>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-solid.css"/>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-regular.css"/>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-light.css"/>
   <style>
     a { text-decoration: none; color: white; }
     .form-group { margin-bottom: 15px; }
@@ -53,52 +48,12 @@
                     Thanh toán khi nhận hàng
                   </label>
                 </div>
-                <div class="payment-btn" id="thenganhang">
-                  <input type="radio" id="nganhang" name="paymentMethod" value="2">
-                  <label for="nganhang">
-                    <i class="fa-duotone fa-solid fa-credit-card"></i>
-                    Thanh toán bằng thẻ ngân hàng
-                  </label>
-                </div>
-                <div class="content-group chk-ship" id="thenganhang-group">
-                  <div class="content-group">
-                    <form class="info-the-ngan-hang">
-                      <div class="form-group">
-                        <input id="tenchuthe" name="tenchuthe" type="text" placeholder="Tên chủ thẻ" class="form-control" />
-                        <span class="form-message"></span>
-                      </div>
-                      <div class="form-group">
-                        <input id="sotk" name="sotk" type="text" placeholder="Số tài khoản" class="form-control" />
-                        <span class="form-message"></span>
-                      </div>
-                      <div class="form-group">
-                        <input id="ngayhethan" name="ngayhethan" type="text" placeholder="Ngày hết hạn" class="form-control" />
-                        <span class="form-message"></span>
-                      </div>
-                      <div class="form-group">
-                        <input id="cvv" name="cvv" type="text" placeholder="Mã CVV" class="form-control" />
-                        <span class="form-message"></span>
-                      </div>
-                    </form>
-                  </div>
-                </div>
                 <div class="payment-btn" id="vidientu">
                   <input type="radio" id="dientu" name="paymentMethod" value="3">
                   <label for="dientu">
                     <i class="fa-duotone fa-solid fa-wallet"></i>
-                    Thanh toán bằng ví điện tử
+                    Thanh toán bằng VNPay
                   </label>
-                </div>
-                <div class="content-group chk-ship" id="vidientu-group">
-                  <div class="checkout-type-order">
-                    <div class="type-wallet-btn active" id="google-pay-icon">
-                      <i class="fa-brands fa-google-pay"></i>
-                        <p>VNPAY</p>
-                    </div>
-                    <div class="type-wallet-btn" id="paypal-icon">
-                      <i class="fa-brands fa-paypal"></i>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -162,16 +117,16 @@
             <div class="priceFlx chk-ship">
               <div class="text">Phí vận chuyển</div>
               <div class="price-detail chk-free-ship">
-                    <span>
-                      <%
-                        Integer shippingFee = (Integer) request.getAttribute("shippingFee");
-                        if (shippingFee == null || shippingFee == 0) {
-                      %>Miễn phí<%
-                    } else {
-                    %><%= shippingFee %> đ<%
-                      }
-                    %>
-                    </span>
+                <span>
+                  <%
+                    Integer shippingFee = (Integer) request.getAttribute("shippingFee");
+                    if (shippingFee == null || shippingFee == 0) {
+                  %>Miễn phí<%
+                } else {
+                %><%= shippingFee %> đ<%
+                  }
+                %>
+                </span>
               </div>
             </div>
           </div>
@@ -208,7 +163,6 @@
   </form>
 </div>
 
-<!-- Thay phần modal hiện tại bằng đoạn này -->
 <div id="order-success-modal" class="modal" style="display: <%= session.getAttribute("paymentSuccessMessage") != null ? "block" : "none" %>">
   <div class="modal-content">
     <div class="modal-check">
@@ -224,7 +178,6 @@
   </div>
 </div>
 
-<!-- Thêm script để tự động ẩn modal sau 5 giây -->
 <script>
   <% if (session.getAttribute("paymentSuccessMessage") != null) { %>
   setTimeout(() => {

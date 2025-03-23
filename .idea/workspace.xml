@@ -9,11 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="them view">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/details.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/testProject/css/details.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/details.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/testProject/views/details.jsp" afterDir="false" />
-    </list>
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="them view" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -323,7 +319,7 @@
       <workItem from="1742452120263" duration="124000" />
       <workItem from="1742452352658" duration="7390000" />
       <workItem from="1742741875579" duration="197000" />
-      <workItem from="1742742152076" duration="357000" />
+      <workItem from="1742742152076" duration="664000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />
