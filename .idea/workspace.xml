@@ -9,7 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="them view" />
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="them view">
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/ChatbotWebhook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/js/chatbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,10 +29,10 @@
       <list>
         <option value="Jsp File" />
         <option value="filter" />
-        <option value="JavaScript File" />
         <option value="servlet" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JavaScript File" />
         <option value="Servlet" />
       </list>
     </option>
@@ -319,7 +325,7 @@
       <workItem from="1742452120263" duration="124000" />
       <workItem from="1742452352658" duration="7390000" />
       <workItem from="1742741875579" duration="197000" />
-      <workItem from="1742742152076" duration="664000" />
+      <workItem from="1742742152076" duration="4397000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />

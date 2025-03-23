@@ -336,12 +336,34 @@
     </div>
 </div>
 
+<!-- Chatbox Icon -->
+<div class="chat-icon" onclick="toggleChatbox()">
+    <i class="fa-solid fa-comment"></i>
+</div>
+
+<!-- Chatbox Container -->
+<div class="chatbox" id="chatbox">
+    <div class="chatbox-header">
+        Chat với Food T^3
+    </div>
+    <div class="chatbox-body" id="chatbox-body">
+        <div class="message bot-message">Chào bạn! Bạn muốn ăn gì hôm nay?</div>
+    </div>
+    <div class="chatbox-input">
+        <input type="text" id="user-input" placeholder="Nhập sở thích của bạn..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button onclick="sendMessage()">Gửi</button>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp"></jsp:include>
 
-<script src="js/home.js">
-</script>
+<script src="js/home.js"></script>
 <script src="js/module_popup_home.js"></script>
+<script>
+    const contextPath = '${pageContext.request.contextPath}';
+</script>
 <script src="${pageContext.request.contextPath}/js/ViewU.js"></script>
+<script src="${pageContext.request.contextPath}/js/chatbox.js"></script>
 </body>
 
 </html>

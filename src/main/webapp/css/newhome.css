@@ -442,4 +442,107 @@ html {
 }
 
 
+/* Chat Icon */
+.chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #b5292f; /* Màu chủ đạo của trang */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.chat-icon:hover {
+  background-color: #941f26;
+}
+
+/* Chatbox */
+.chatbox {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background: white;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.chatbox-header {
+  background: #b5292f;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px 5px 0 0;
+  font-weight: 600;
+}
+
+.chatbox-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #f9f9f9;
+}
+
+.chatbox-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #e6e6e6;
+}
+
+.chatbox-input input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-right: 5px;
+  font-family: "Poppins", sans-serif;
+}
+
+.chatbox-input button {
+  padding: 5px 10px;
+  background: #b5292f;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+
+.chatbox-input button:hover {
+  background: #941f26;
+}
+
+.message {
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.bot-message {
+  background: #e6e6e6;
+  align-self: flex-start;
+}
+
+.user-message {
+  background: #b5292f;
+  color: white;
+  align-self: flex-end;
+  text-align: right;
+}
+
 
