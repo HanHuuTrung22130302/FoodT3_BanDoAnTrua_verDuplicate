@@ -49,6 +49,7 @@ public class ChatbotWebhook extends HttpServlet {
         String taste = parameters.has("taste") && !parameters.get("taste").isJsonNull() ? parameters.get("taste").getAsString() : null;
         JsonArray restrictionsArray = parameters.has("restrictions") && !parameters.get("restrictions").isJsonNull() ? parameters.getAsJsonArray("restrictions") : new JsonArray();
         String category = parameters.has("category") && !parameters.get("category").isJsonNull() ? parameters.get("category").getAsString() : null;
+        String product = parameters.has("product") && !parameters.get("product").isJsonNull() ? parameters.get("product").getAsString() : null;
 
         // Chuyển JsonArray thành danh sách String
         List<String> restrictions = restrictionsArray.size() > 0 ?
@@ -59,14 +60,26 @@ public class ChatbotWebhook extends HttpServlet {
         List<Food> foods = foodDAO.getAll();
         String reply;
 
-        if (taste != null) {
+        if (product != null) {
+            // Tìm món ăn theo tên sản phẩm
+            Food matchedFood = foods.stream()
+                    .filter(food -> food.getFoodName().toLowerCase().contains(product.toLowerCase()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchedFood != null) {
+                reply = String.format("Thông tin về %s: Giá %dđ, Thành phần: %s.",
+                        matchedFood.getFoodName(), matchedFood.getPrice(), matchedFood.getDescription());
+            } else {
+                reply = "Tôi không tìm thấy thông tin về " + product + ". Bạn có thể thử hỏi món khác!";
+            }
+        } else if (taste != null) {
+            // Lọc theo sở thích trước
             foods = foods.stream()
                     .filter(food -> food.getDescription().toLowerCase().contains(taste) || food.getFoodName().toLowerCase().contains(taste))
-                    .limit(3)
                     .collect(Collectors.toList());
-            reply = "Bạn thích món " + taste + "? Tôi gợi ý: " + formatFoodList(foods, request);
-        } else if (!restrictions.isEmpty()) {
-            // Lọc món ăn dựa trên tất cả các restrictions
+
+            // Áp dụng các restrictions nếu có
             for (String restriction : restrictions) {
                 switch (restriction) {
                     case "thịt bò":
@@ -92,7 +105,34 @@ public class ChatbotWebhook extends HttpServlet {
                         break;
                 }
             }
-            // Giới hạn 3 món sau khi lọc
+            foods = foods.stream().limit(3).collect(Collectors.toList());
+            reply = "Bạn muốn ăn " + taste + "? Tôi gợi ý: " + formatFoodList(foods, request);
+        } else if (!restrictions.isEmpty()) {
+            for (String restriction : restrictions) {
+                switch (restriction) {
+                    case "thịt bò":
+                    case "bò":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("bò") && !food.getFoodName().toLowerCase().contains("bò"))
+                                .collect(Collectors.toList());
+                        break;
+                    case "hải sản":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("hải sản") && !food.getFoodName().toLowerCase().contains("hải sản"))
+                                .collect(Collectors.toList());
+                        break;
+                    case "tôm":
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains("tôm") && !food.getFoodName().toLowerCase().contains("tôm"))
+                                .collect(Collectors.toList());
+                        break;
+                    default:
+                        foods = foods.stream()
+                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains(restriction))
+                                .collect(Collectors.toList());
+                        break;
+                }
+            }
             foods = foods.stream().limit(3).collect(Collectors.toList());
             reply = "Bạn không ăn được " + String.join(" và ", restrictions) + "? Tôi gợi ý: " + formatFoodList(foods, request);
         } else if (category != null) {

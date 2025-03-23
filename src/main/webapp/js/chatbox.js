@@ -38,8 +38,9 @@ function sendMessage() {
                 queryText: message,
                 parameters: {
                     taste: extractTaste(message),
-                    restrictions: restrictionsList, // Gửi toàn bộ danh sách restrictions
-                    category: extractCategory(message)
+                    restrictions: restrictionsList,
+                    category: extractCategory(message),
+                    product: extractProduct(message) // Thêm tham số product
                 }
             }
         })
@@ -67,10 +68,27 @@ function sendMessage() {
         });
 }
 
-// Trích xuất sở thích về vị
+// Trích xuất sở thích (taste)
 function extractTaste(message) {
-    const tastes = ['ngọt', 'mặn', 'cay', 'chua', 'nhạt'];
-    return tastes.find(taste => message.includes(taste)) || null;
+    const tastes = [
+        { keyword: 'ngọt', value: 'ngọt' },
+        { keyword: 'mặn', value: 'mặn' },
+        { keyword: 'cay', value: 'cay' },
+        { keyword: 'chua', value: 'chua' },
+        { keyword: 'nhạt', value: 'nhạt' },
+        { keyword: 'thịt gà', value: 'thịt gà' },
+        { keyword: 'gà', value: 'gà' },
+        { keyword: 'thịt heo', value: 'thịt heo' },
+        { keyword: 'heo', value: 'heo' },
+        { keyword: 'thịt bò', value: 'thịt bò' },
+        { keyword: 'bò', value: 'bò' },
+        { keyword: 'hải sản', value: 'hải sản' },
+        { keyword: 'tôm', value: 'tôm' }
+    ];
+    return tastes.find(t =>
+        (message.includes('muốn ăn') || message.includes('thích') || message.includes('thèm')) &&
+        message.includes(t.keyword)
+    )?.value || null;
 }
 
 // Trích xuất hạn chế (restriction)
@@ -101,6 +119,17 @@ function extractCategory(message) {
         { keyword: 'khát nước', value: 'nước' }
     ];
     return categories.find(category => message.includes(category.keyword))?.value || null;
+}
+
+// Trích xuất sản phẩm (product) để hỏi chi tiết
+function extractProduct(message) {
+    const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này'];
+    if (keywords.some(keyword => message.includes(keyword))) {
+        // Tìm tên sản phẩm trong câu (giả sử tên sản phẩm bắt đầu bằng chữ cái in hoa hoặc cụm từ sau "về")
+        const productMatch = message.match(/(về\s+)?([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?:\s|$)/i);
+        return productMatch ? productMatch[2].trim() : null;
+    }
+    return null;
 }
 
 // Định dạng phản hồi với link sản phẩm

@@ -52,6 +52,7 @@ public class FoodDAO {
                                 rs.getInt("quantity"),
                                 rs.getString("image"),
                                 rs.getString("description"),
+                                rs.getString("ingredients"),
                                 rs.getInt("category_id"),
                                 rs.getInt("sold"),
                                 rs.getInt("views"),
@@ -107,6 +108,7 @@ public class FoodDAO {
                                 rs.getInt("quantity"),
                                 rs.getString("image"),
                                 rs.getString("description"),
+                                rs.getString("ingredients"),
                                 rs.getInt("category_id"),
                                 rs.getInt("sold"),
                                 rs.getInt("views"),
@@ -237,8 +239,8 @@ public class FoodDAO {
     // phương thức thêm món ăn
     public boolean addFood(Food food) {
         String query = "INSERT INTO food (category_id, food_name, price, discount_price, " +
-                "image, description, quantity, sold, created_at, updated_at, views) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "image, description,ingredients, quantity, sold, created_at, updated_at, views) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -252,11 +254,12 @@ public class FoodDAO {
             ps.setObject(4, food.getDiscountPrice()); // NULL nếu không có
             ps.setString(5, food.getImg());
             ps.setString(6, food.getDescription());
-            ps.setObject(7, food.getQuantity());
-            ps.setInt(8, food.getSold());
-            ps.setTimestamp(9, food.getCreatedAt());
-            ps.setObject(10, food.getUpdatedAt());
-            ps.setInt(11, food.getViews());
+            ps.setString(7, food.getIngredients());
+            ps.setObject(8, food.getQuantity());
+            ps.setInt(9, food.getSold());
+            ps.setTimestamp(10, food.getCreatedAt());
+            ps.setObject(11, food.getUpdatedAt());
+            ps.setInt(12, food.getViews());
 
             int rowInserted = ps.executeUpdate();
             return rowInserted > 0;
@@ -273,7 +276,7 @@ public class FoodDAO {
     // Phuơng thức cập nhật thông tin món ăn
     public boolean updateFood(Food food) {
         String query = "UPDATE food SET category_id = ?, food_name = ?, price = ?, image = ?, " +
-                "description = ?, updated_at = ? WHERE food_id = ?";
+                "description = ?, ingredients = ?,  updated_at = ? WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -286,8 +289,9 @@ public class FoodDAO {
             ps.setInt(3, food.getPrice());
             ps.setString(4, food.getImg());
             ps.setString(5, food.getDescription());
-            ps.setTimestamp(6, food.getUpdatedAt());
-            ps.setInt(7, food.getIdFood());
+            ps.setString(6, food.getIngredients());
+            ps.setTimestamp(7, food.getUpdatedAt());
+            ps.setInt(8, food.getIdFood());
 
             int rowUpdated = ps.executeUpdate();
             return rowUpdated > 0;

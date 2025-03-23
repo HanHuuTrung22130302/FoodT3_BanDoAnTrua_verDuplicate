@@ -88,6 +88,9 @@
                     <textarea id="item_details" name="description" placeholder="Nhập chi tiết món ăn:"
                               required></textarea>
 
+                    <label for="item_ingredients">Nguyên liệu:</label>
+                    <textarea id="item_ingredients" name="ingredients" placeholder="Nhập nguyên liệu (cách nhau bởi dấu phẩy):" required></textarea>
+
                     <label for="item_image">Hình ảnh:</label>
                     <input type="file" id="item_image" name="img" required>
 
@@ -105,7 +108,7 @@
                 <h2>CẬP NHẬT MÓN</h2>
                 <form id="update_item_form" action="foodservice" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="idFood" value="${food.idFood}">
+                    <input type="hidden" id="update_idFood" name="idFood" value="">
                     <label for="items_name">Tên Món:</label>
                     <input type="text" id="items_name" name="foodName" placeholder="Nhập tên món ăn..." required>
 
@@ -116,16 +119,17 @@
                         </c:forEach>
                     </select>
 
-                    <label for="items_price"> Giá:</label>
+                    <label for="items_price">Giá:</label>
                     <input type="number" id="items_price" name="price" placeholder="Nhập giá của món ăn:" required>
 
                     <label for="items_details">Chi tiết món ăn:</label>
-                    <textarea id="items_details" name="description" placeholder="Nhập chi tiết món ăn:"
-                              required>
-                    </textarea>
+                    <textarea id="items_details" name="description" placeholder="Nhập chi tiết món ăn:" required></textarea>
+
+                    <label for="items_ingredients">Nguyên liệu:</label>
+                    <textarea id="items_ingredients" name="ingredients" placeholder="Nhập nguyên liệu (cách nhau bởi dấu phẩy):" required></textarea>
 
                     <label for="items_image">Hình ảnh:</label>
-                    <input type="file" id="items_image" name="img" required>
+                    <input type="file" id="items_image" name="img">
 
                     <button type="submit">Lưu</button>
                 </form>

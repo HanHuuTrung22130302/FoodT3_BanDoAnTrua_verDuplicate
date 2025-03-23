@@ -10,6 +10,7 @@ public class Food {
     private int quantity;
     private String img;
     private String description;
+    private String ingredients; // Thêm trường mới
     private int idCategory;
     private int sold;
     private int views;
@@ -18,6 +19,22 @@ public class Food {
 
     public Food() {
 
+    }
+
+    public Food(int idFood, String foodName, int price, int discountPrice, int quantity, String img, String description, String ingredients, int idCategory, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
+        this.idFood = idFood;
+        this.foodName = foodName;
+        this.price = price;
+        this.discountPrice = discountPrice;
+        this.quantity = quantity;
+        this.img = img;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.idCategory = idCategory;
+        this.sold = sold;
+        this.views = views;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Food(int idFood, String foodName, int price, int discountPrice, int quantity, String img, String description, int idCategory, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
@@ -33,6 +50,14 @@ public class Food {
         this.views = views;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
     }
 
     public Integer getIdFood() {
