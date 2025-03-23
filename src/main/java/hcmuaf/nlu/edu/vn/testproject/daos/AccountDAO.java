@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 public class AccountDAO {
     // Check email tồn tại hay ko
     public Account getUserByEmail(String email) {
-        String query = "select * from account where email = ?";
+        String query = "SELECT * FROM account WHERE email = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -37,7 +37,7 @@ public class AccountDAO {
     }
 
     public Account getUserById(int userId) {
-        String query = "select * from account where account_id = ?";
+        String query = "SELECT * FROM account WHERE account_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -46,6 +46,32 @@ public class AccountDAO {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, userId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return new Account(
+                        rs.getInt("account_id"),
+                        rs.getInt("role_id"),
+                        rs.getString("password"),
+                        rs.getString("name"),
+                        rs.getString("email")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Account getUserByName(String name) {
+        String query = "SELECT * FROM account WHERE name = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, name);
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new Account(
@@ -87,7 +113,7 @@ public class AccountDAO {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, account.getIdRole());
-            ps.setString(2, account.getPass()); // Có thể để trống hoặc tạo ngẫu nhiên
+            ps.setString(2, MD5.getMD5(account.getPass()));
             ps.setString(3, account.getName());
             ps.setString(4, account.getEmail());
             ps.executeUpdate();

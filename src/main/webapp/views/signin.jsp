@@ -31,17 +31,18 @@
             </a>
             <h1>Tạo tài khoản</h1>
             <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                <a href="https://www.facebook.com/v22.0/dialog/oauth?client_id=624822650411926&redirect_uri=http://localhost:8080/testProject/loginFacebook&scope=public_profile,email"
+                   class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-c32ercvpjs2kccueb3mjj7l3nd2ksqk7.apps.googleusercontent.com&approval_prompt=force"
+                   class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
             <span>hoặc sử dụng email của bạn</span>
-            <input name="name" type="text" placeholder="Tên đăng nhập"/>
-            <input name="email" type="email" placeholder="Email"/>
-            <input name="pass" type="password" placeholder="Mật khẩu"/>
+            <input name="name" type="text" placeholder="Tên đăng nhập" required/>
+            <input name="email" type="email" placeholder="Email" required/>
+            <input name="pass" type="password" placeholder="Mật khẩu" required/>
             <button type="submit">Đăng ký</button>
         </form>
-
 
     </div>
     <div class="form-container sign-in-container">
@@ -87,6 +88,6 @@
 <script src="${pageContext.request.contextPath}/js/signin.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/loginAjax.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/signUpAjax.js"></script>
 </body>
 </html>
