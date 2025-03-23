@@ -21,6 +21,10 @@ public class BannerDao {
         getAllBanner();
     }
 
+    public List<Banner> getBanners() {
+        return banners;
+    }
+
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllBanner() {
 
@@ -48,9 +52,9 @@ public class BannerDao {
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
                 banners.add(
-                        new Banner(rs.getInt("idBanner"),
+                        new Banner(rs.getInt("banner_id"),
                                 rs.getString("url"),
-                                rs.getDate("createdAt")
+                                rs.getDate("created_at")
                         )
                 );
             }
@@ -66,7 +70,7 @@ public class BannerDao {
     }
 
     public void addBanner(Banner banner) {
-        String query = "INSERT INTO banner (url, createdAt) VALUES (?, ?)";
+        String query = "INSERT INTO banner (url, created_at) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -95,7 +99,7 @@ public class BannerDao {
     }
 
     public void deleteBaner(int id) {
-        String query = "DELETE FROM banner WHERE idBanner = ?";
+        String query = "DELETE FROM banner WHERE banner_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -131,9 +135,5 @@ public class BannerDao {
         } catch (SQLException e) {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
         }
-    }
-
-    public List<Banner> getBanners() {
-        return banners;
     }
 }

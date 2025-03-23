@@ -23,11 +23,10 @@ public class ViewpDao {
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getUReview(int id) {
 
-        String query = "INSERT INTO productview (idFood, idAcc, times)\n" +
+        String query = "INSERT INTO product_view (food_id, account_id, view_time)\n" +
                 "VALUES (?, 1, NOW());\n";
         Connection con = null;
         PreparedStatement ps = null;
-
         ResultSet rs = null;
 
         try {
@@ -35,7 +34,7 @@ public class ViewpDao {
             con = new DbContext().getConnection();
 
             ps = con.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -43,18 +42,19 @@ public class ViewpDao {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
-            closeResources( ps, con);
+            closeResources(ps, con);
         }
     }
+
     public void getUFoodReview(int id) {
 
         String query = "UPDATE food f\n" +
                 "SET f.views = (\n" +
                 "  SELECT COUNT(*) + 1\n" +
-                "  FROM productview pv\n" +
-                "  WHERE pv.idFood = f.idFood\n" +
+                "  FROM product_view pv\n" +
+                "  WHERE pv.food_id = f.food_id\n" +
                 ")\n" +
-                "WHERE f.idFood = ?;";
+                "WHERE f.food_id = ?;";
         Connection con = null;
         PreparedStatement ps = null;
 
@@ -63,7 +63,7 @@ public class ViewpDao {
             con = new DbContext().getConnection();
 
             ps = con.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -71,11 +71,11 @@ public class ViewpDao {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
-            closeResources( ps, con);
+            closeResources(ps, con);
         }
     }
 
-    private void closeResources( PreparedStatement ps, Connection con) {
+    private void closeResources(PreparedStatement ps, Connection con) {
         try {
             if (ps != null) ps.close();
             if (con != null) con.close();

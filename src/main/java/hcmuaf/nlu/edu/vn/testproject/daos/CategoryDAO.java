@@ -28,8 +28,8 @@ public class CategoryDAO {
 
             while (rs.next()) {
                 categoryList.add(
-                        new Category(rs.getInt("idCategory"),
-                                     rs.getString("nameCategory")));
+                        new Category(rs.getInt("category_id"),
+                                     rs.getString("category_name")));
             }
 
         } catch (SQLException e) {

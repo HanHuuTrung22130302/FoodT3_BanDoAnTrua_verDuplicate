@@ -18,7 +18,7 @@ public class InvoiceOrderDetailDao {
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public static List<OrderInvoiceDetail> getInvoiceOrderDetails(int idInvoice) {
         List<OrderInvoiceDetail> data = new ArrayList<>();
-        String query = "SELECT * FROM invoicedetail id join food f ON id.idFood = f.idFood where idInvoice=?";
+        String query = "SELECT * FROM invoice_detail id join food f ON id.food_id = f.food_id where invoice_id=?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -32,13 +32,13 @@ public class InvoiceOrderDetailDao {
             while (rs.next()) {
                 data.add(
                         new OrderInvoiceDetail(
-                                rs.getInt("idDetail"),
-                                rs.getInt("idInvoice"),
-                                rs.getInt("idFood"),
-                                rs.getString("foodname"),
+                                rs.getInt("detail_id"),
+                                rs.getInt("invoice_id"),
+                                rs.getInt("food_id"),
+                                rs.getString("food_name"),
                                 rs.getInt("quantity"),
-                                rs.getInt("totalAmount"),
-                                rs.getString("img")
+                                rs.getInt("total_amount"),
+                                rs.getString("image")
                         ));
             }
 
@@ -67,5 +67,4 @@ public class InvoiceOrderDetailDao {
     public static void main(String[] args) {
         System.out.println(getInvoiceOrderDetails(1));
     }
-
 }

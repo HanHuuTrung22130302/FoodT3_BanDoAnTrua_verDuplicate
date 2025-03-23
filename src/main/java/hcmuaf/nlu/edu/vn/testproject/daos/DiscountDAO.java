@@ -21,7 +21,7 @@ public class DiscountDAO {
         // Xóa danh sách cũ trước khi thêm dữ liệu mới
         discounts.clear();
 
-        String query = "SELECT * FROM discountcode";
+        String query = "SELECT * FROM discount_code";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -45,13 +45,13 @@ public class DiscountDAO {
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
                 discounts.add(new Discount(
-                        rs.getInt("idCode"),
-                        rs.getString("codeName"),
-                        rs.getDouble("discountRate"),
+                        rs.getInt("discount_code_id"),
+                        rs.getString("code_name"),
+                        rs.getDouble("discount_rate"),
                         rs.getString("title"),
                         rs.getString("description"),
-                        rs.getDate("startDate"),
-                        rs.getDate("endDate")
+                        rs.getDate("start_date"),
+                        rs.getDate("end_date")
                 ));
             }
         } catch (SQLException e) {
@@ -67,7 +67,7 @@ public class DiscountDAO {
 
     // Phương thúc thêm mã giảm giá
     public boolean addDiscount(Discount discount) {
-        String query = "INSERT INTO discountcode (codeName, discountRate, title, description, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO discount_code (code_name, discount_rate, title, description, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -92,7 +92,7 @@ public class DiscountDAO {
     }
 
     public boolean deleteDiscount(int idCode) {
-        String query = "DELETE FROM discountcode WHERE idCode = ?";
+        String query = "DELETE FROM discount_code WHERE discount_code_id = ?";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, idCode);
@@ -113,5 +113,4 @@ public class DiscountDAO {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
         }
     }
-
 }

@@ -12,7 +12,7 @@ public class SignUpDAO {
 
 
     public static void signUp(String name, String password, String email) {
-        String query = "INSERT INTO account (name, pass, idRole,email) VALUES (?, ?, 2,?)";
+        String query = "INSERT INTO account (name, password, role_id,email) VALUES (?, ?, 2,?)";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -21,7 +21,7 @@ public class SignUpDAO {
         try {
             con = new DbContext().getConnection();
 
-            ps = con.prepareStatement(query,PreparedStatement.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, hashedPassword);
             ps.setString(3, email);
@@ -44,30 +44,28 @@ public class SignUpDAO {
         }
     }
 
-
-
     public static Account checkUserExist(String name, String email) {
         String query = "SELECT * FROM Account WHERE name = ? OR email = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try{
+        try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, name);
             ps.setString(2, email);
 
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 return new Account(
-                        rs.getInt("idAcc"),
-                        rs.getInt("idRole"),
-                        rs.getString("pass"),
+                        rs.getInt("account_id"),
+                        rs.getInt("role_id"),
+                        rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

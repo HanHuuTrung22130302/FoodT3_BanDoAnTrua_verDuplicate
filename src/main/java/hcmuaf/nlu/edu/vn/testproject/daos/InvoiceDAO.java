@@ -12,8 +12,8 @@ import java.util.List;
 
 public class InvoiceDAO {
     public void addInvoice(Invoice invoice) {
-        String query = "INSERT INTO invoice (idAcc, recipientName, phoneNumber, deliveryAddress, note, orderDate, totalAmount, idCode, paymentMethod, isPaid) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, NULL)";
-        String query2 = "INSERT INTO orderstatus (idInvoice, orderSt) VALUES (?, 1)";
+        String query = "INSERT INTO invoice (account_id, recipient_name, phone_number, delivery_address, note, order_date, total_amount, discount_code_id, payment_method, is_paid) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, NULL)";
+        String query2 = "INSERT INTO order_status (invoice_id, order_status) VALUES (?, 1)";
         Connection conn = null;
         PreparedStatement ps = null;
         PreparedStatement ps2 = null;
@@ -39,18 +39,13 @@ public class InvoiceDAO {
                 // Lấy ID của hóa đơn vừa chèn vào
                 rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-
                     invoice.setIdInvoice(rs.getInt(1));
-
-
                     int idInvoice = rs.getInt(1);
                     ps2 = conn.prepareStatement(query2);
                     ps2.setInt(1, idInvoice);
                     ps2.executeUpdate();
-
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -67,7 +62,7 @@ public class InvoiceDAO {
     }
 
     public void addInvoiceDetail(InvoiceDetail detail) {
-        String query = "INSERT INTO invoicedetail (idInvoice, idFood, quantity, totalAmount) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO invoice_detail (invoice_id, food_id, quantity, total_amount) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -85,10 +80,10 @@ public class InvoiceDAO {
 
     public List<InvoiceDetail> getInvoiceDetails() {
         // Truy vấn gộp món ăn theo foodName và tính tổng số lượng, tổng doanh thu
-        String query = "SELECT f.foodName, f.img, SUM(id.quantity) AS totalQuantity, SUM(id.totalAmount) AS totalAmount " +
-                "FROM invoicedetail id " +
-                "JOIN food f ON id.idFood = f.idFood " +
-                "GROUP BY f.foodName, f.img";
+        String query = "SELECT f.food_name, f.image, SUM(id.quantity) AS totalQuantity, SUM(id.total_amount) AS totalAmount " +
+                "FROM invoice_detail id " +
+                "JOIN food f ON id.food_id = f.food_id " +
+                "GROUP BY f.food_name, f.image";
 
         List<InvoiceDetail> details = new ArrayList<>();
         Connection conn = null;
@@ -102,12 +97,12 @@ public class InvoiceDAO {
 
             while (rs.next()) {
                 InvoiceDetail detail = new InvoiceDetail();
-                detail.setQuantity(rs.getInt("totalQuantity"));  // Tổng số lượng bán
-                detail.setTotalAmount(rs.getInt("totalAmount"));  // Tổng doanh thu
+                detail.setQuantity(rs.getInt("total_quantity"));  // Tổng số lượng bán
+                detail.setTotalAmount(rs.getInt("total_amount"));  // Tổng doanh thu
 
                 Food food = new Food();
-                food.setFoodName(rs.getString("foodName"));
-                food.setImg(rs.getString("img"));
+                food.setFoodName(rs.getString("food_name"));
+                food.setImg(rs.getString("image"));
 
                 detail.setFood(food);
                 details.add(detail);
@@ -134,18 +129,5 @@ public class InvoiceDAO {
             }
         }
         return invoiceDetails;
-    }
-
-
-    public static void main(String[] args) {
-        InvoiceDAO dao = new InvoiceDAO();
-        List<InvoiceDetail> invoiceDetails = dao.getInvoiceDetails();
-        for (InvoiceDetail detail : invoiceDetails) {
-            System.out.println("Tên món ăn: " + detail.getFood().getFoodName());
-            System.out.println("Hình ảnh món ăn: " + detail.getFood().getImg());
-            System.out.println("Số lượng bán: " + detail.getQuantity());
-            System.out.println("Doanh thu: " + detail.getTotalAmount());
-            System.out.println("-----------------------------------");
-        }
     }
 }

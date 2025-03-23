@@ -23,9 +23,9 @@ public class AccountDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new Account(
-                        rs.getInt("idAcc"),
-                        rs.getInt("idRole"),
-                        rs.getString("pass"),
+                        rs.getInt("account_id"),
+                        rs.getInt("role_id"),
+                        rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
@@ -37,7 +37,7 @@ public class AccountDAO {
     }
 
     public Account getUserById(int userId) {
-        String query = "select * from account where idAcc = ?";
+        String query = "select * from account where account_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -49,9 +49,9 @@ public class AccountDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new Account(
-                        rs.getInt("idAcc"),
-                        rs.getInt("idRole"),
-                        rs.getString("pass"),
+                        rs.getInt("account_id"),
+                        rs.getInt("role_id"),
+                        rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
@@ -63,7 +63,7 @@ public class AccountDAO {
     }
 
     public void updatePassword(String email, String password) {
-        String query = "update account set pass = ? where email = ?";
+        String query = "update account set password = ? where email = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         String hashedPassword = MD5.getMD5(password);
@@ -80,7 +80,7 @@ public class AccountDAO {
     }
 
     public void insertAccount(Account account) {
-        String query = "INSERT INTO account (idRole, pass, name, email) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO account (role_id, password, name, email) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         try {

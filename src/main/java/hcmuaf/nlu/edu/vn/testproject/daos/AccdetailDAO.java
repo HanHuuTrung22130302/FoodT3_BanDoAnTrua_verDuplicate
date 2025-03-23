@@ -17,8 +17,8 @@ public class AccdetailDAO {
     public List<AccDetail> getAllAccDetail() {
 
         List<AccDetail> listAcc = new ArrayList<AccDetail>();
-        String query = "SELECT accdetail.*, account.email" +
-                " FROM accdetail RIGHT JOIN account ON accdetail.idAcc = account.idAcc WHERE account.idRole = 2";
+        String query = "SELECT account_detail.*, account.email" +
+                " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id WHERE account.role_id = 2";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -29,12 +29,12 @@ public class AccdetailDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 listAcc.add(new AccDetail(
-                        rs.getInt("idAcc"),
-                        rs.getString("fullName"),
-                        rs.getString("phoneNumber"),
+                        rs.getInt("account_id"),
+                        rs.getString("full_name"),
+                        rs.getString("phone_number"),
                         rs.getString("address"),
                         rs.getInt("gender"),
-                        rs.getString("birthDate"),
+                        rs.getString("birth_date"),
                         rs.getString("email")
                 ));
             }
@@ -50,7 +50,7 @@ public class AccdetailDAO {
     }
 
     public Account getAccountById(int idAcc) {
-        String query = "SELECT name, email FROM account WHERE idAcc = ?";
+        String query = "SELECT name, email FROM account WHERE account_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -72,7 +72,7 @@ public class AccdetailDAO {
     }
 
     public AccDetail getAccDetailById(int idAcc) {
-        String query = "SELECT fullName, phoneNumber,address, birthDate, gender FROM accDetail WHERE idAcc = ?";
+        String query = "SELECT full_name, phone_number,address, birth_date, gender FROM account_detail WHERE account_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -84,10 +84,10 @@ public class AccdetailDAO {
             rs = ps.executeQuery();
             if (rs.next()) {
                 accDetail = new AccDetail();
-                accDetail.setFullName(rs.getString("fullName"));
-                accDetail.setPhoneNumber(rs.getString("phoneNumber"));
+                accDetail.setFullName(rs.getString("full_name"));
+                accDetail.setPhoneNumber(rs.getString("phone_number"));
                 accDetail.setAddress(rs.getString("address"));
-                accDetail.setBirthDate(rs.getString("birthDate"));
+                accDetail.setBirthDate(rs.getString("birth_date"));
                 accDetail.setGender(rs.getInt("gender"));
             }
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class AccdetailDAO {
     public void updateAccdetail(int idAcc, String fullName, String address, String phoneNumber, String birthDate, int gender) {
         Connection con = null;
         PreparedStatement ps = null;
-        String query = "UPDATE accDetail SET fullName = ?, phoneNumber = ?,address = ?, birthDate = ?, gender = ? WHERE idAcc = ?";
+        String query = "UPDATE account_detail SET full_name = ?, phone_number = ?,address = ?, birth_date = ?, gender = ? WHERE account_id = ?";
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
@@ -153,7 +153,7 @@ public class AccdetailDAO {
     public void addAccDetail(int idAcc, String fullName, String address, String phoneNumber, String birthDate, int gender) {
         Connection con = null;
         PreparedStatement ps = null;
-        String query = "INSERT INTO accDetail (idAcc, fullName, phoneNumber, address, birthDate, gender, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, NOW(),NOW())";
+        String query = "INSERT INTO account_detail (account_id, full_name, phone_number, address, birth_date, gender, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(),NOW())";
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);

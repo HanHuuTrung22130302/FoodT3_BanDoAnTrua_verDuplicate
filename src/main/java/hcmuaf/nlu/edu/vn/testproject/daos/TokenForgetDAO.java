@@ -17,7 +17,7 @@ public class TokenForgetDAO {
     }
 
     public boolean insertTokenForget(PasswordResetToken tokenForget) {
-        String query = "insert into password_reset_tokens (token, experyTime, isUsed, userId) values (?, ?, ?, ?)";
+        String query = "insert into password_reset_tokens (token, expiry_time, is_used, account_id) values (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -49,11 +49,11 @@ public class TokenForgetDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new PasswordResetToken(
-                        rs.getInt("id"),
-                        rs.getBoolean("isUsed"),
+                        rs.getInt("token_id"),
+                        rs.getBoolean("is_used"),
                         rs.getString("token"),
-                        rs.getTimestamp("experyTime").toLocalDateTime(),
-                        rs.getInt("userId")
+                        rs.getTimestamp("expiry_time").toLocalDateTime(),
+                        rs.getInt("account_id")
                 );
             }
 
@@ -64,7 +64,7 @@ public class TokenForgetDAO {
     }
 
     public void updateStatus(PasswordResetToken token) {
-        String query = "update password_reset_tokens set isUsed = ? where token = ?";
+        String query = "update password_reset_tokens set is_used = ? where token = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 

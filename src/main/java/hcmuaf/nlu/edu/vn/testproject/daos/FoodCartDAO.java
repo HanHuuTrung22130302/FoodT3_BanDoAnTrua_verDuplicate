@@ -15,23 +15,23 @@ public class FoodCartDAO implements FoodService {
 
     @Override
     public Food getFoodByID(int id) {
-        String query = "SELECT * FROM food WHERE idFood = ?";
+        String query = "SELECT * FROM food WHERE food_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Food food = null;
-        try{
-            con= new DbContext().getConnection();
+        try {
+            con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
                 food = new Food();
-                food.setIdFood(rs.getInt("idFood"));
-                food.setFoodName(rs.getString("foodName"));
+                food.setIdFood(rs.getInt("food_id"));
+                food.setFoodName(rs.getString("food_name"));
                 food.setPrice(rs.getInt("price"));
-                food.setImg(rs.getString("img"));
+                food.setImg(rs.getString("image"));
                 food.setDescription(rs.getString("description"));
             }
 
@@ -42,6 +42,7 @@ public class FoodCartDAO implements FoodService {
         }
         return food;
     }
+
     public static void main(String[] args) {
         // Tạo đối tượng FoodCartDAO
         FoodCartDAO foodCartDAO = new FoodCartDAO();

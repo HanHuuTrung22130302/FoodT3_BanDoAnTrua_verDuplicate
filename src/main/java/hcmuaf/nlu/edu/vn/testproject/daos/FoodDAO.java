@@ -43,20 +43,20 @@ public class FoodDAO {
 
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
-                data.put(rs.getInt("idFood"),
+                data.put(rs.getInt("food_id"),
                         new Food(
-                                rs.getInt("idFood"),
-                                rs.getString("foodName"),
+                                rs.getInt("food_id"),
+                                rs.getString("food_name"),
                                 rs.getInt("price"),
-                                rs.getInt("discountPrice"),
+                                rs.getInt("discount_price"),
                                 rs.getInt("quantity"),
-                                rs.getString("img"),
+                                rs.getString("image"),
                                 rs.getString("description"),
-                                rs.getInt("idCategory"),
+                                rs.getInt("category_id"),
                                 rs.getInt("sold"),
                                 rs.getInt("views"),
-                                rs.getTimestamp("createdAt"),
-                                rs.getTimestamp("updatedAt")
+                                rs.getTimestamp("created_at"),
+                                rs.getTimestamp("updated_at")
                         ));
             }
 
@@ -72,7 +72,7 @@ public class FoodDAO {
 
     public List<Food> getFoodsByCategory(int idCategory) {
 
-        String query = "SELECT * FROM food WHERE idCategory = ?";
+        String query = "SELECT * FROM food WHERE category_id = ?";
         List<Food> foodList = new ArrayList<>();
 
         Connection con = null;
@@ -100,18 +100,18 @@ public class FoodDAO {
             while (rs.next()) {
                 foodList.add(
                         new Food(
-                                rs.getInt("idFood"),
-                                rs.getString("foodName"),
+                                rs.getInt("food_id"),
+                                rs.getString("food_name"),
                                 rs.getInt("price"),
-                                rs.getInt("discountPrice"),
+                                rs.getInt("discount_price"),
                                 rs.getInt("quantity"),
-                                rs.getString("img"),
+                                rs.getString("image"),
                                 rs.getString("description"),
-                                rs.getInt("idCategory"),
+                                rs.getInt("category_id"),
                                 rs.getInt("sold"),
                                 rs.getInt("views"),
-                                rs.getTimestamp("createdAt"),
-                                rs.getTimestamp("updatedAt")
+                                rs.getTimestamp("created_at"),
+                                rs.getTimestamp("updated_at")
                         ));
             }
 
@@ -216,7 +216,7 @@ public class FoodDAO {
 
     // Phương thức xóa món ăn
     public void deleteFood(int idFood) {
-        String query = "DELETE FROM food WHERE idFood = ?";
+        String query = "DELETE FROM food WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -236,8 +236,8 @@ public class FoodDAO {
 
     // phương thức thêm món ăn
     public boolean addFood(Food food) {
-        String query = "INSERT INTO food (idCategory, foodName, price, discountPrice, " +
-                "img, description, quantity, sold, createdAt, updatedAt, views) " +
+        String query = "INSERT INTO food (category_id, food_name, price, discount_price, " +
+                "image, description, quantity, sold, created_at, updated_at, views) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
@@ -272,8 +272,8 @@ public class FoodDAO {
 
     // Phuơng thức cập nhật thông tin món ăn
     public boolean updateFood(Food food) {
-        String query = "UPDATE food SET idCategory = ?, foodName = ?, price = ?, img = ?, " +
-                "description = ?, updatedAt = ? WHERE idFood = ?";
+        String query = "UPDATE food SET category_id = ?, food_name = ?, price = ?, image = ?, " +
+                "description = ?, updated_at = ? WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 

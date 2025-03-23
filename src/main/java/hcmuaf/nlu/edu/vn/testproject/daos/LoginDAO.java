@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 
 public class LoginDAO {
     public Account login(String name, String password) {
-        String query = "SELECT * FROM Account WHERE name = ? AND pass = ?";
+        String query = "SELECT * FROM Account WHERE name = ? AND password = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -23,9 +23,9 @@ public class LoginDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 return new Account(
-                        rs.getInt("idAcc"),
-                        rs.getInt("idRole"),
-                        rs.getString("pass"),
+                        rs.getInt("account_id"),
+                        rs.getInt("role_id"),
+                        rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
@@ -35,21 +35,4 @@ public class LoginDAO {
         }
         return null;
     }
-
-
-    public static void main(String[] args) {
-        LoginDAO loginDAO = new LoginDAO();
-        try {
-            Account account = loginDAO.login("trung", "12345678");
-            if (account != null) {
-                System.out.println("Đăng nhập thành công!");
-            } else {
-                System.out.println("Tên người dùng hoặc mật khẩu không đúng.");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
 }
