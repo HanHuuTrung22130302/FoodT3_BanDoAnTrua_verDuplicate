@@ -22,6 +22,8 @@ public class LogoutController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         session.removeAttribute("currentUser");
+        session.removeAttribute("order");
+        session.invalidate(); // Hủy toàn bộ session
         response.sendRedirect("home");
     }
 }
