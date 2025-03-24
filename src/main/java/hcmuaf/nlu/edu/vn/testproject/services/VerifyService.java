@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public class VerifyService {
     private final String from = "anhtuanwork0925@gmail.com";
-    private final String password = "rmvm vpro bbxb xixd"; // App password từ Gmail
+    private final String password = "hbnw mtjx zikp icnw"; // App password từ Gmail
 
     public String generateToken() {
         return UUID.randomUUID().toString();
     }
 
-    public boolean sendVerificationEmail(String to, String token, String username) {
+    public boolean sendVerificationEmail(String to, String token, String name) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
@@ -38,7 +38,7 @@ public class VerifyService {
             msg.setSubject("Xác thực email đăng ký", "UTF-8");
 
             String link = "http://localhost:8080/testProject/verify?token=" + token;
-            String content = "<h1>Xin chào " + username + "</h1>" +
+            String content = "<h1>Xin chào " + name + "</h1>" +
                     "<p>Vui lòng nhấp vào liên kết dưới đây để xác thực email của bạn:</p>" +
                     "<a href='" + link + "'>Xác thực email</a>";
             msg.setContent(content, "text/html; charset=UTF-8");

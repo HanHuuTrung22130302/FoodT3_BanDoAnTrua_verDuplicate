@@ -1,7 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccdetailDAO;
-import hcmuaf.nlu.edu.vn.testproject.models.AccDetail;
+import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.services.AccdetailService;
 import jakarta.servlet.*;
@@ -21,7 +21,7 @@ public class ManageCustomerController extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getIdRole() == 2) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             // Chuyển hướng về trang home nếu người dùng chưa đăng nhập
             response.sendRedirect("home");
             return;
@@ -29,7 +29,7 @@ public class ManageCustomerController extends HttpServlet {
 
         AccdetailDAO dao = new AccdetailDAO();
         AccdetailService accdetailService = new AccdetailService();
-        List<AccDetail> listAcc = new ArrayList<>();
+        List<AccountDetail> listAcc = new ArrayList<>();
         String txtSearch = request.getParameter("text");
         if (txtSearch != null && !txtSearch.isEmpty()) {
             listAcc = dao.searchAcc(txtSearch);

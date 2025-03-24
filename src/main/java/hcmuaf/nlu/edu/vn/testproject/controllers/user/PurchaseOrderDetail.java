@@ -20,7 +20,7 @@ public class PurchaseOrderDetail extends HttpServlet {
         String id = request.getParameter("id");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getIdAcc());
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
         OrderInvoice oi = invoiceOrderServices.getOrder(id);
         request.setAttribute("order", oi);
 

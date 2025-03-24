@@ -18,7 +18,7 @@ public class CancelBtnController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getIdAcc());
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
         String id = request.getParameter("id");
         if(id!=null){
             invoiceOrderServices.cancelInvoice(id);

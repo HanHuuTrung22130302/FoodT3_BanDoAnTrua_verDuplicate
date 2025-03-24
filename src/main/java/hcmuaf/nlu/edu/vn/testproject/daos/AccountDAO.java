@@ -89,7 +89,7 @@ public class AccountDAO {
     }
 
     public void updatePassword(String email, String password) {
-        String query = "update account set password = ? where email = ?";
+        String query = "UPDATE account SET password = ? WHERE email = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         String hashedPassword = MD5.getMD5(password);
@@ -112,8 +112,8 @@ public class AccountDAO {
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, account.getIdRole());
-            ps.setString(2, MD5.getMD5(account.getPass()));
+            ps.setInt(1, account.getRoleId());
+            ps.setString(2, account.getPassword());
             ps.setString(3, account.getName());
             ps.setString(4, account.getEmail());
             ps.executeUpdate();

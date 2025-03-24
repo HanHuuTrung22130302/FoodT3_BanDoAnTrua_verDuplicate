@@ -25,7 +25,7 @@ public class DonHangSession implements Filter {
 
         if (session.getAttribute("currentUser") != null) {
             Account acc = (Account) session.getAttribute("currentUser");
-            InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getIdAcc());
+            InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
             int totaldh = invoiceOrderServices.getTotalDonHang();
             session.setAttribute("totaldh", totaldh);
         }

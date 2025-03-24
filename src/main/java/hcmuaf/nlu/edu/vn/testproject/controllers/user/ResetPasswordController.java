@@ -41,7 +41,7 @@ public class ResetPasswordController extends HttpServlet {
                 return;
             }
 
-            Account user = accountDAO.getUserById(tokenForgetPass.getUserId());
+            Account user = accountDAO.getUserById(tokenForgetPass.getAccountId());
             request.setAttribute("email", user.getEmail());
             session.setAttribute("token", tokenForgetPass.getToken());
             request.getRequestDispatcher("views/reset_pass.jsp").forward(request, response);

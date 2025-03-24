@@ -1,7 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
-public class AccDetail {
-    private int idAcc;
+public class AccountDetail {
+    private int accountId;
     private String fullName;
     private String phoneNumber;
     private String address;
@@ -9,11 +9,11 @@ public class AccDetail {
     private String birthDate;
     private String email;
 
-    public AccDetail() {
+    public AccountDetail() {
     }
 
-    public AccDetail(int idAcc, String fullName, String phoneNumber, String address, int gender, String birthDate) {
-        this.idAcc = idAcc;
+    public AccountDetail(int accountId, String fullName, String phoneNumber, String address, int gender, String birthDate) {
+        this.accountId = accountId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -21,8 +21,8 @@ public class AccDetail {
         this.birthDate = birthDate;
     }
 
-    public AccDetail(int idAcc, String fullName, String phoneNumber, String address, int gender, String birthDate, String email) {
-        this.idAcc = idAcc;
+    public AccountDetail(int accountId, String fullName, String phoneNumber, String address, int gender, String birthDate, String email) {
+        this.accountId = accountId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -31,12 +31,12 @@ public class AccDetail {
         this.email = email;
     }
 
-    public int getIdAcc() {
-        return idAcc;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setIdAcc(int idAcc) {
-        this.idAcc = idAcc;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getFullName() {
@@ -87,16 +87,16 @@ public class AccDetail {
         this.email = email;
     }
 
-
     @Override
     public String toString() {
-        return "AccDetail{" +
-                "idAcc=" + idAcc +
+        return "AccountDetail{" +
+                "accountId=" + accountId +
                 ", fullName='" + fullName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 ", gender=" + gender +
                 ", birthDate='" + birthDate + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

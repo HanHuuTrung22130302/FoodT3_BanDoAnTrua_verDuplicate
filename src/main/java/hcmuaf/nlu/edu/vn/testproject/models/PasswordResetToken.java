@@ -3,36 +3,38 @@ package hcmuaf.nlu.edu.vn.testproject.models;
 import java.time.LocalDateTime;
 
 public class PasswordResetToken {
-    private int id;
+    private int tokenId;
     private boolean isUsed;
     private String token;
     private LocalDateTime experyTime;
-    private int userId;
+    private int accountId;
 
     public PasswordResetToken() {
     }
 
-    public PasswordResetToken(int id, boolean isUsed, String token, LocalDateTime experyTime, int userId) {
-        this.id = id;
+
+
+    public PasswordResetToken(int tokenId, boolean isUsed, String token, LocalDateTime experyTime, int accountId) {
+        this.tokenId = tokenId;
         this.isUsed = isUsed;
         this.token = token;
         this.experyTime = experyTime;
-        this.userId = userId;
+        this.accountId = accountId;
     }
 
-    public PasswordResetToken(int userId, boolean isUsed, String token, LocalDateTime experyTime) {
+    public PasswordResetToken(int accountId, boolean isUsed, String token, LocalDateTime experyTime) {
         this.isUsed = isUsed;
         this.token = token;
         this.experyTime = experyTime;
-        this.userId = userId;
+        this.accountId = accountId;
     }
 
-    public int getId() {
-        return id;
+    public int getTokenId() {
+        return tokenId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTokenId(int id) {
+        this.tokenId = id;
     }
 
     public boolean isUsed() {
@@ -55,26 +57,26 @@ public class PasswordResetToken {
         return experyTime;
     }
 
-    public void setExpiryTime(LocalDateTime experyTime) {
+    public void setExperyTime(LocalDateTime experyTime) {
         this.experyTime = experyTime;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     @Override
     public String toString() {
         return "PasswordResetToken{" +
-                "id=" + id +
+                "tokenId=" + tokenId +
                 ", isUsed=" + isUsed +
                 ", token='" + token + '\'' +
-                ", expiryTime=" + experyTime +
-                ", userId=" + userId +
+                ", experyTime=" + experyTime +
+                ", accountId=" + accountId +
                 '}';
     }
 }

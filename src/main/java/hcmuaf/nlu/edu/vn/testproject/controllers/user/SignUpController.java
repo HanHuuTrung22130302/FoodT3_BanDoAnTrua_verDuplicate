@@ -1,7 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
-import hcmuaf.nlu.edu.vn.testproject.daos.VerificationDAO;
+import hcmuaf.nlu.edu.vn.testproject.daos.PendingAccountDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.services.VerifyService;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class SignUpController extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
-    private final VerificationDAO verificationDAO = new VerificationDAO();
+    private final PendingAccountDAO pendingAccountDAO = new PendingAccountDAO();
     private final VerifyService emailService = new VerifyService();
 
     @Override
@@ -43,7 +43,7 @@ public class SignUpController extends HttpServlet {
             return;
         }
 
-        // Kiểm tra username hoặc email đã tồn tại
+        // Kiểm tra username hoặc email đã tồn tại trong account
         Account existingUserByUsername = accountDAO.getUserByName(username);
         Account existingUserByEmail = accountDAO.getUserByEmail(email);
 
@@ -56,23 +56,17 @@ public class SignUpController extends HttpServlet {
             return;
         }
 
-        // Tạo tài khoản mới (role_id mặc định là 2 - user)
-        Account newAccount = new Account(0, 2, password, username, email);
-        accountDAO.insertAccount(newAccount);
-
-        // Lấy account_id vừa tạo
-        Account createdAccount = accountDAO.getUserByEmail(email);
-
-        // Tạo token xác thực và gửi email
+        // Tạo token và lưu vào pending_accounts với thời gian hết hạn 1 phút
         String token = emailService.generateToken();
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10);
-        verificationDAO.insertVerificationToken(createdAccount.getIdAcc(), token, expiryTime);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(1); // Hết hạn sau 1 phút
+        pendingAccountDAO.insertPendingAccount(username, password, email, token, expiryTime);
 
+        // Gửi email xác thực
         boolean emailSent = emailService.sendVerificationEmail(email, token, username);
         if (emailSent) {
-            out.print("{\"status\": \"success\", \"message\": \"Đăng ký thành công! Vui lòng kiểm tra email để xác thực.\"}");
+            out.print("{\"status\": \"success\", \"message\": \"Vui lòng kiểm tra email để hoàn tất đăng ký trong 1 phút.\"}");
         } else {
-            out.print("{\"status\": \"error\", \"message\": \"Đăng ký thành công nhưng gửi email xác thực thất bại.\"}");
+            out.print("{\"status\": \"error\", \"message\": \"Gửi email xác thực thất bại.\"}");
         }
     }
 }

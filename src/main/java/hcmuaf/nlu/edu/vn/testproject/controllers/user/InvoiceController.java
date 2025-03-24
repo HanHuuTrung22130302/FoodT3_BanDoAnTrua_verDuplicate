@@ -18,7 +18,7 @@ public class InvoiceController extends HttpServlet {
 
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getIdAcc());
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
         int totaldh = invoiceOrderServices.getTotalDonHang();
 
         session.setAttribute("totaldh", totaldh);

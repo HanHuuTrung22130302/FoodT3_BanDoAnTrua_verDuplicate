@@ -1,58 +1,46 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class Account {
-    private int idAcc;
-    private int idRole;
-    private String pass;
+    private int accountId;
+    private int roleId;
+    private String password;
     private String name;
     private String email;
-    private AccDetail accDetail;
+    private AccountDetail accountDetail;
 
     public Account() {
     }
 
-    public Account(int idAcc, int idRole, String pass, String name, String email) {
-        this.idAcc = idAcc;
-        this.idRole = idRole;
-        this.pass = pass;
+    public Account(int accountId, int roleId, String password, String name, String email) {
+        this.accountId = accountId;
+        this.roleId = roleId;
+        this.password = password;
         this.name = name;
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "idAcc=" + idAcc +
-                ", idRole=" + idRole +
-                ", pass='" + pass + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", accDetail=" + accDetail +
-                '}';
+    public int getAccountId() {
+        return accountId;
     }
 
-    public int getIdAcc() {
-        return idAcc;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
-    public void setIdAcc(int idAcc) {
-        this.idAcc = idAcc;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public int getIdRole() {
-        return idRole;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
-    public void setIdRole(int idRole) {
-        this.idRole = idRole;
+    public String getPassword() {
+        return password;
     }
 
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -71,11 +59,23 @@ public class Account {
         this.email = email;
     }
 
-    public void setAccDetail(AccDetail accDetail) {
-        this.accDetail = accDetail;
+    public AccountDetail getAccountDetail() {
+        return accountDetail;
     }
 
-    public AccDetail getAccDetail() {
-        return this.accDetail;
+    public void setAccountDetail(AccountDetail accountDetail) {
+        this.accountDetail = accountDetail;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId=" + accountId +
+                ", roleId=" + roleId +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", accountDetail=" + accountDetail +
+                '}';
     }
 }

@@ -27,7 +27,7 @@ public class TokenForgetDAO {
             ps.setString(1, tokenForget.getToken());
             ps.setTimestamp(2, Timestamp.valueOf(getFormatDate(tokenForget.getExperyTime())));
             ps.setBoolean(3, tokenForget.isUsed()); // Xác định token đc sử dụng chưa
-            ps.setInt(4, tokenForget.getUserId());
+            ps.setInt(4, tokenForget.getAccountId());
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {

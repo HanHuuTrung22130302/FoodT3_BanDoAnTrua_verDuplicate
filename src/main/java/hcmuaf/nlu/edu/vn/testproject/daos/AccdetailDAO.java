@@ -1,8 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
-import hcmuaf.nlu.edu.vn.testproject.libs.MD5;
-import hcmuaf.nlu.edu.vn.testproject.models.AccDetail;
+import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 
 import java.sql.Connection;
@@ -14,9 +13,9 @@ import java.util.List;
 
 public class AccdetailDAO {
 
-    public List<AccDetail> getAllAccDetail() {
+    public List<AccountDetail> getAllAccDetail() {
 
-        List<AccDetail> listAcc = new ArrayList<AccDetail>();
+        List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
         String query = "SELECT account_detail.*, account.email" +
                 " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id WHERE account.role_id = 2";
         Connection conn = null;
@@ -28,7 +27,7 @@ public class AccdetailDAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                listAcc.add(new AccDetail(
+                listAcc.add(new AccountDetail(
                         rs.getInt("account_id"),
                         rs.getString("full_name"),
                         rs.getString("phone_number"),
@@ -71,19 +70,19 @@ public class AccdetailDAO {
         return account;
     }
 
-    public AccDetail getAccDetailById(int idAcc) {
+    public AccountDetail getAccDetailById(int idAcc) {
         String query = "SELECT full_name, phone_number,address, birth_date, gender FROM account_detail WHERE account_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        AccDetail accDetail = null;
+        AccountDetail accDetail = null;
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
             ps.setInt(1, idAcc);
             rs = ps.executeQuery();
             if (rs.next()) {
-                accDetail = new AccDetail();
+                accDetail = new AccountDetail();
                 accDetail.setFullName(rs.getString("full_name"));
                 accDetail.setPhoneNumber(rs.getString("phone_number"));
                 accDetail.setAddress(rs.getString("address"));
@@ -116,11 +115,11 @@ public class AccdetailDAO {
     }
 
     // Phương thức tìm kiếm theo tên
-    public List<AccDetail> searchAcc(String textSearch) {
-        List<AccDetail> listAcc = new ArrayList<>();
+    public List<AccountDetail> searchAcc(String textSearch) {
+        List<AccountDetail> listAcc = new ArrayList<>();
 
         // Duyệt qua danh sách các AccDetail
-        for (AccDetail accDetail : getAllAccDetail()) {
+        for (AccountDetail accDetail : getAllAccDetail()) {
             // Kiểm tra nếu bất kỳ thuộc tính nào của AccDetail trong textSearch (không phân biệt chữ hoa/thường)
             if ((accDetail.getEmail() != null && accDetail.getEmail().toLowerCase().contains(textSearch.toLowerCase())) ||
                     (accDetail.getFullName() != null && accDetail.getFullName().toLowerCase().contains(textSearch.toLowerCase())) ||

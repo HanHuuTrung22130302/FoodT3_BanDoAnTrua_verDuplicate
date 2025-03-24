@@ -59,7 +59,7 @@ public class CheckoutController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
-        int idAcc = currentUser.getIdAcc();
+        int idAcc = currentUser.getAccountId();
 
         String recipientName = request.getParameter("tennguoinhan");
         String phoneNumber = request.getParameter("sdtnhan");

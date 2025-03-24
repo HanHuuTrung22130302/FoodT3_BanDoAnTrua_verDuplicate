@@ -39,7 +39,7 @@ public class OrderController extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getIdRole() == 2) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             // Chuyển hướng về trang home nếu người dùng chưa đăng nhập
             response.sendRedirect("home");
             return;

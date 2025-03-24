@@ -25,7 +25,7 @@ public class ContactController extends HttpServlet {
         Account account = (Account) session.getAttribute("currentUser");
         int id =1;
         if (account != null)
-        id = account.getIdAcc();
+        id = account.getAccountId();
         String name = request.getParameter("name");
         if(name == null || name.isEmpty())name="";
         String email = request.getParameter("email");

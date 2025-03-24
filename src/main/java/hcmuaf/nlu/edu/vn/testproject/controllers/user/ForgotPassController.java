@@ -34,7 +34,7 @@ public class ForgotPassController extends HttpServlet {
         ResetService service = new ResetService();
         String token = service.generateToken();
         String linkReset = "http://localhost:8080/testProject/resetpassword?token=" + token;
-        PasswordResetToken newToken = new PasswordResetToken(account.getIdAcc(), false, token, service.expireDateTime());
+        PasswordResetToken newToken = new PasswordResetToken(account.getAccountId(), false, token, service.expireDateTime());
 
         //Send link to this email
         TokenForgetDAO tokenForgetDAO = new TokenForgetDAO();
