@@ -12,8 +12,6 @@ public class PasswordResetToken {
     public PasswordResetToken() {
     }
 
-
-
     public PasswordResetToken(int tokenId, boolean isUsed, String token, LocalDateTime experyTime, int accountId) {
         this.tokenId = tokenId;
         this.isUsed = isUsed;
@@ -67,16 +65,5 @@ public class PasswordResetToken {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
-    }
-
-    @Override
-    public String toString() {
-        return "PasswordResetToken{" +
-                "tokenId=" + tokenId +
-                ", isUsed=" + isUsed +
-                ", token='" + token + '\'' +
-                ", experyTime=" + experyTime +
-                ", accountId=" + accountId +
-                '}';
     }
 }

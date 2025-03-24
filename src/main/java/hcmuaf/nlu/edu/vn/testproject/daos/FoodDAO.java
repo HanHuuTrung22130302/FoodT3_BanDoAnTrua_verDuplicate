@@ -248,11 +248,11 @@ public class FoodDAO {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
 
-            ps.setInt(1, food.getIdCategory());
+            ps.setInt(1, food.getCategoryId());
             ps.setString(2, food.getFoodName());
             ps.setInt(3, food.getPrice());
             ps.setObject(4, food.getDiscountPrice()); // NULL nếu không có
-            ps.setString(5, food.getImg());
+            ps.setString(5, food.getImage());
             ps.setString(6, food.getDescription());
             ps.setString(7, food.getIngredients());
             ps.setObject(8, food.getQuantity());
@@ -284,14 +284,14 @@ public class FoodDAO {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
 
-            ps.setInt(1, food.getIdCategory());
+            ps.setInt(1, food.getCategoryId());
             ps.setString(2, food.getFoodName());
             ps.setInt(3, food.getPrice());
-            ps.setString(4, food.getImg());
+            ps.setString(4, food.getImage());
             ps.setString(5, food.getDescription());
             ps.setString(6, food.getIngredients());
             ps.setTimestamp(7, food.getUpdatedAt());
-            ps.setInt(8, food.getIdFood());
+            ps.setInt(8, food.getFoodId());
 
             int rowUpdated = ps.executeUpdate();
             return rowUpdated > 0;

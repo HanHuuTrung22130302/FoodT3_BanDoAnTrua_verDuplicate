@@ -1,26 +1,49 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class OrderInvoiceDetail {
-    private int idDetail;
-    private int idInvoice;
-    private int idFood;
+    private int detailId;
+    private int invoiceId;
+    private int foodId;
     private String foodName;
     private int quantity;
     private int totalAmount;
-    private String img;
+    private String image;
 
     public OrderInvoiceDetail() {
     }
 
-
-    public OrderInvoiceDetail(int idDetail, int idInvoice, int idFood,String foodName, int quantity, int totalAmount, String img) {
-        this.idDetail = idDetail;
-        this.idInvoice = idInvoice;
-        this.idFood = idFood;
+    public OrderInvoiceDetail(int detailId, int invoiceId, int foodId, String foodName, int quantity, int totalAmount, String image) {
+        this.detailId = detailId;
+        this.invoiceId = invoiceId;
+        this.foodId = foodId;
         this.foodName = foodName;
         this.quantity = quantity;
         this.totalAmount = totalAmount;
-        this.img = img;
+        this.image = image;
+    }
+
+    public int getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(int detailId) {
+        this.detailId = detailId;
+    }
+
+    public int getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    public int getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 
     public String getFoodName() {
@@ -29,38 +52,6 @@ public class OrderInvoiceDetail {
 
     public void setFoodName(String foodName) {
         this.foodName = foodName;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public int getIdDetail() {
-        return idDetail;
-    }
-
-    public void setIdDetail(int idDetail) {
-        this.idDetail = idDetail;
-    }
-
-    public int getIdInvoice() {
-        return idInvoice;
-    }
-
-    public void setIdInvoice(int idInvoice) {
-        this.idInvoice = idInvoice;
-    }
-
-    public int getIdFood() {
-        return idFood;
-    }
-
-    public void setIdFood(int idFood) {
-        this.idFood = idFood;
     }
 
     public int getQuantity() {
@@ -79,16 +70,11 @@ public class OrderInvoiceDetail {
         this.totalAmount = totalAmount;
     }
 
-    @Override
-    public String toString() {
-        return "OrderInvoiceDetail{" +
-                "idDetail=" + idDetail +
-                ", idInvoice=" + idInvoice +
-                ", idFood=" + idFood +
-                ", foodName='" + foodName + '\'' +
-                ", quantity=" + quantity +
-                ", totalAmount=" + totalAmount +
-                ", img='" + img + '\'' +
-                '}';
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

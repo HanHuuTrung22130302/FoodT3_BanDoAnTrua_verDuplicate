@@ -48,10 +48,10 @@
                                     ${sessionScope.currentUser.name}
                             </a>
                             <div class="submenu" id="submenu">
-                                <c:if test="${sessionScope.currentUser.idRole == 1}">
+                                <c:if test="${sessionScope.currentUser.roleId == 1}">
                                     <a href="admin" id="admin-link">Quản trị</a>
                                 </c:if>
-                                <c:if test="${sessionScope.currentUser.idRole == 2}">
+                                <c:if test="${sessionScope.currentUser.roleId == 2}">
                                     <a href="user" id="user-link">Thông tin</a>
                                 </c:if>
                                 <a href="logout" id="logout">Đăng xuất</a>
@@ -148,8 +148,8 @@
             </a>
 
             <c:forEach var="category" items="${listC}">
-                <a href="allmenu?option=${category.idCategory}">
-                    <div class="category-item">${category.nameCategory}</div>
+                <a href="allmenu?option=${category.categoryId}">
+                    <div class="category-item">${category.categoryName}</div>
                 </a>
             </c:forEach>
         </div>
@@ -159,7 +159,7 @@
     <div id="content_section">
         <div class="content_section">
         <c:forEach var="food" items="${list}">
-            <div class="card" onclick="showPopup('${food.idFood}');getU('${food.idFood}')">
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.img}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
@@ -172,9 +172,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -187,7 +187,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
         </div>

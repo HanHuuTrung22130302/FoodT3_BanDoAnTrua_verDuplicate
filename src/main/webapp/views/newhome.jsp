@@ -143,12 +143,12 @@
     </div>
     <div id="content_section lst4Sold" class="content_section">
         <c:forEach var="food" items="${lst4Sold}">
-            <div class="card" onclick="showPopup('${food.idFood}');getU('${food.idFood}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
@@ -156,9 +156,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -171,7 +171,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
     </div>
@@ -186,12 +186,12 @@
     </div>
     <div id="content_section lst4View" class="content_section">
         <c:forEach var="food" items="${lst4View}">
-            <div class="card" onclick="showPopup('${food.idFood}');getU('${food.idFood}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
@@ -199,9 +199,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -214,7 +214,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
     </div>
@@ -229,12 +229,12 @@
     </div>
     <div id="content_section lst4Propose" class="content_section">
         <c:forEach var="food" items="${lst4Propose}">
-            <div class="card" onclick="showPopup('${food.idFood}');getU('${food.idFood}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
@@ -242,9 +242,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -257,7 +257,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
     </div>
@@ -272,12 +272,12 @@
     </div>
     <div id="content_section" class="content_section">
         <c:forEach var="food" items="${lst4Rate}">
-            <div class="card" onclick="showPopup('${food.idFood}');getU('${food.idFood}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
@@ -285,9 +285,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -300,7 +300,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
     </div>

@@ -59,9 +59,9 @@ public class FoodControllerAjax extends HttpServlet {
         } else {
             out.println("<div class=\"content_section\">");
             for (Food food : foodList) {
-                String addToCartUrl = request.getContextPath() + "/addtoCart?foodID=" + food.getIdFood();
-                out.println("<div class=\"card\" onclick=\"showPopup('" + food.getIdFood() + "')\">\n" +
-                        "                <img src=\"" + food.getImg() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
+                String addToCartUrl = request.getContextPath() + "/addtoCart?foodID=" + food.getFoodId();
+                out.println("<div class=\"card\" onclick=\"showPopup('" + food.getFoodId() + "')\">\n" +
+                        "                <img src=\"" + food.getImage() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
                         "                <div class=\"card_content\">\n" +
                         "                    <h3>" + food.getFoodName() + "</h3>\n" +
                         "                    <p>" + food.getPrice() + "đ</p>\n" +
@@ -72,9 +72,9 @@ public class FoodControllerAjax extends HttpServlet {
                         "            </div>\n" +
                         "\n" +
                         "            <!-- Popup chi tiết món ăn -->\n" +
-                        "            <div id=\"" + food.getIdFood() + "\" class=\"popup\">\n" +
+                        "            <div id=\"" + food.getFoodId() + "\" class=\"popup\">\n" +
                         "                <div class=\"popup-content\">\n" +
-                        "                    <img src=\"" + food.getImg() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
+                        "                    <img src=\"" + food.getImage() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
                         "                    <h3>" + food.getFoodName() + "</h3>\n" +
                         "                    <p>Giá: " + food.getPrice() + "đ</p>\n" +
                         "                    <span>\n" +
@@ -86,7 +86,7 @@ public class FoodControllerAjax extends HttpServlet {
                         "                        </a>\n" +
                         "                    </button>\n" +
                         "                </div>\n" +
-                        "                <span class=\"close\" onclick=\"closePopup('" + food.getIdFood() + "')\">&times;</span>\n" +
+                        "                <span class=\"close\" onclick=\"closePopup('" + food.getFoodId() + "')\">&times;</span>\n" +
                         "            </div>");
             }
             out.println("</div>");

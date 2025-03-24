@@ -1,7 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class GoogleAccount {
-    private String id;
+    private String accountId;
     private String email;
     private String name;
     private String first_name;
@@ -13,8 +13,8 @@ public class GoogleAccount {
     public GoogleAccount() {
     }
 
-    public GoogleAccount(String id, String email, String name, String first_name, String given_name, String family_name, String picture, boolean verified_email) {
-        this.id = id;
+    public GoogleAccount(String accountId, String email, String name, String first_name, String given_name, String family_name, String picture, boolean verified_email) {
+        this.accountId = accountId;
         this.email = email;
         this.name = name;
         this.first_name = first_name;
@@ -24,12 +24,12 @@ public class GoogleAccount {
         this.verified_email = verified_email;
     }
 
-    public String getId() {
-        return id;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getEmail() {
@@ -86,19 +86,5 @@ public class GoogleAccount {
 
     public void setVerified_email(boolean verified_email) {
         this.verified_email = verified_email;
-    }
-
-    @Override
-    public String toString() {
-        return "GoogleAccount{" +
-                "id='" + id + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", given_name='" + given_name + '\'' +
-                ", family_name='" + family_name + '\'' +
-                ", picture='" + picture + '\'' +
-                ", verified_email=" + verified_email +
-                '}';
     }
 }

@@ -76,22 +76,22 @@
                         <tr>
                             <td>
                                 <button class="delete-btn">
-                                    <a href="${pageContext.request.contextPath}/addtoCart?removeFoodID=${item.food.idFood}" class="delete-btn">
+                                    <a href="${pageContext.request.contextPath}/addtoCart?removeFoodID=${item.food.foodId}" class="delete-btn">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </a>
                                 </button>
                             </td>
                             <td>${item.food.foodName}</td>
                             <td>
-                                <img src="${item.food.img}" alt="${item.food.foodName}" class="product-img"/>
+                                <img src="${item.food.image}" alt="${item.food.foodName}" class="product-img"/>
                             </td>
                             <td>
                                 <div class="congtrubutton">
-                                    <a href="${pageContext.request.contextPath}/addtoCart?decrement=${item.food.idFood}">
+                                    <a href="${pageContext.request.contextPath}/addtoCart?decrement=${item.food.foodId}">
                                         <button>-</button>
                                     </a>
                                     <span>${item.quantity}</span>
-                                    <a href="${pageContext.request.contextPath}/addtoCart?increment=${item.food.idFood}">
+                                    <a href="${pageContext.request.contextPath}/addtoCart?increment=${item.food.foodId}">
                                         <button>+</button>
                                     </a>
                                 </div>
@@ -148,7 +148,6 @@
 
 
 <jsp:include page="footer.jsp"></jsp:include>
-
 
 <script src="${pageContext.request.contextPath}/js/cart.js"></script>
 </body>

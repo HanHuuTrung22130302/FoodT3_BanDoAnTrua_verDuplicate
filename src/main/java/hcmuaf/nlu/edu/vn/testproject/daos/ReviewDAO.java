@@ -83,13 +83,13 @@ public class ReviewDAO {
     }
 
     public List<Integer> getTop4FoodRate() {
-        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getIdFood, Collectors.counting()));
+        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getFoodId, Collectors.counting()));
         List<Integer> lsIdFood = countStarLS.entrySet().stream().sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())).limit(4).map(Map.Entry::getKey).collect(Collectors.toList());
         return lsIdFood;
     }
 
     public List<Integer> getTopFoodRate() {
-        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getIdFood, Collectors.counting()));
+        Map<Integer, Long> countStarLS = dataReviewFood.values().stream().filter(rv -> rv.getRating() == 5).collect(Collectors.groupingBy(ReviewFood::getFoodId, Collectors.counting()));
         List<Integer> lsIdFood = countStarLS.entrySet().stream().sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())).map(Map.Entry::getKey).collect(Collectors.toList());
         return lsIdFood;
     }

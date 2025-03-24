@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderInvoice {
-    private int idInvoice;
-    private int idAcc;
+    private int invoiceId;
+    private int accountId;
     private String recipientName;
     private String phoneNumber;
     private String deliveryAddress;
@@ -15,15 +15,15 @@ public class OrderInvoice {
     private int idCode;
     private int paymentMethod;
     private int isPaid;
-    private int orderSt;
+    private int orderStatus;
     private List<OrderInvoiceDetail> orderInvoiceDetail;
 
     public OrderInvoice() {
     }
 
-    public OrderInvoice(int idInvoice, int idAcc, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int idCode, int paymentMethod, int isPaid, int orderSt, List<OrderInvoiceDetail> orderInvoiceDetail) {
-        this.idInvoice = idInvoice;
-        this.idAcc = idAcc;
+    public OrderInvoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int idCode, int paymentMethod, int isPaid, int orderStatus, List<OrderInvoiceDetail> orderInvoiceDetail) {
+        this.invoiceId = invoiceId;
+        this.accountId = accountId;
         this.recipientName = recipientName;
         this.phoneNumber = phoneNumber;
         this.deliveryAddress = deliveryAddress;
@@ -33,43 +33,24 @@ public class OrderInvoice {
         this.idCode = idCode;
         this.paymentMethod = paymentMethod;
         this.isPaid = isPaid;
-        this.orderSt = orderSt;
+        this.orderStatus = orderStatus;
         this.orderInvoiceDetail = orderInvoiceDetail;
     }
 
-    @Override
-    public String toString() {
-        return "OrderInvoice{" +
-                "idInvoice=" + idInvoice +
-                ", idAcc=" + idAcc +
-                ", recipientName='" + recipientName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", deliveryAddress='" + deliveryAddress + '\'' +
-                ", note='" + note + '\'' +
-                ", orderDate='" + orderDate + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", idCode=" + idCode +
-                ", paymentMethod=" + paymentMethod +
-                ", isPaid=" + isPaid +
-                ", orderSt=" + orderSt +
-                ", orderInvoiceDetail=" + orderInvoiceDetail +
-                '}';
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public int getIdInvoice() {
-        return idInvoice;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public void setIdInvoice(int idInvoice) {
-        this.idInvoice = idInvoice;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public int getIdAcc() {
-        return idAcc;
-    }
-
-    public void setIdAcc(int idAcc) {
-        this.idAcc = idAcc;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getRecipientName() {
@@ -144,12 +125,12 @@ public class OrderInvoice {
         this.isPaid = isPaid;
     }
 
-    public int getOrderSt() {
-        return orderSt;
+    public int getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setOrderSt(int orderSt) {
-        this.orderSt = orderSt;
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public List<OrderInvoiceDetail> getOrderInvoiceDetail() {

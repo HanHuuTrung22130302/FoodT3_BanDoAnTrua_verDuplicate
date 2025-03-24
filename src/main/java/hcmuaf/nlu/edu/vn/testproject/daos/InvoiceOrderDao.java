@@ -107,7 +107,7 @@ public class InvoiceOrderDao {
     public List<OrderInvoice> getInvoiceShipping() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 1) {
+            if (oi.getOrderStatus() == 1) {
                 ois.add(oi);
             }
         }
@@ -117,7 +117,7 @@ public class InvoiceOrderDao {
     public List<OrderInvoice> getInvoiceDelivered() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 2) {
+            if (oi.getOrderStatus() == 2) {
                 ois.add(oi);
             }
         }
@@ -127,7 +127,7 @@ public class InvoiceOrderDao {
     public List<OrderInvoice> getInvoiceCancelled() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 3) {
+            if (oi.getOrderStatus() == 3) {
                 ois.add(oi);
             }
         }
@@ -136,7 +136,7 @@ public class InvoiceOrderDao {
 
     public OrderInvoice getInvoiceOrder(int id) {
         for (OrderInvoice oi : data) {
-            if (oi.getIdInvoice() == id) {
+            if (oi.getInvoiceId() == id) {
                 return oi;
             }
         }
@@ -159,7 +159,7 @@ public class InvoiceOrderDao {
 
     public int getTotalShippingInvoices() {
         return (int) data.stream()
-                .filter(order -> order.getOrderSt() == 1)
+                .filter(order -> order.getOrderStatus() == 1)
                 .count();
     }
 }

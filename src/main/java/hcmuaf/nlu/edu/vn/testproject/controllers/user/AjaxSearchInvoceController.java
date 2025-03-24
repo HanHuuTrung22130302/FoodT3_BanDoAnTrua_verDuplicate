@@ -37,11 +37,11 @@ public class AjaxSearchInvoceController extends HttpServlet {
         } else {
 
             for (OrderInvoice oi : ois) {
-                String formattedId = String.format("%06d", oi.getIdInvoice());
+                String formattedId = String.format("%06d", oi.getInvoiceId());
                 String orderst = "";
-                if (oi.getOrderSt() == 1) orderst = "Đang giao";
-                if (oi.getOrderSt() == 2) orderst = "Đã giao";
-                if (oi.getOrderSt() == 3) orderst = "Đã hủy";
+                if (oi.getOrderStatus() == 1) orderst = "Đang giao";
+                if (oi.getOrderStatus() == 2) orderst = "Đã giao";
+                if (oi.getOrderStatus() == 3) orderst = "Đã hủy";
                 out.println(
                         "            <div class=\"order-container\">\n" +
                                 "                <div class=\"order-card\">\n" +
@@ -53,7 +53,7 @@ public class AjaxSearchInvoceController extends HttpServlet {
                     out.println(
                             "                        <div class=\"product-item\">\n" +
                                     "                            <img\n" +
-                                    "                                    src=\"" + oid.getImg() + "\"\n" +
+                                    "                                    src=\"" + oid.getImage() + "\"\n" +
                                     "                                    class=\"product-image\"\n" +
                                     "                            />\n" +
                                     "                            <div class=\"product-info\">\n" +
@@ -74,10 +74,10 @@ public class AjaxSearchInvoceController extends HttpServlet {
                         "                    </div>\n" +
                         "                    <div class=\"order-footer\">\n" +
                         "                        <div class=\"order-status\">Trạng thái: " + orderst + " </div>\n");
-                if (oi.getOrderSt() == 1)
+                if (oi.getOrderStatus() == 1)
                     out.println("<a class=\"info-order-button\" href=\"PurchaseOrderDetail?id=${iorder.idInvoice}\" style=\"text-decoration: none\">Chi tiết</a>\n" +
-                            "    <a class=\"cancel-order-button\" href=\"javascript:void(0);\" onclick=\"confirmCancel("+oi.getIdInvoice()+")\" style=\"text-decoration: none\">Hủy đơn hàng</a>");
-                if (oi.getOrderSt() == 2 || oi.getOrderSt() == 3)
+                            "    <a class=\"cancel-order-button\" href=\"javascript:void(0);\" onclick=\"confirmCancel("+oi.getInvoiceId()+")\" style=\"text-decoration: none\">Hủy đơn hàng</a>");
+                if (oi.getOrderStatus() == 2 || oi.getOrderStatus() == 3)
                     out.println("<a class=\"info-order-button\" href=\"PurchaseOrderDetail?id=${iorder.idInvoice}\" style=\"text-decoration: none\">Chi tiết</a>");
                 out.println("                    </div>\n" +
                         "                </div>\n" +

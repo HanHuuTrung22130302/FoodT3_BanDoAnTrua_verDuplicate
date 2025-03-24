@@ -1,9 +1,9 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class InvoiceDetail {
-    private int idDetail;
-    private int idInvoice;
-    private int idFood;
+    private int detailId;
+    private int invoiceId;
+    private int foodId;
     private int quantity;
     private int totalAmount;
     private Food food;
@@ -11,54 +11,36 @@ public class InvoiceDetail {
     public InvoiceDetail() {
     }
 
-    @Override
-    public String toString() {
-        return "InvoiceDetail{" +
-                "idDetail=" + idDetail +
-                ", idInvoice=" + idInvoice +
-                ", idFood=" + idFood +
-                ", quantity=" + quantity +
-                ", totalAmount=" + totalAmount +
-                '}';
-    }
-
-    public InvoiceDetail(int idDetail, int idInvoice, int idFood, int quantity, int totalAmount) {
-        this.idDetail = idDetail;
-        this.idInvoice = idInvoice;
-        this.idFood = idFood;
+    public InvoiceDetail(int detailId, int invoiceId, int foodId, int quantity, int totalAmount) {
+        this.detailId = detailId;
+        this.invoiceId = invoiceId;
+        this.foodId = foodId;
         this.quantity = quantity;
         this.totalAmount = totalAmount;
     }
-    public Food getFood() {
-        return food;
+
+    public int getDetailId() {
+        return detailId;
     }
 
-    public void setFood(Food food) {
-        this.food = food;
+    public void setDetailId(int detailId) {
+        this.detailId = detailId;
     }
 
-    public int getIdDetail() {
-        return idDetail;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setIdDetail(int idDetail) {
-        this.idDetail = idDetail;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public int getIdInvoice() {
-        return idInvoice;
+    public int getFoodId() {
+        return foodId;
     }
 
-    public void setIdInvoice(int idInvoice) {
-        this.idInvoice = idInvoice;
-    }
-
-    public int getIdFood() {
-        return idFood;
-    }
-
-    public void setIdFood(int idFood) {
-        this.idFood = idFood;
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 
     public int getQuantity() {
@@ -75,5 +57,13 @@ public class InvoiceDetail {
 
     public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
     }
 }

@@ -4,31 +4,19 @@ import java.util.Date;
 
 public class ReviewFood {
     private  String name;
-    private int idReview;
-    private int idFood;
+    private int reviewId;
+    private int foodId;
     private int rating;
-    private int idAcc;
+    private int accountId;
     private Date date;
 
-    public ReviewFood(String name, int idReview, int idFood, int rating, int idAcc, Date date) {
+    public ReviewFood(String name, int reviewId, int foodId, int rating, int accountId, Date date) {
         this.name = name;
-        this.idReview = idReview;
-        this.idFood = idFood;
+        this.reviewId = reviewId;
+        this.foodId = foodId;
         this.rating = rating;
-        this.idAcc = idAcc;
+        this.accountId = accountId;
         this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return "ReviewFood{" +
-                "name='" + name + '\'' +
-                ", idReview=" + idReview +
-                ", idFood=" + idFood +
-                ", rating=" + rating +
-                ", idAcc=" + idAcc +
-                ", date=" + date +
-                '}';
     }
 
     public String getName() {
@@ -39,20 +27,20 @@ public class ReviewFood {
         this.name = name;
     }
 
-    public int getIdReview() {
-        return idReview;
+    public int getReviewId() {
+        return reviewId;
     }
 
-    public void setIdReview(int idReview) {
-        this.idReview = idReview;
+    public void setReviewId(int reviewId) {
+        this.reviewId = reviewId;
     }
 
-    public int getIdFood() {
-        return idFood;
+    public int getFoodId() {
+        return foodId;
     }
 
-    public void setIdFood(int idFood) {
-        this.idFood = idFood;
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 
     public int getRating() {
@@ -63,14 +51,13 @@ public class ReviewFood {
         this.rating = rating;
     }
 
-    public int getIdAcc() {
-        return idAcc;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setIdAcc(int idAcc) {
-        this.idAcc = idAcc;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
-
 
     public Date getDate() {
         return date;

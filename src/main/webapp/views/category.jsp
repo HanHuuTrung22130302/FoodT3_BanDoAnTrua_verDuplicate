@@ -34,13 +34,13 @@
         <tbody>
         <c:forEach var="bann" items="${bans}">
           <tr>
-            <td>${bann.id}</td>
+            <td>${bann.bannerId}</td>
             <td><img src="${pageContext.request.contextPath}/${bann.url}"/></td>
 
             <td>
               <form action="banner" method="post" style="display: inline">
                 <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="${bann.id}">
+                <input type="hidden" name="id" value="${bann.bannerId}">
                 <button class="delete"
                         onclick="return confirm('Bạn có chắc chắn muốn xóa banner này?')"><i
                         class="fas fa-trash"></i>

@@ -54,7 +54,7 @@ public class AddToCartController extends HttpServlet {
 
             if (order != null) {
                 List<Item> list = order.getItems();
-                list.removeIf(item -> item.getFood().getIdFood() == foodIDToRemove);
+                list.removeIf(item -> item.getFood().getFoodId() == foodIDToRemove);
                 order.setItems(list);
                 session.setAttribute("order", order);
             }
@@ -68,7 +68,7 @@ public class AddToCartController extends HttpServlet {
             if (order != null) {
                 List<Item> list = order.getItems();
                 for (Item item : list) {
-                    if (item.getFood().getIdFood() == foodIdToIncrement) {
+                    if (item.getFood().getFoodId() == foodIdToIncrement) {
                         item.setQuantity(item.getQuantity() + 1);
                     }
                 }
@@ -82,7 +82,7 @@ public class AddToCartController extends HttpServlet {
             if (order != null) {
                 List<Item> list = order.getItems();
                 for (Item item : list) {
-                    if (item.getFood().getIdFood() == foodIdDecrement) {
+                    if (item.getFood().getFoodId() == foodIdDecrement) {
                         if (item.getQuantity() > 1) {
                             item.setQuantity(item.getQuantity() - 1);
                         } else {
@@ -120,7 +120,7 @@ public class AddToCartController extends HttpServlet {
                     List<Item> list = order.getItems();
                     boolean found = false;
                     for (Item item : list) {
-                        if (item.getFood().getIdFood() == food.getIdFood()) {
+                        if (item.getFood().getFoodId() == food.getFoodId()) {
                             item.setQuantity(item.getQuantity() + quantity);
                             found = true;
                         }

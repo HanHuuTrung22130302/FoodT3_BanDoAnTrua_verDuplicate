@@ -28,10 +28,10 @@ public class FoodCartDAO implements FoodService {
 
             if (rs.next()) {
                 food = new Food();
-                food.setIdFood(rs.getInt("food_id"));
+                food.setFoodId(rs.getInt("food_id"));
                 food.setFoodName(rs.getString("food_name"));
                 food.setPrice(rs.getInt("price"));
-                food.setImg(rs.getString("image"));
+                food.setImage(rs.getString("image"));
                 food.setDescription(rs.getString("description"));
             }
 
@@ -54,10 +54,10 @@ public class FoodCartDAO implements FoodService {
         // Kiểm tra kết quả và in ra thông tin món ăn
         if (food != null) {
             System.out.println("Món ăn tìm thấy:");
-            System.out.println("ID: " + food.getIdFood());
+            System.out.println("ID: " + food.getFoodId());
             System.out.println("Tên: " + food.getFoodName());
             System.out.println("Giá: " + food.getPrice() + "đ");
-            System.out.println("Hình ảnh: " + food.getImg());
+            System.out.println("Hình ảnh: " + food.getImage());
             System.out.println("Mô tả: " + food.getDescription());
         } else {
             System.out.println("Không tìm thấy món ăn với ID: " + foodID);

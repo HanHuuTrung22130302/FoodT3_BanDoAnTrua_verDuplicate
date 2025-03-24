@@ -3,15 +3,15 @@ package hcmuaf.nlu.edu.vn.testproject.models;
 import java.sql.Timestamp;
 
 public class Food {
-    private int idFood;
+    private int foodId;
     private String foodName;
     private int price;
     private int discountPrice;
     private int quantity;
-    private String img;
+    private String image;
     private String description;
     private String ingredients; // Thêm trường mới
-    private int idCategory;
+    private int categoryId;
     private int sold;
     private int views;
     private Timestamp createdAt;
@@ -21,51 +21,43 @@ public class Food {
 
     }
 
-    public Food(int idFood, String foodName, int price, int discountPrice, int quantity, String img, String description, String ingredients, int idCategory, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
-        this.idFood = idFood;
+    public Food(int foodId, String foodName, int price, int discountPrice, int quantity, String image, String description, String ingredients, int categoryId, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
+        this.foodId = foodId;
         this.foodName = foodName;
         this.price = price;
         this.discountPrice = discountPrice;
         this.quantity = quantity;
-        this.img = img;
+        this.image = image;
         this.description = description;
         this.ingredients = ingredients;
-        this.idCategory = idCategory;
+        this.categoryId = categoryId;
         this.sold = sold;
         this.views = views;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Food(int idFood, String foodName, int price, int discountPrice, int quantity, String img, String description, int idCategory, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
-        this.idFood = idFood;
+    public Food(int foodId, String foodName, int price, int discountPrice, int quantity, String image, String description, int categoryId, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
+        this.foodId = foodId;
         this.foodName = foodName;
         this.price = price;
         this.discountPrice = discountPrice;
         this.quantity = quantity;
-        this.img = img;
+        this.image = image;
         this.description = description;
-        this.idCategory = idCategory;
+        this.categoryId = categoryId;
         this.sold = sold;
         this.views = views;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public String getIngredients() {
-        return ingredients;
+    public int getFoodId() {
+        return foodId;
     }
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public Integer getIdFood() {
-        return idFood;
-    }
-
-    public void setIdFood(Integer idFood) {
-        this.idFood = idFood;
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 
     public String getFoodName() {
@@ -84,28 +76,28 @@ public class Food {
         this.price = price;
     }
 
-    public Integer getDiscountPrice() {
+    public int getDiscountPrice() {
         return discountPrice;
     }
 
-    public void setDiscountPrice(Integer discountPrice) {
+    public void setDiscountPrice(int discountPrice) {
         this.discountPrice = discountPrice;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public String getImg() {
-        return img;
+    public String getImage() {
+        return image;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getDescription() {
@@ -116,27 +108,35 @@ public class Food {
         this.description = description;
     }
 
-    public int getIdCategory() {
-        return idCategory;
+    public String getIngredients() {
+        return ingredients;
     }
 
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public Integer getSold() {
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getSold() {
         return sold;
     }
 
-    public void setSold(Integer sold) {
+    public void setSold(int sold) {
         this.sold = sold;
     }
 
-    public Integer getViews() {
+    public int getViews() {
         return views;
     }
 
-    public void setViews(Integer views) {
+    public void setViews(int views) {
         this.views = views;
     }
 

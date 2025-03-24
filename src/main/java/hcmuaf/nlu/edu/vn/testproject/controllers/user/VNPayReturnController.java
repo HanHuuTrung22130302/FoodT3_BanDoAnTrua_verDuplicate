@@ -60,13 +60,13 @@ public class VNPayReturnController extends HttpServlet {
                 invoiceDAO.addInvoice(pendingInvoice);
                 for (Item item : order.getItems()) {
                     InvoiceDetail detail = new InvoiceDetail();
-                    detail.setIdInvoice(pendingInvoice.getIdInvoice());
-                    detail.setIdFood(item.getFood().getIdFood());
+                    detail.setInvoiceId(pendingInvoice.getInvoiceId());
+                    detail.setFoodId(item.getFood().getFoodId());
                     detail.setQuantity(item.getQuantity());
                     detail.setTotalAmount(item.getQuantity() * item.getFood().getPrice());
                     invoiceDAO.addInvoiceDetail(detail);
                 }
-                logger.info("Invoice saved successfully: " + pendingInvoice.getIdInvoice());
+                logger.info("Invoice saved successfully: " + pendingInvoice.getInvoiceId());
                 session.removeAttribute("pendingInvoice");
                 session.removeAttribute("order");
                 session.setAttribute("paymentSuccessMessage", "Thanh toán VNPay thành công!");

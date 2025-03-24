@@ -37,12 +37,12 @@
         <div class="order-container">
             <div class="order-card">
                 <div class="idDonHang">
-                    <i class="fa-regular fa-copy"></i> ${String.format("%06d",order.idInvoice)}
+                    <i class="fa-regular fa-copy"></i> ${String.format("%06d",order.invoiceId)}
                 </div>
                 <c:forEach var="item" items="${order.orderInvoiceDetail}">
                     <div class="product-item">
                         <img
-                                src="${item.img}"
+                                src="${item.image}"
                                 class="product-image"
                         />
                         <div class="product-info">
@@ -66,7 +66,7 @@
 
     <div class="tracking">
 
-        <c:if test="${order.orderSt == 1}">
+        <c:if test="${order.orderStatus == 1}">
             <!-- Thẻ "xác nhận" -->
             <div class="tracking-item">
                 <div class="status waiti">
@@ -108,7 +108,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 2}">
+        <c:if test="${order.orderStatus == 2}">
             <!-- Thẻ "đang chuẩn bị" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -150,7 +150,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 3}">
+        <c:if test="${order.orderStatus == 3}">
             <!-- Thẻ "đang giao" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -192,7 +192,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 4}">
+        <c:if test="${order.orderStatus == 4}">
             <!-- Thẻ "đã giao" -->
             <div class="tracking-item">
                 <div class="status completed">
@@ -234,7 +234,7 @@
             </div>
         </c:if>
 
-        <c:if test="${order.orderSt == 5}">
+        <c:if test="${order.orderStatus == 5}">
             <!-- Thẻ "Đã hủy" -->
             <div class="tracking-item">
 

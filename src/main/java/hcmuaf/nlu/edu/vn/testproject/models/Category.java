@@ -1,39 +1,31 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class Category {
-    private int idCategory;
-    private String nameCategory;
+    private int categoryId;
+    private String categoryName;
 
     public Category() {
 
     }
 
-    public Category(int idCategory, String nameCategory) {
-        this.idCategory = idCategory;
-        this.nameCategory = nameCategory;
+    public Category(int categoryId, String categoryName) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
 
-    public int getIdCategory() {
-        return idCategory;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getNameCategory() {
-        return nameCategory;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setNameCategory(String nameCategory) {
-        this.nameCategory = nameCategory;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "idCategory=" + idCategory +
-                ", nameCategory='" + nameCategory + '\'' +
-                '}';
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

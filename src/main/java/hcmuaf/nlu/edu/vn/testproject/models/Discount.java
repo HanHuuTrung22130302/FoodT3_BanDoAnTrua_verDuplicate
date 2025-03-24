@@ -3,7 +3,7 @@ package hcmuaf.nlu.edu.vn.testproject.models;
 import java.util.Date;
 
 public class Discount {
-    private int idCode;
+    private int discountCodeId;
     private String codeName;
     private Double discountRate;
     private String title;
@@ -14,8 +14,8 @@ public class Discount {
     public Discount() {
     }
 
-    public Discount(int idCode, String codeName, Double discountRate, String title, String description, Date startDate, Date endDate) {
-        this.idCode = idCode;
+    public Discount(int discountCodeId, String codeName, Double discountRate, String title, String description, Date startDate, Date endDate) {
+        this.discountCodeId = discountCodeId;
         this.codeName = codeName;
         this.discountRate = discountRate;
         this.title = title;
@@ -24,12 +24,12 @@ public class Discount {
         this.endDate = endDate;
     }
 
-    public int getIdCode() {
-        return idCode;
+    public int getDiscountCodeId() {
+        return discountCodeId;
     }
 
-    public void setIdCode(int idCode) {
-        this.idCode = idCode;
+    public void setDiscountCodeId(int discountCodeId) {
+        this.discountCodeId = discountCodeId;
     }
 
     public String getCodeName() {

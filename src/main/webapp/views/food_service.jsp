@@ -25,9 +25,9 @@
                     Tất cả
                 </option>
                 <c:forEach var="category" items="${listC}">
-                    <option value="foodservice?option=${category.idCategory}"
-                        ${currentCategory == category.idCategory.toString() ? 'selected' : ''}>
-                            ${category.nameCategory}
+                    <option value="foodservice?option=${category.categoryId}"
+                        ${currentCategory == category.categoryId.toString() ? 'selected' : ''}>
+                            ${category.categoryName}
                     </option>
                 </c:forEach>
             </select>
@@ -77,7 +77,7 @@
                     <label for="item_category">Loại Món:</label>
                     <select id="item_category" name="idCategory">
                         <c:forEach var="category" items="${listC}">
-                            <option value="${category.idCategory}">${category.nameCategory}</option>
+                            <option value="${category.categoryId}">${category.categoryName}</option>
                         </c:forEach>
                     </select>
 
@@ -115,7 +115,7 @@
                     <label for="items_category">Loại Món:</label>
                     <select id="items_category" name="idCategory">
                         <c:forEach var="category" items="${listC}">
-                            <option value="${category.idCategory}">${category.nameCategory}</option>
+                            <option value="${category.categoryId}">${category.categoryName}</option>
                         </c:forEach>
                     </select>
 
@@ -139,7 +139,7 @@
         <div class="menu_container">
             <c:forEach var="food" items="${list}">
                 <div class="menu-item">
-                    <img alt="${food.foodName}" height="100" src="${food.img}"/>
+                    <img alt="${food.foodName}" height="100" src="${food.image}"/>
                     <div class="details">
                         <h3>
                                 ${food.foodName}
@@ -149,8 +149,8 @@
                         </p>
                         <button>
                             <c:forEach var="category" items="${listC}">
-                                <c:if test="${category.idCategory == food.idCategory}">
-                                    ${category.nameCategory}
+                                <c:if test="${category.categoryId == food.categoryId}">
+                                    ${category.categoryName}
                                 </c:if>
                             </c:forEach>
                         </button>
@@ -162,8 +162,8 @@
                         <!-- Nút cập nhật mở popup bằng JavaScript -->
                         <form action="foodservice" method="post" style="display: inline">
                             <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="idFood" value="${food.idFood}">
-                            <button type="button" class="update_item_btn" onclick="openUpdatePopup(${food.idFood})">
+                            <input type="hidden" name="idFood" value="${food.foodId}">
+                            <button type="button" class="update_item_btn" onclick="openUpdatePopup(${food.foodId})">
                                 <i class="fas fa-edit"></i>
                             </button>
                         </form>
@@ -171,7 +171,7 @@
                         <!-- Nút xóa có xác nhận -->
                         <form action="foodservice" method="post" style="display: inline">
                             <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="idFood" value="${food.idFood}">
+                            <input type="hidden" name="idFood" value="${food.foodId}">
                             <button type="submit" class="delete_item_btn"
                                     onclick="return confirm('Bạn có chắc chắn muốn xóa món này?')">
                                 <i class="fas fa-trash"></i>

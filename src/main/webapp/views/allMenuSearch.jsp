@@ -48,8 +48,8 @@
             </a>
 
             <c:forEach var="category" items="${listC}">
-                <a href="allmenu?option=${category.idCategory}">
-                    <div class="category-item">${category.nameCategory}</div>
+                <a href="allmenu?option=${category.categoryId}">
+                    <div class="category-item">${category.categoryName}</div>
                 </a>
             </c:forEach>
         </div>
@@ -62,12 +62,12 @@
             <h3>Không có món ăn phù hợp!</h3>
         </c:if>
         <c:forEach var="food" items="${list}">
-            <div class="card" onclick="showPopup('${food.idFood}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+            <div class="card" onclick="showPopup('${food.foodId}')">
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
@@ -75,9 +75,9 @@
             </div>
 
             <!-- Popup chi tiết món ăn -->
-            <div id="${food.idFood}" class="popup">
+            <div id="${food.foodId}" class="popup">
                 <div class="popup-content">
-                    <img src="${food.img}" alt="${food.foodName}"/>
+                    <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
                     <span>
@@ -90,7 +90,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.idFood}')">&times;</span>
+                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
             </div>
         </c:forEach>
         <div class="pagination" style="width:1200px;margin:0px auto; padding-left:35px ;  text-align:center;">

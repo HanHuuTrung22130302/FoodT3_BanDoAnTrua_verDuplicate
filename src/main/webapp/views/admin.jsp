@@ -68,7 +68,7 @@
             <div class="best-seller-cards">
                 <c:forEach var="food" items="${lst4Sold}">
                     <div class="best-seller-card">
-                        <img src="${food.img}"
+                        <img src="${food.image}"
                              alt="${food.foodName}"/>
                         <h3>${food.foodName}</h3>
                         <p>Đã bán: 7 suất</p>

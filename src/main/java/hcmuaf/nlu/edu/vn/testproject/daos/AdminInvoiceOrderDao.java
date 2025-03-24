@@ -87,7 +87,7 @@ public class AdminInvoiceOrderDao {
     public List<OrderInvoice> getInvoiceShipping() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 1) {
+            if (oi.getOrderStatus() == 1) {
                 ois.add(oi);
             }
         }
@@ -97,7 +97,7 @@ public class AdminInvoiceOrderDao {
     public List<OrderInvoice> getInvoiceDelivered() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 2) {
+            if (oi.getOrderStatus() == 2) {
                 ois.add(oi);
             }
         }
@@ -107,7 +107,7 @@ public class AdminInvoiceOrderDao {
     public List<OrderInvoice> getInvoiceCancelled() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
-            if (oi.getOrderSt() == 3) {
+            if (oi.getOrderStatus() == 3) {
                 ois.add(oi);
             }
         }
@@ -119,7 +119,7 @@ public class AdminInvoiceOrderDao {
 
         for (OrderInvoice oi : data) {
             if (isNumeric(input)) {
-                if (oi.getIdInvoice() == Integer.parseInt(input)) {
+                if (oi.getInvoiceId() == Integer.parseInt(input)) {
                     result.add(oi); // Thêm vào danh sách kết quả
                 }
             } else {

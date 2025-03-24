@@ -49,24 +49,24 @@
                 <div class="order-card">
                     <div class="toporder">
                         <div class="idDonHang">
-                            <i class="fa-regular fa-copy"></i> ${String.format("%06d", iorder.idInvoice)}
+                            <i class="fa-regular fa-copy"></i> ${String.format("%06d", iorder.invoiceId)}
                         </div>
                         <div class="order-status">
 
                             <c:choose>
-                                <c:when test="${iorder.orderSt == 1}">
+                                <c:when test="${iorder.orderStatus == 1}">
                                     Đang chờ xác nhận đơn hàng
                                 </c:when>
-                                <c:when test="${iorder.orderSt == 2}">
+                                <c:when test="${iorder.orderStatus == 2}">
                                     Đơn hàng đang được chuẩn bị
                                 </c:when>
-                                <c:when test="${iorder.orderSt == 3}">
+                                <c:when test="${iorder.orderStatus == 3}">
                                     Đơn hàng đang được giao
                                 </c:when>
-                                <c:when test="${iorder.orderSt == 4}">
+                                <c:when test="${iorder.orderStatus == 4}">
                                     Đã hoàn thành
                                 </c:when>
-                                <c:when test="${iorder.orderSt == 5}">
+                                <c:when test="${iorder.orderStatus == 5}">
                                     Đơn hàng đã hủy
                                 </c:when>
 
@@ -76,7 +76,7 @@
                     <c:forEach var="item" items="${iorder.orderInvoiceDetail}">
                         <div class="product-item">
                             <img
-                                    src="${item.img}"
+                                    src="${item.image}"
                                     class="product-image"
                             />
                             <div class="product-info">
@@ -96,18 +96,18 @@
                     </div>
                     <div class="order-footer">
 
-                        <c:if test="${iorder.orderSt == 1 || iorder.orderSt == 2 || iorder.orderSt == 3 }">
-                            <!-- Hiển thị cả thẻ <a> và <button> khi order.orderSt là 1 -->
+                        <c:if test="${iorder.orderStatus == 1 || iorder.orderStatus == 2 || iorder.orderStatus == 3 }">
+                            <!-- Hiển thị cả thẻ <a> và <button> khi order.orderStatus là 1 -->
                             <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.idInvoice}"
                                style="text-decoration: none">Chi tiết</a>
                             <a class="cancel-order-button" href="javascript:void(0);"
-                               onclick="confirmCancel(${iorder.idInvoice})" style="text-decoration: none">Hủy đơn
+                               onclick="confirmCancel(${iorder.invoiceId})" style="text-decoration: none">Hủy đơn
                                 hàng</a>
                         </c:if>
 
-                        <c:if test="${iorder.orderSt == 4 || iorder.orderSt == 5}">
-                            <!-- Chỉ hiển thị thẻ <a> khi order.orderSt là 2 hoặc 3 -->
-                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.idInvoice}"
+                        <c:if test="${iorder.orderStatus == 4 || iorder.orderStatus == 5}">
+                            <!-- Chỉ hiển thị thẻ <a> khi order.orderStatus là 2 hoặc 3 -->
+                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
                                style="text-decoration: none">Chi tiết</a>
                         </c:if>
 
@@ -116,8 +116,6 @@
             </div>
         </c:forEach>
     </div>
-
-
 </div>
 
 <!-- Xử lý footer -->

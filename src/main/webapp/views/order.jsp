@@ -74,20 +74,20 @@
             <tbody>
             <c:forEach var="oi" items="${ois}">
                 <tr>
-                    <td>${String.format("%06d",oi.idInvoice)}</td>
+                    <td>${String.format("%06d",oi.invoiceId)}</td>
                     <td>${oi.recipientName}</td>
                     <td>${oi.orderDate}</td>
                     <td class="money">${oi.totalAmount}</td>
                     <td>
                         <button class="details-button">
                             <c:choose>
-                                <c:when test="${oi.orderSt == 1}">
+                                <c:when test="${oi.orderStatus == 1}">
                                     Đang giao
                                 </c:when>
-                                <c:when test="${oi.orderSt == 2}">
+                                <c:when test="${oi.orderStatus == 2}">
                                     Đã giao
                                 </c:when>
-                                <c:when test="${oi.orderSt == 3}">
+                                <c:when test="${oi.orderStatus == 3}">
                                     Đã hủy
                                 </c:when>
 

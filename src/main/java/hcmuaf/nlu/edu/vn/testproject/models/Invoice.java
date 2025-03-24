@@ -1,49 +1,49 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 public class Invoice {
-    private int idInvoice;
-    private int idAcc;
+    private int invoiceId;
+    private int accountId;
     private String recipientName;
     private String phoneNumber;
     private String deliveryAddress;
     private String note;
     private String orderDate;
     private int totalAmount;
-    private int idCode;
+    private int discountCodeId;
     private int paymentMethod;
     private int isPaid;
 
     public Invoice() {
     }
 
-    public Invoice(int idInvoice, int idAcc, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int idCode, int paymentMethod, int isPaid) {
-        this.idInvoice = idInvoice;
-        this.idAcc = idAcc;
+    public Invoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int discountCodeId, int paymentMethod, int isPaid) {
+        this.invoiceId = invoiceId;
+        this.accountId = accountId;
         this.recipientName = recipientName;
         this.phoneNumber = phoneNumber;
         this.deliveryAddress = deliveryAddress;
         this.note = note;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
-        this.idCode = idCode;
+        this.discountCodeId = discountCodeId;
         this.paymentMethod = paymentMethod;
         this.isPaid = isPaid;
     }
 
-    public int getIdInvoice() {
-        return idInvoice;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setIdInvoice(int idInvoice) {
-        this.idInvoice = idInvoice;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public Integer getIdAcc() {
-        return idAcc;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setIdAcc(Integer idAcc) {
-        this.idAcc = idAcc;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getRecipientName() {
@@ -86,20 +86,20 @@ public class Invoice {
         this.orderDate = orderDate;
     }
 
-    public Integer getTotalAmount() {
+    public int getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Integer totalAmount) {
+    public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Integer getIdCode() {
-        return idCode;
+    public int getDiscountCodeId() {
+        return discountCodeId;
     }
 
-    public void setIdCode(Integer idCode) {
-        this.idCode = idCode;
+    public void setDiscountCodeId(int discountCodeId) {
+        this.discountCodeId = discountCodeId;
     }
 
     public int getPaymentMethod() {
@@ -116,22 +116,5 @@ public class Invoice {
 
     public void setIsPaid(int isPaid) {
         this.isPaid = isPaid;
-    }
-
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "idInvoice=" + idInvoice +
-                ", idAcc=" + idAcc +
-                ", recipientName='" + recipientName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", deliveryAddress='" + deliveryAddress + '\'' +
-                ", note='" + note + '\'' +
-                ", orderDate='" + orderDate + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", idCode=" + idCode +
-                ", paymentMethod=" + paymentMethod +
-                ", isPaid=" + isPaid +
-                '}';
     }
 }

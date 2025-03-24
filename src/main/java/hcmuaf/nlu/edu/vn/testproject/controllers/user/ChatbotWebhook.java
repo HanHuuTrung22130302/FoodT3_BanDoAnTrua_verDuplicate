@@ -139,28 +139,28 @@ public class ChatbotWebhook extends HttpServlet {
             switch (category) {
                 case "nước":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 4)
+                            .filter(food -> food.getCategoryId() == 4)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn khát nước à? Tôi gợi ý vài món nước: " + formatFoodList(foods, request);
                     break;
                 case "cơm":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 1)
+                            .filter(food -> food.getCategoryId() == 1)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món cơm? Tôi gợi ý: " + formatFoodList(foods, request);
                     break;
                 case "bún":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 2)
+                            .filter(food -> food.getCategoryId() == 2)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món bún? Tôi gợi ý: " + formatFoodList(foods, request);
                     break;
                 case "phở":
                     foods = foods.stream()
-                            .filter(food -> food.getIdCategory() == 3)
+                            .filter(food -> food.getCategoryId() == 3)
                             .limit(3)
                             .collect(Collectors.toList());
                     reply = "Bạn muốn món phở? Tôi gợi ý: " + formatFoodList(foods, request);

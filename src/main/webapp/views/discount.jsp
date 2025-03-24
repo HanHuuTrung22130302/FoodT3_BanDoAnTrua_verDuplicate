@@ -49,7 +49,7 @@
                         <td>
                             <form action="discount" method="post" style="display: inline">
                                 <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${discount.idCode}">
+                                <input type="hidden" name="id" value="${discount.discountCodeId}">
                                 <button class="delete"
                                         onclick="return confirm('Bạn có chắc chắn muốn xóa discount này?')">
                                     <i class="fas fa-trash"

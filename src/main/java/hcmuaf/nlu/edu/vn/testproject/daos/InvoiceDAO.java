@@ -23,7 +23,7 @@ public class InvoiceDAO {
             ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); // Thêm tùy chọn để lấy key được sinh ra
 
             // Gán các tham số vào câu lệnh SQL
-            ps.setInt(1, invoice.getIdAcc());
+            ps.setInt(1, invoice.getAccountId());
             ps.setString(2, invoice.getRecipientName());
             ps.setString(3, invoice.getPhoneNumber());
             ps.setString(4, invoice.getDeliveryAddress());
@@ -39,7 +39,7 @@ public class InvoiceDAO {
                 // Lấy ID của hóa đơn vừa chèn vào
                 rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    invoice.setIdInvoice(rs.getInt(1));
+                    invoice.setInvoiceId(rs.getInt(1));
                     int idInvoice = rs.getInt(1);
                     ps2 = conn.prepareStatement(query2);
                     ps2.setInt(1, idInvoice);
@@ -68,8 +68,8 @@ public class InvoiceDAO {
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, detail.getIdInvoice());
-            ps.setInt(2, detail.getIdFood());
+            ps.setInt(1, detail.getInvoiceId());
+            ps.setInt(2, detail.getFoodId());
             ps.setInt(3, detail.getQuantity());
             ps.setInt(4, detail.getTotalAmount());
             ps.executeUpdate();
@@ -102,7 +102,7 @@ public class InvoiceDAO {
 
                 Food food = new Food();
                 food.setFoodName(rs.getString("food_name"));
-                food.setImg(rs.getString("image"));
+                food.setImage(rs.getString("image"));
 
                 detail.setFood(food);
                 details.add(detail);

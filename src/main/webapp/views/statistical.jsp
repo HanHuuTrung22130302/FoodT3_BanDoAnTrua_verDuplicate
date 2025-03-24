@@ -67,7 +67,7 @@
                     <td>${status.index + 1}</td>
                     <td class="product_name">
                         <img alt="${detail.food.foodName}" height="50"
-                             src="${pageContext.request.contextPath}/${detail.food.img}"/>
+                             src="${pageContext.request.contextPath}/${detail.food.image}"/>
                             ${detail.food.foodName}
                     </td>
                     <td>${detail.quantity}</td>
@@ -75,7 +75,6 @@
                 </tr>
             </c:forEach>
             </tbody>
-
         </table>
     </div>
 </div>

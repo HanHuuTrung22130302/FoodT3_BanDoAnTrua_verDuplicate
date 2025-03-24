@@ -112,7 +112,7 @@ public class CheckoutController extends HttpServlet {
             String paymentUrl = createVNPayPaymentUrl(request, finalAmount);
             if (paymentUrl != null) {
                 Invoice pendingInvoice = new Invoice();
-                pendingInvoice.setIdAcc(idAcc);
+                pendingInvoice.setAccountId(idAcc);
                 pendingInvoice.setRecipientName(recipientName);
                 pendingInvoice.setPhoneNumber(phoneNumber);
                 pendingInvoice.setDeliveryAddress(deliveryAddress);
@@ -139,7 +139,7 @@ public class CheckoutController extends HttpServlet {
         String orderDate = sdf.format(new Date());
 
         Invoice invoice = new Invoice();
-        invoice.setIdAcc(idAcc);
+        invoice.setAccountId(idAcc);
         invoice.setRecipientName(recipientName);
         invoice.setPhoneNumber(phoneNumber);
         invoice.setDeliveryAddress(deliveryAddress);
@@ -157,8 +157,8 @@ public class CheckoutController extends HttpServlet {
 
             for (Item item : order.getItems()) {
                 InvoiceDetail detail = new InvoiceDetail();
-                detail.setIdInvoice(invoice.getIdInvoice());
-                detail.setIdFood(item.getFood().getIdFood());
+                detail.setInvoiceId(invoice.getInvoiceId());
+                detail.setFoodId(item.getFood().getFoodId());
                 detail.setQuantity(item.getQuantity());
                 detail.setTotalAmount(item.getQuantity() * item.getFood().getPrice());
                 invoiceDAO.addInvoiceDetail(detail);

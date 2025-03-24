@@ -50,7 +50,7 @@
         <div class="text2">Quản Lý Cửa Hàng</div>
         <div class="card-container">
             <div class="card-info">
-                <img src="${pageContext.request.contextPath}/Images/team/trung_han.jpg"" alt="Hình ảnh cá nhân"/>
+                <img src="${pageContext.request.contextPath}/Images/team/trung_han.jpg" alt="Hình ảnh cá nhân"/>
                 <div class="info">
                     <h3>Hán Hữu Trung</h3>
                     <p>MSSV: 22130302</p>
