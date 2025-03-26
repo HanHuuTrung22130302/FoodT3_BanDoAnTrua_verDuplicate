@@ -22,7 +22,6 @@ function sendMessage() {
     input.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    // Trích xuất restriction mới và thêm vào danh sách nếu có
     const newRestriction = extractRestriction(message);
     if (newRestriction && !restrictionsList.includes(newRestriction)) {
         restrictionsList.push(newRestriction);
@@ -40,7 +39,8 @@ function sendMessage() {
                     taste: extractTaste(message),
                     restrictions: restrictionsList,
                     category: extractCategory(message),
-                    product: extractProduct(message) // Thêm tham số product
+                    product: extractProduct(message),
+                    ingredients: extractIngredients(message) // Thêm tham số ingredients
                 }
             }
         })
@@ -123,13 +123,29 @@ function extractCategory(message) {
 
 // Trích xuất sản phẩm (product) để hỏi chi tiết
 function extractProduct(message) {
-    const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này'];
+    const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này', 'thành phần', 'nguyên liệu'];
     if (keywords.some(keyword => message.includes(keyword))) {
-        // Tìm tên sản phẩm trong câu (giả sử tên sản phẩm bắt đầu bằng chữ cái in hoa hoặc cụm từ sau "về")
-        const productMatch = message.match(/(về\s+)?([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?:\s|$)/i);
+        const productMatch = message.match(/(món\s+)?([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?:\s|$)/i);
         return productMatch ? productMatch[2].trim() : null;
     }
     return null;
+}
+
+// Trích xuất thành phần (ingredients)
+function extractIngredients(message) {
+    const ingredients = [
+        { keyword: 'gà', value: 'gà' },
+        { keyword: 'bò', value: 'bò' },
+        { keyword: 'tôm', value: 'tôm' },
+        { keyword: 'cá', value: 'cá' },
+        { keyword: 'rau', value: 'rau' },
+        { keyword: 'heo', value: 'heo' },
+        { keyword: 'hải sản', value: 'hải sản' }
+    ];
+    const foundIngredients = ingredients.filter(i =>
+        (message.includes('có') || message.includes('chứa')) && message.includes(i.keyword)
+    ).map(i => i.value);
+    return foundIngredients.length > 0 ? foundIngredients : null;
 }
 
 // Định dạng phản hồi với link sản phẩm

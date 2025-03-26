@@ -50,26 +50,59 @@ public class ChatbotWebhook extends HttpServlet {
         JsonArray restrictionsArray = parameters.has("restrictions") && !parameters.get("restrictions").isJsonNull() ? parameters.getAsJsonArray("restrictions") : new JsonArray();
         String category = parameters.has("category") && !parameters.get("category").isJsonNull() ? parameters.get("category").getAsString() : null;
         String product = parameters.has("product") && !parameters.get("product").isJsonNull() ? parameters.get("product").getAsString() : null;
+        JsonArray ingredientsArray = parameters.has("ingredients") && !parameters.get("ingredients").isJsonNull() ? parameters.getAsJsonArray("ingredients") : new JsonArray();
 
         // Chuyển JsonArray thành danh sách String
         List<String> restrictions = restrictionsArray.size() > 0 ?
                 restrictionsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
+                List.of();
+        List<String> ingredients = ingredientsArray.size() > 0 ?
+                ingredientsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
                 List.of();
 
         // Logic gợi ý món ăn
         List<Food> foods = foodDAO.getAll();
         String reply;
 
+        // Kiểm tra câu hỏi gốc để ưu tiên xử lý product nếu có từ "thành phần" hoặc "nguyên liệu"
+        String queryText = queryResult.get("queryText").getAsString().toLowerCase();
+        if ((queryText.contains("thành phần") || queryText.contains("nguyên liệu")) && product == null) {
+            // Nếu không có product từ extractProduct, thử tìm tên món trong câu hỏi
+            String[] words = queryText.split("\\s+");
+            StringBuilder potentialProduct = new StringBuilder();
+            for (int i = 0; i < words.length; i++) {
+                if (words[i].equals("món") && i + 1 < words.length) {
+                    for (int j = i + 1; j < words.length; j++) {
+                        if (!words[j].equals("có") && !words[j].equals("những") && !words[j].equals("thành")
+                                && !words[j].equals("phần") && !words[j].equals("nguyên") && !words[j].equals("liệu")
+                                && !words[j].equals("gì")) {
+                            potentialProduct.append(words[j]).append(" ");
+                        } else {
+                            break;
+                        }
+                    }
+                    product = potentialProduct.toString().trim();
+                    break;
+                }
+            }
+        }
+
         if (product != null) {
             // Tìm món ăn theo tên sản phẩm
+            String finalProduct = product;
             Food matchedFood = foods.stream()
-                    .filter(food -> food.getFoodName().toLowerCase().contains(product.toLowerCase()))
+                    .filter(food -> food.getFoodName().toLowerCase().contains(finalProduct.toLowerCase()))
                     .findFirst()
                     .orElse(null);
 
             if (matchedFood != null) {
-                reply = String.format("Thông tin về %s: Giá %dđ, Thành phần: %s.",
-                        matchedFood.getFoodName(), matchedFood.getPrice(), matchedFood.getDescription());
+                if (queryText.contains("thành phần") || queryText.contains("nguyên liệu")) {
+                    reply = String.format("Thành phần của %s: %s.",
+                            matchedFood.getFoodName(), matchedFood.getIngredients());
+                } else {
+                    reply = String.format("Thông tin về %s: Giá %dđ, Thành phần: %s.",
+                            matchedFood.getFoodName(), matchedFood.getPrice(), matchedFood.getIngredients());
+                }
             } else {
                 reply = "Tôi không tìm thấy thông tin về " + product + ". Bạn có thể thử hỏi món khác!";
             }
@@ -100,7 +133,7 @@ public class ChatbotWebhook extends HttpServlet {
                         break;
                     default:
                         foods = foods.stream()
-                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains(restriction))
+                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains("restriction"))
                                 .collect(Collectors.toList());
                         break;
                 }

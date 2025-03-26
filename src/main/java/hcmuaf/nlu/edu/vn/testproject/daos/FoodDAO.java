@@ -71,6 +71,59 @@ public class FoodDAO {
         }
     }
 
+    // Thêm phương thức lấy món ăn theo danh sách thành phần
+    public List<Food> getFoodsByIngredients(List<String> ingredients) {
+        List<Food> foodList = new ArrayList<>();
+        String query = "SELECT * FROM food WHERE " +
+                String.join(" AND ", Collections.nCopies(ingredients.size(), "LOWER(ingredients) LIKE ?"));
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = new DbContext().getConnection();
+            if (con != null) {
+                System.out.println("Kết nối cơ sở dữ liệu thành công!");
+            } else {
+                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
+                return foodList;
+            }
+
+            ps = con.prepareStatement(query);
+            for (int i = 0; i < ingredients.size(); i++) {
+                ps.setString(i + 1, "%" + ingredients.get(i).toLowerCase() + "%");
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                foodList.add(new Food(
+                        rs.getInt("food_id"),
+                        rs.getString("food_name"),
+                        rs.getInt("price"),
+                        rs.getInt("discount_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("ingredients"),
+                        rs.getInt("category_id"),
+                        rs.getInt("sold"),
+                        rs.getInt("views"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeResources(rs, ps, con);
+        }
+        return foodList;
+    }
+
+
     public List<Food> getFoodsByCategory(int idCategory) {
 
         String query = "SELECT * FROM food WHERE category_id = ?";
