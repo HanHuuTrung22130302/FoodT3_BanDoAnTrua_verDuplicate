@@ -91,8 +91,8 @@
 
                     <div class="line_end"></div>
                     <div class="order-total">
-                        <strong>Tổng tiền:</strong>
-                        <span class="total-money" id="totalAmount">${iorder.totalAmount}&nbsp;đ</span>
+                        <strong>Thành tiền:</strong>
+                        <span class="total-money" id="totalAmount" style="font-size: 25px">${iorder.totalAmount}&nbsp;đ</span>
                     </div>
                     <div class="order-footer">
 
