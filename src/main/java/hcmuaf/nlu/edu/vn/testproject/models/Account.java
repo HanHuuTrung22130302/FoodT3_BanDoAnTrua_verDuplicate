@@ -1,5 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
+import java.time.LocalDateTime;
+
 public class Account {
     private int accountId;
     private int roleId;
@@ -7,6 +9,9 @@ public class Account {
     private String name;
     private String email;
     private AccountDetail accountDetail;
+    private int failedLoginAttempts; // Số lần đăng nhập sai
+    private boolean isLocked;
+    private LocalDateTime lockTime; // Thời gian khóa
 
     public Account() {
     }
@@ -17,6 +22,17 @@ public class Account {
         this.password = password;
         this.name = name;
         this.email = email;
+    }
+
+    public Account(int accountId, int roleId, String password, String name, String email, AccountDetail accountDetail, int failedLoginAttempts, boolean isLocked) {
+        this.accountId = accountId;
+        this.roleId = roleId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.accountDetail = accountDetail;
+        this.failedLoginAttempts = 0;
+        this.isLocked = false;
     }
 
     public int getAccountId() {
@@ -67,6 +83,30 @@ public class Account {
         this.accountDetail = accountDetail;
     }
 
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public LocalDateTime getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(LocalDateTime lockTime) {
+        this.lockTime = lockTime;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -76,6 +116,9 @@ public class Account {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accountDetail=" + accountDetail +
+                ", failedLoginAttempts=" + failedLoginAttempts +
+                ", isLocked=" + isLocked +
+                ", lockTime=" + lockTime +
                 '}';
     }
 }

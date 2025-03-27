@@ -50,8 +50,7 @@ public class ResetService {
             msg.setSubject("Reset Password", "UTF-8");
             String content = "<h1>Xin chào " + name + "</h1>" +
                     "<p>Đây là email tự động từ hệ thống đặt lại mật khẩu của chúng tôi.</p>" +
-                    "<p>Click vào liên kết sau để đặt lại mật khẩu: <a href=\"" + link + "\">Click here</a></p>" +
-                    "<p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>";
+                    "<p>Click vào liên kết sau để đặt lại mật khẩu: <a href=\"" + link + "\">Click here</a></p>";
             msg.setContent(content, "text/html; charset=UTF-8");
             Transport.send(msg);
             System.out.println("Gửi email thành công tới: " + to);

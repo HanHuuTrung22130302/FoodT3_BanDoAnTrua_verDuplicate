@@ -264,3 +264,12 @@ a:hover {
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
+
+.captcha-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.captcha-container img {
+  margin-bottom: 5px;
+}

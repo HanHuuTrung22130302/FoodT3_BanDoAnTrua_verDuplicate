@@ -5,6 +5,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,7 @@ public class VerifyService {
     }
 
     public LocalDateTime expireDateTime() {
-        return LocalDateTime.now().plusMinutes(5); // Thời gian hết hạn là 5 phút
+        return LocalDateTime.now().plusMinutes(1); // Thời gian hết hạn là 1 phút
     }
 
     public boolean isExpireTime(LocalDateTime expiryTime) {
@@ -29,6 +30,14 @@ public class VerifyService {
         return Pattern.compile(EMAIL_PATTERN).matcher(email).matches();
     }
 
+    // Tạo mã OTP ngẫu nhiên (6 chữ số)
+    public String generateOtpCode() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // Tạo số ngẫu nhiên 6 chữ số
+        return String.valueOf(otp);
+    }
+
+    // Gửi email xác thực
     public boolean sendVerificationEmail(String to, String token, String name) {
         if (!isValidEmail(to)) {
             System.out.println("Email không hợp lệ: " + to);
@@ -59,8 +68,8 @@ public class VerifyService {
 
             String link = "http://localhost:8080/testProject/verify?token=" + token;
             String content = "<h1>Xin chào " + name + "</h1>" +
-                    "<p>Vui lòng nhấp vào liên kết dưới đây để xác thực email của bạn (hết hạn sau 1 phút):</p>" +
-                    "<a href='" + link + "'>Xác thực email</a>";
+                    "<p>Đây là email tự động từ hệ thống đăng ký của chúng tôi.</p>" +
+                    "<p>Click vào liên kết sau để xác thực tài khoản: <a href=\"" + link + "\">Click here</a></p>";
             msg.setContent(content, "text/html; charset=UTF-8");
 
             Transport.send(msg);
@@ -68,6 +77,51 @@ public class VerifyService {
             return true;
         } catch (MessagingException e) {
             System.out.println("Lỗi gửi email: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Gửi email chứa mã OTP
+    public boolean sendOtpEmail(String to, String otpCode, String name) {
+        if (!isValidEmail(to)) {
+            System.out.println("Email không hợp lệ: " + to);
+            return false;
+        }
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+        MimeMessage msg = new MimeMessage(session);
+
+        try {
+            msg.addHeader("content-type", "text/html; charset=UTF-8");
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+            msg.setSubject("Mã OTP để mở khóa tài khoản", "UTF-8");
+
+            String content = "<h1>Xin chào " + name + "</h1>" +
+                    "<p>Mã OTP của bạn để mở khóa tài khoản là:</p>" +
+                    "<h2>" + otpCode + "</h2>" +
+                    "<p>Mã này sẽ hết hạn sau 5 phút.</p>";
+            msg.setContent(content, "text/html; charset=UTF-8");
+
+            Transport.send(msg);
+            System.out.println("Gửi email OTP thành công!");
+            return true;
+        } catch (MessagingException e) {
+            System.out.println("Lỗi gửi email OTP: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
