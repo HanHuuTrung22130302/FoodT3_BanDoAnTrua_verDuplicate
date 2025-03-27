@@ -97,8 +97,8 @@ public class InvoiceDAO {
 
             while (rs.next()) {
                 InvoiceDetail detail = new InvoiceDetail();
-                detail.setQuantity(rs.getInt("total_quantity"));  // Tổng số lượng bán
-                detail.setTotalAmount(rs.getInt("total_amount"));  // Tổng doanh thu
+                detail.setQuantity(rs.getInt("totalQuantity"));  // Tổng số lượng bán
+                detail.setTotalAmount(rs.getInt("totalAmount"));  // Tổng doanh thu
 
                 Food food = new Food();
                 food.setFoodName(rs.getString("food_name"));

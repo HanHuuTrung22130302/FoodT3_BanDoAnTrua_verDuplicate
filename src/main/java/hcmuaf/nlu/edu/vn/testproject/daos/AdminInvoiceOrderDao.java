@@ -49,7 +49,7 @@ public class AdminInvoiceOrderDao {
                         rs.getString("order_date"),
                         rs.getInt("total_amount"),
                         rs.getInt("discount_code_id"),
-                        rs.getInt("paymentMethod"),
+                        rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
                         rs.getInt("order_status"),
                         InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
