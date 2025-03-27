@@ -9,8 +9,8 @@ public class Account {
     private String name;
     private String email;
     private AccountDetail accountDetail;
-    private int failedLoginAttempts; // Số lần đăng nhập sai
-    private boolean isLocked;
+    private int failedAttempts; // Số lần đăng nhập sai
+    private boolean isLocked; // Trạng thái khóa
     private LocalDateTime lockTime; // Thời gian khóa
 
     public Account() {
@@ -22,17 +22,6 @@ public class Account {
         this.password = password;
         this.name = name;
         this.email = email;
-    }
-
-    public Account(int accountId, int roleId, String password, String name, String email, AccountDetail accountDetail, int failedLoginAttempts, boolean isLocked) {
-        this.accountId = accountId;
-        this.roleId = roleId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.accountDetail = accountDetail;
-        this.failedLoginAttempts = 0;
-        this.isLocked = false;
     }
 
     public int getAccountId() {
@@ -83,12 +72,12 @@ public class Account {
         this.accountDetail = accountDetail;
     }
 
-    public int getFailedLoginAttempts() {
-        return failedLoginAttempts;
+    public int getFailedAttempts() {
+        return failedAttempts;
     }
 
-    public void setFailedLoginAttempts(int failedLoginAttempts) {
-        this.failedLoginAttempts = failedLoginAttempts;
+    public void setFailedAttempts(int failedAttempts) {
+        this.failedAttempts = failedAttempts;
     }
 
     public boolean isLocked() {
@@ -116,7 +105,7 @@ public class Account {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accountDetail=" + accountDetail +
-                ", failedLoginAttempts=" + failedLoginAttempts +
+                ", failedAttempts=" + failedAttempts +
                 ", isLocked=" + isLocked +
                 ", lockTime=" + lockTime +
                 '}';

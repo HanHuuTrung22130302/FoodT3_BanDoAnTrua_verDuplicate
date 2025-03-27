@@ -1,0 +1,32 @@
+.category-container {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.category-item {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+}
+
+.category-item:hover {
+    background-color: #b5292f; 
+    color: white;
+    border-radius: 5px;
+    transform: scale(1.05);
+    
+}
+.category-container a{
+    text-decoration: none;
+}
