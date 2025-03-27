@@ -40,7 +40,7 @@ function sendMessage() {
                     restrictions: restrictionsList,
                     category: extractCategory(message),
                     product: extractProduct(message),
-                    ingredients: extractIngredients(message) // Thêm tham số ingredients
+                    ingredients: extractIngredients(message)
                 }
             }
         })
@@ -86,7 +86,7 @@ function extractTaste(message) {
         { keyword: 'tôm', value: 'tôm' }
     ];
     return tastes.find(t =>
-        (message.includes('muốn ăn') || message.includes('thích') || message.includes('thèm')) &&
+        (message.includes('muốn ăn') || message.includes('thích') || message.includes('thèm')) || message.includes('gợi ý') &&
         message.includes(t.keyword)
     )?.value || null;
 }
@@ -125,7 +125,20 @@ function extractCategory(message) {
 function extractProduct(message) {
     const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này', 'thành phần', 'nguyên liệu'];
     if (keywords.some(keyword => message.includes(keyword))) {
-        const productMatch = message.match(/(món\s+)?([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?:\s|$)/i);
+        // Chuẩn hóa chuỗi: loại bỏ các từ không cần thiết
+        let normalizedMessage = message.toLowerCase()
+            .replace("có những thành phần gì", "")
+            .replace("có những nguyên liệu nào", "")
+            .replace("có nguyên liệu gì", "")
+            .replace("có gì", "")
+            .replace("thành phần của", "")
+            .replace("nguyên liệu của", "")
+            .replace("thành phần", "")
+            .replace("nguyên liệu", "")
+            .trim();
+
+        // Tách tên món bằng regex
+        let productMatch = normalizedMessage.match(/(món\s+)?([a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)/i);
         return productMatch ? productMatch[2].trim() : null;
     }
     return null;

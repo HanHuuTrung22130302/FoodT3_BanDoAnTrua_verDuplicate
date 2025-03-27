@@ -88,10 +88,19 @@ public class ChatbotWebhook extends HttpServlet {
         }
 
         if (product != null) {
-            // Tìm món ăn theo tên sản phẩm
-            String finalProduct = product;
+            // Debug: In danh sách món ăn từ DB
+            System.out.println("Danh sách món ăn trong DB:");
+            foods.forEach(food -> System.out.println(" - " + food.getFoodName() + " (Ingredients: " + food.getIngredients() + ")"));
+
+            // Tìm món ăn theo tên sản phẩm (cải thiện logic so khớp)
+            String finalProduct = product.toLowerCase().trim();
             Food matchedFood = foods.stream()
-                    .filter(food -> food.getFoodName().toLowerCase().contains(finalProduct.toLowerCase()))
+                    .filter(food -> {
+                        String foodName = food.getFoodName().toLowerCase().trim();
+                        boolean matches = foodName.equals(finalProduct) || foodName.contains(finalProduct);
+                        System.out.println("So sánh: " + foodName + " với " + finalProduct + " -> " + matches);
+                        return matches;
+                    })
                     .findFirst()
                     .orElse(null);
 
