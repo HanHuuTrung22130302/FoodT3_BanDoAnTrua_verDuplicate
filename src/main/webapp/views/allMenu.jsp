@@ -160,11 +160,11 @@
         <div class="content_section">
         <c:forEach var="food" items="${list}">
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
-                <img src="${food.img}" alt="${food.foodName}"/>
+                <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <h3>${food.foodName}</h3>
                     <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.idFood}" var="addtoCart"/>
+                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>

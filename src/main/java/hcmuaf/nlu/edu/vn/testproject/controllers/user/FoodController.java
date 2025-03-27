@@ -67,6 +67,5 @@ public class FoodController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Phương thức POST có thể được sử dụng trong tương lai khi cần thiết
     }
 }

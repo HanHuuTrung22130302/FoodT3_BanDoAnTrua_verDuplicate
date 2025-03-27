@@ -4,18 +4,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <meta
+            name="viewport"
+            content="width=
+    , initial-scale=1.0"
+    />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
     <title>Đăng nhập</title>
     <link href='Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/signin.css"/>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="signup" method="post" id="signupForm">
+        <form action="signup" method="post">
             <a href="home" class="back-to-home">
                 <i class="fas fa-arrow-left"></i>
             </a>
@@ -34,12 +42,14 @@
             <div id="messageContainer" style="color: red; margin-top: 10px; text-align: center;"></div>
             <button type="submit">Đăng ký</button>
         </form>
+
     </div>
     <div class="form-container sign-in-container">
-        <form action="login" method="post" id="loginForm">
+        <form action="login" method="post">
             <a href="${pageContext.request.contextPath}/home" class="back-to-home">
                 <i class="fas fa-arrow-left"></i>
             </a>
+
             <h1>Đăng nhập</h1>
             <div class="social-container">
                 <a href="https://www.facebook.com/v22.0/dialog/oauth?client_id=624822650411926&redirect_uri=http://localhost:8080/testProject/loginFacebook&scope=public_profile,email"
@@ -49,14 +59,10 @@
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
             <span>Hoặc sử dụng tài khoản</span>
-            <input name="user" type="text" placeholder="Tên đăng nhập" required/>
-            <input name="pass" type="password" placeholder="Mật khẩu" required/>
+            <input name="user" type="text" placeholder="Tên đăng nhập"/>
+            <input name="pass" type="password" placeholder="Mật khẩu"/>
             <div id="login_messageContainer" style="color: red; margin-top: 10px; text-align: center;"></div>
-            <div id="captchaContainer" style="display: none; margin-top: 10px;">
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-            </div>
             <a href="forgotpass">Bạn quên mật khẩu?</a>
-            <a href="unlock?action=request">Mở khóa tài khoản</a>
             <button type="submit">Đăng nhập</button>
         </form>
     </div>
@@ -69,7 +75,10 @@
             </div>
             <div class="overlay-panel overlay-right">
                 <h1>Hello, Friends!</h1>
-                <p>Đăng ký và bắt đầu hành trình khai phá vị giác ngay cùng chúng tôi!</p>
+                <p>
+                    Đăng ký và bắt đầu hành trình khai phá vị giác ngay cùng chúng
+                    tôi!
+                </p>
                 <button class="ghost" id="signUp">Đăng ký</button>
             </div>
         </div>
@@ -78,7 +87,6 @@
 
 <script src="${pageContext.request.contextPath}/js/signin.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/loginAjax.js"></script>
-<script src="${pageContext.request.contextPath}/js/signupAjax.js"></script>
+<script src="${pageContext.request.contextPath}/js/signUpAjax.js"></script>
 </body>
 </html>
