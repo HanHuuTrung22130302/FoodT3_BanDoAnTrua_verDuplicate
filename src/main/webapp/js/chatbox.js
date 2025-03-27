@@ -54,7 +54,29 @@ function sendMessage() {
         .then(data => {
             const botMessage = document.createElement('div');
             botMessage.className = 'message bot-message';
-            botMessage.innerHTML = formatResponse(data.fulfillmentText);
+
+            // Nếu có danh sách món ăn, hiển thị khung
+            if (data.foods) {
+                botMessage.innerHTML = `<p>${data.fulfillmentText}</p>`;
+                const foodContainer = document.createElement('div');
+                foodContainer.className = 'food-container';
+                data.foods.forEach(food => {
+                    const foodItem = document.createElement('div');
+                    foodItem.className = 'food-item';
+                    foodItem.innerHTML = `
+                        <img src="${food.image}" alt="${food.foodName}" class="food-image">
+                        <h3>${food.foodName}</h3>
+                        <p>${food.price}đ</p>
+                      
+                    `;
+                    foodContainer.appendChild(foodItem);
+                });
+                botMessage.appendChild(foodContainer);
+            } else {
+                // Nếu không có danh sách món (ví dụ: hỏi thành phần), hiển thị text bình thường
+                botMessage.innerHTML = formatResponse(data.fulfillmentText);
+            }
+
             chatBody.appendChild(botMessage);
             chatBody.scrollTop = chatBody.scrollHeight;
         })
@@ -65,6 +87,37 @@ function sendMessage() {
             botMessage.textContent = 'Có lỗi xảy ra, vui lòng thử lại!';
             chatBody.appendChild(botMessage);
             chatBody.scrollTop = chatBody.scrollHeight;
+        });
+}
+
+// Hàm thêm vào giỏ hàng
+function addToCart(foodId) {
+    fetch(`${contextPath}/addtoCart?foodID=${foodId}`, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add to cart');
+            }
+            alert('Đã thêm vào giỏ hàng!');
+            // Cập nhật số lượng giỏ hàng nếu cần
+            updateCartCount();
+        })
+        .catch(error => {
+            console.error('Error adding to cart:', error);
+            alert('Có lỗi khi thêm vào giỏ hàng!');
+        });
+}
+
+// Cập nhật số lượng giỏ hàng (giả định có sẵn hàm này trong hệ thống của bạn)
+function updateCartCount() {
+    fetch(`${contextPath}/cart`, { method: 'GET' })
+        .then(response => response.text())
+        .then(data => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+            const cartCount = doc.querySelector('.count').textContent;
+            document.querySelector('.nav_item_shop .count').textContent = cartCount;
         });
 }
 
@@ -86,7 +139,7 @@ function extractTaste(message) {
         { keyword: 'tôm', value: 'tôm' }
     ];
     return tastes.find(t =>
-        (message.includes('muốn ăn') || message.includes('thích') || message.includes('thèm')) || message.includes('gợi ý') &&
+        (message.includes('muốn ăn') || message.includes('thích') || message.includes('thèm') || message.includes('gợi ý')) &&
         message.includes(t.keyword)
     )?.value || null;
 }
@@ -125,7 +178,6 @@ function extractCategory(message) {
 function extractProduct(message) {
     const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này', 'thành phần', 'nguyên liệu'];
     if (keywords.some(keyword => message.includes(keyword))) {
-        // Chuẩn hóa chuỗi: loại bỏ các từ không cần thiết
         let normalizedMessage = message.toLowerCase()
             .replace("có những thành phần gì", "")
             .replace("có những nguyên liệu nào", "")
@@ -137,7 +189,6 @@ function extractProduct(message) {
             .replace("nguyên liệu", "")
             .trim();
 
-        // Tách tên món bằng regex
         let productMatch = normalizedMessage.match(/(món\s+)?([a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)/i);
         return productMatch ? productMatch[2].trim() : null;
     }
@@ -161,7 +212,7 @@ function extractIngredients(message) {
     return foundIngredients.length > 0 ? foundIngredients : null;
 }
 
-// Định dạng phản hồi với link sản phẩm
+// Định dạng phản hồi với link sản phẩm (giữ lại cho trường hợp không có danh sách món)
 function formatResponse(text) {
     const foodNames = text.match(/([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?=\s*\()/g);
     if (foodNames) {
