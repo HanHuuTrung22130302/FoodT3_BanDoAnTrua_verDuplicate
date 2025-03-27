@@ -29,9 +29,10 @@
 <!-- Xử lý container -->
 <div id="containe">
     <div class="order-status-container">
-        <button class="status-button" onclick="ajaxOrder(0)">Tất cả</button>
-        <button class="status-button" onclick="ajaxOrder(1)">Đang vận chuyển</button>
-        <button class="status-button" onclick="ajaxOrder(2)">Đã vận chuyển</button>
+        <button class="status-button active" onclick="ajaxOrder(0)">Tất cả</button>
+        <button class="status-button" onclick="ajaxOrder(1)">Đang xác nhận</button>
+        <button class="status-button" onclick="ajaxOrder(1)">Chờ giao hàng</button>
+        <button class="status-button" onclick="ajaxOrder(2)"> Hoàn thành</button>
         <button class="status-button" onclick="ajaxOrder(3)">Đã hủy</button>
     </div>
     <div class="search-box-container">
@@ -92,9 +93,14 @@
                     <div class="line_end"></div>
                     <div class="order-total">
                         <strong>Thành tiền:</strong>
-                        <span class="total-money" id="totalAmount" style="font-size: 25px">${iorder.totalAmount}&nbsp;đ</span>
+                        <span class="total-money" id="totalAmount" style="font-size: 22px">${iorder.totalAmount}&nbsp;đ</span>
                     </div>
                     <div class="order-footer">
+
+                        <c:if test="${iorder.orderStatus == 4 }">
+                            <a class="info-order-button" href=""
+                               style="text-decoration: none">Đánh giá</a>
+                        </c:if>
 
                         <c:if test="${iorder.orderStatus == 1 || iorder.orderStatus == 2 || iorder.orderStatus == 3 }">
                             <!-- Hiển thị cả thẻ <a> và <button> khi order.orderStatus là 1 -->
@@ -106,7 +112,6 @@
                         </c:if>
 
                         <c:if test="${iorder.orderStatus == 4 || iorder.orderStatus == 5}">
-                            <!-- Chỉ hiển thị thẻ <a> khi order.orderStatus là 2 hoặc 3 -->
                             <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
                                style="text-decoration: none">Chi tiết</a>
                         </c:if>
@@ -128,6 +133,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/isCancelOrder.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_search_Invoice.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/jsButtonStatusPurchaseOrder.js"></script>
 </body>
 </html>
