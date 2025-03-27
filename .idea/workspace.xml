@@ -12,12 +12,309 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="[#63] Feat: Thêm tùy chọn đăng nhập bằng tài khoản FaceBook">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/UnlockController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/VerifyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/VerifyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/signUpAjax.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/signUpAjax.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-Bo-Hue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-Hue-chay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-cha-ghe.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-cha-ha-noi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-ga-sa-te.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-heo-quay-cha-gio-top-mo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-mang-ga.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-nem-thit-nuong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-thit-luoc-rau-song-mam-nem.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Bun/Bun-thit-nuong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-ba-roi-rim-tom.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-ca-chien-xa-ot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-canh-chua-ca-hu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-bo-luc-lac.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-dua-bo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-duong-chau.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-ga-xoi-mo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-muc-trung-muoi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-chien-trung-op-la.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-dau-hu-kho-ca-ri.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-dau-hu-kho-suon-chay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-ga-kho-xa-ot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-ga-nau-Hai-Nam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-gio-heo-kho-cai-chua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-kho-qua-cha-ca.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-muc-xao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-suon-cong-mat-ong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-suon-non-rim-nuoc-dua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-dui-ga-chien.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-heo-quay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-suon-bi-cha.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-suon-trung.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-thit-nuong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-tam-xiu-mai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-thit-kho-Dai-Loan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-thit-kho-mam-ruoc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-thit-kho-tieu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-thit-kho-trung.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-thit-luoc-ca-phao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Com/Com-trung-cuon-thit.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-bo-chin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-bo-tai-lan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-bo-tai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-bo-vien.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-chua-lang-son.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-cuon-chay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-cuon-chien-phong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-cuon-ngu-xa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-cuon-thit-heo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-cuon-tom-chua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-ga.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-hai-san.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-heo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-xao-gion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-xao-hai-san.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-xao-kieu-Thai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-xao-rau-cai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/Pho-xot-vang.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/pho-ga-tron.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/Pho/pho-xao-thit-bam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Nuoc-cam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Nuoc-chanh.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Nuoc-dua-hau.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Nuoc-ep-buoi-ca-rot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Nuoc-ep-tao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Sinh-to-xoai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Sua-chua-viet-quat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-bac-ha.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-dao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-hoa-nhai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-sua-cookie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-sua-kem-trung-chay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra-tran-chau-khoai-lang.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/Tra_chanh_gia_tay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/chanh-muoi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/espresso.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/latte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/matcha-latte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/nuoc-ep-dua-cam.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/Food/nuoc/sinh-to-dau-sua-chua.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/LOGO_V2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/pic1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/pic2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/pic3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/pic4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/qc1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/qc123.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/qc2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/home/qc3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/11eee4b7bd64359ac559565d5499dd1f.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/8dbd0fc142724d44ceeac980493bbf39.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/8ed968cd1356c61727675e52fb62e52f.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/admin_logo_cus.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/admin_logo_food.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/admin_logo_food2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/admin_logo_money.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/logo/testLOGO.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/main_content/main-content-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/main_content/main-content-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/main_content/main_content_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/team/trung_han.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/team/tuan_22130311.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Images/team/tuan_22130312.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/Videos/[appsgolem.com][00-00-00][00-00-16]_Miami_s_Best_New_Chef_is_Mak.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/context/DbContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/AdminController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/BannerController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/CategoryController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/DiscountController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/ManageCustomerController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/ManageFoodController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/OrderController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/SearchInvoice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/admin/StatisticalController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/filterUser/DonHangSession.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AboutController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AccDetailController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AccountController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AddToCartController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AjaxSearchController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/AjaxSearchInvoceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/CancelBtnController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/CartController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/ChatbotWebhook.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/CheckAddressController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/CheckoutController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/ContactController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/FoodController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/FoodControllerAjax.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/ForgotPassController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/HomeController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/InvoiceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginWithFacebookController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginWithGoogleController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/LogoutController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/PurchaseOrderAjaxControler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/PurchaseOrderController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/PurchaseOrderDetail.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/ResetPasswordController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/SearchController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/SignUpController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/VNPayReturnController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/VerificationController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/controllers/user/ViewUController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/AccdetailDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/AccountDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/AdminInvoiceOrderDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/BannerDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/CategoryDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/Config.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/ContactDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/DiscountDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/DistanceCheck.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/FoodCartDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/FoodDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceOrderDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceOrderDetailDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/LoginDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/PendingAccountDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/ReviewDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/SignUpDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/TokenForgetDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/ViewpDao.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/libs/MD5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Account.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/AccountDetail.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Banner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Category.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Discount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Food.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/GoogleAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Invoice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/InvoiceDetail.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Item.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/Order.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/OrderInvoice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/OrderInvoiceDetail.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/OtpRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/PasswordResetToken.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/PendingAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/models/ReviewFood.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/AccdetailService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/AdminInvoiceService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/BannerService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/CategoryService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/ContactService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/DiscountService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/FacebookLogin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/FoodService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/FoodServiceListFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/GoogleLogin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/Iconstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/InvoiceOrderServices.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/ResetService$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/ResetService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/VerifyService$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/services/VerifyService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/activation-1.1.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/annotations-13.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/commons-codec-1.11.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/commons-logging-1.3.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/error_prone_annotations-2.27.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/fluent-hc-4.5.14.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/gson-2.11.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/httpclient-4.5.14.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/httpcore-4.4.16.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/jakarta.el-api-5.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/jakarta.servlet.jsp.jstl-3.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/jakarta.servlet.jsp.jstl-api-3.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/javax.mail-1.6.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/javax.mail-api-1.6.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/json-20230227.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/kotlin-stdlib-1.4.10.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/kotlin-stdlib-common-1.4.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/mysql-connector-j-8.0.33.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/okhttp-4.9.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/okio-2.8.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/lib/protobuf-java-3.21.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/Comment_Food.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/about.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/admin.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/allmenu_n.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/banner_management.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/cart.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/check-out.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/contact.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/customer_service.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/details.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/discount.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/food_service.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/forgot_pass.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/module_container_PurchaseOrder.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/module_header_footer.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/module_home_n.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/module_informationuser.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/module_submenu_catelory.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/newhome.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/order.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/reset_pass.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/signin.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/signinCssModule.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/statistical.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/css/verification.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/UserInformation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/ViewU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/admin_popup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/adminpopupInvoice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/cart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/chatbox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/check-out.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/cus_service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/details.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/food_service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/isCancelOrder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/loginAjax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/menu.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_OrderInvoice_ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_check_contact.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_dangnhap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_dangnhap_UserInfor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_popup_home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_popup_purchase.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_search_ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_search_invoice_ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_signin_isSign.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/module_stopPopup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/purchase.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/signUpAjax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/signin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/js/test_module_load_ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/PurchaseOrder.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/UserInformation.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/about.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/admin.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/allMenu.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/allMenuSearch.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/banner.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/cart.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/category.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/check-out.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/contact.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/customer_sevice.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/details.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/discount.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/food_service.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/footer.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/forgot_pass.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/header.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/leftAdmin.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/newhome.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/order.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/reset_pass.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/signin.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/statistical.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/unlock.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/verification.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/verify-otp.jsp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,51 +387,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.AccdetailDAO.executor": "Run",
-    "Application.BannerDao.executor": "Run",
-    "Application.BannerService.executor": "Run",
-    "Application.ContactController.executor": "Run",
-    "Application.ContactDao.executor": "Run",
-    "Application.ContactService.executor": "Run",
-    "Application.DbContext.executor": "Run",
-    "Application.DistanceCheck.executor": "Run",
-    "Application.FoodCartDAO.executor": "Run",
-    "Application.FoodDAO.executor": "Run",
-    "Application.InvoiceDAO.executor": "Run",
-    "Application.InvoiceOrderDao.executor": "Run",
-    "Application.InvoiceOrderDetailDao.executor": "Run",
-    "Application.InvoiceOrderServices.executor": "Run",
-    "Application.LoginDAO.executor": "Run",
-    "Application.MD5.executor": "Run",
-    "Application.Order.executor": "Run",
-    "Application.SignUpDAO.executor": "Run",
-    "Application.ViewpDao.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Tomcat Server.Tomcat 10.1.31.executor": "Run",
-    "Tomcat Server.da.executor": "Run",
-    "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15039062",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.AccdetailDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BannerDao.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BannerService.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ContactController.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ContactDao.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ContactService.executor&quot;: &quot;Run&quot;,
+    &quot;Application.DbContext.executor&quot;: &quot;Run&quot;,
+    &quot;Application.DistanceCheck.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FoodCartDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FoodDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.InvoiceDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.InvoiceOrderDao.executor&quot;: &quot;Run&quot;,
+    &quot;Application.InvoiceOrderDetailDao.executor&quot;: &quot;Run&quot;,
+    &quot;Application.InvoiceOrderServices.executor&quot;: &quot;Run&quot;,
+    &quot;Application.LoginDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MD5.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Order.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SignUpDAO.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ViewpDao.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Tomcat Server.Tomcat 10.1.31.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.da.executor&quot;: &quot;Run&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/tuan/Desktop/LTWEB_FINAL_TERM&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15039062&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\Nam3HocKy1\BTLapTrinhWeb\gitdoanck\LTWEB_FINAL_TERM\src\main\webapp\js" />
