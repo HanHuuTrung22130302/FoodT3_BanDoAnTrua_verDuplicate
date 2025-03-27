@@ -1,24 +1,23 @@
-$(document).ready(function() {
-    $("#signupForm").submit(function(e) {
-        e.preventDefault();
+$(document).ready(function () {
+    $("form[action='signup']").on("submit", function (event) {
+        event.preventDefault(); // Ngăn chặn hành động submit mặc định
+
         $.ajax({
-            url: "${pageContext.request.contextPath}/signup",
             type: "POST",
+            url: $(this).attr('action'),
             data: $(this).serialize(),
-            success: function(response) {
-                $("#messageContainer").text(response.message);
+            success: function (response) {
+                // Nếu đăng ký thành công, chuyển hướng đến trang đăng nhập
                 if (response.status === "success") {
-                    $("#messageContainer").css("color", "green");
-                    setTimeout(() => {
-                        window.location.href = "${pageContext.request.contextPath}/signin.jsp";
-                    }, 2000);
+                    window.location.href = "login"; // Chuyển hướng đến trang login
                 } else {
-                    $("#messageContainer").css("color", "red");
+                    // Hiển thị thông báo lỗi nếu đăng ký thất bại
+                    $("#messageContainer").css("color", "red").text(response.message);
                 }
             },
-            error: function() {
-                $("#messageContainer").text("Có lỗi xảy ra, vui lòng thử lại.");
-                $("#messageContainer").css("color", "red");
+            error: function () {
+                // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                $("#messageContainer").css("color", "red").text("Có lỗi xảy ra. Vui lòng thử lại.");
             }
         });
     });
