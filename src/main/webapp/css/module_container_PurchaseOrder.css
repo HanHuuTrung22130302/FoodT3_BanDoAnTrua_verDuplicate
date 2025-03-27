@@ -74,10 +74,23 @@ min-height: 700px;
   
 /*---------------------------*/
 
-.idDonHang{
-  
+.toporder{
   height: 30px;
+  display: flex;
 }
+.toporder .idDonHang{
+  width: 50%;
+  text-align: left;
+  font-size: 17px;
+}
+.toporder .order-status{
+  width: 50%;
+  text-align: right;
+  font-size: 17px;
+  color: #b5292f;
+}
+
+
 .line_st{
   max-width: 1000px;
   height: 1px;
@@ -148,7 +161,7 @@ min-height: 700px;
   .order-total {
     text-align: right;
     margin: 15px 0;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     color: #333;
   }
@@ -173,12 +186,12 @@ min-height: 700px;
   }
   
   .cancel-order-button {
-    padding: 5px 15px;
+    padding: 10px 40px;
     background-color: #b5292f; 
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -187,12 +200,12 @@ min-height: 700px;
     background-color: #d9363e; 
   }
   .info-order-button {
-    padding: 5px 15px;
+    padding: 10px 40px;
     background-color: #b5292f; 
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
