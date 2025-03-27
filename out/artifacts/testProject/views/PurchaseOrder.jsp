@@ -98,7 +98,7 @@
 
                         <c:if test="${iorder.orderStatus == 1 || iorder.orderStatus == 2 || iorder.orderStatus == 3 }">
                             <!-- Hiển thị cả thẻ <a> và <button> khi order.orderStatus là 1 -->
-                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.idInvoice}"
+                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
                                style="text-decoration: none">Chi tiết</a>
                             <a class="cancel-order-button" href="javascript:void(0);"
                                onclick="confirmCancel(${iorder.invoiceId})" style="text-decoration: none">Hủy đơn
