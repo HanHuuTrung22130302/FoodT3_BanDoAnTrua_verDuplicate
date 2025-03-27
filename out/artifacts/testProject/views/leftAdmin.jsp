@@ -37,6 +37,14 @@
                     Đơn hàng
                 </a>
             </li>
+
+            <li>
+                <a href="views/log_management.jsp">
+                    <i class="fas fa-shopping-cart"> </i>
+                    Quản lý log
+                </a>
+            </li>
+
             <li>
                 <a href="statistical">
                     <i class="fas fa-chart-bar"> </i>

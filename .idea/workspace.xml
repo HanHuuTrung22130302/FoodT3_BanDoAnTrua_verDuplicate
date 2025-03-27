@@ -10,11 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="Fix loi allmenu mat het san pham">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/css/log.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/views/log_management.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/AdminInvoiceOrderDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/AdminInvoiceOrderDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/testProject/WEB-INF/classes/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AdminInvoiceOrderDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AdminInvoiceOrderDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/InvoiceDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/testProject/views/leftAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/testProject/views/leftAdmin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +27,6 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jsp File" />
         <option value="filter" />
         <option value="servlet" />
         <option value="Interface" />
@@ -35,6 +34,7 @@
         <option value="Servlet" />
         <option value="Class" />
         <option value="CSS File" />
+        <option value="Jsp File" />
       </list>
     </option>
   </component>
