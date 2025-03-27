@@ -30,7 +30,6 @@ public class ChatbotWebhook extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Đọc JSON từ request
         StringBuilder buffer = new StringBuilder();
         BufferedReader reader = request.getReader();
         String line;
@@ -39,20 +38,17 @@ public class ChatbotWebhook extends HttpServlet {
         }
         String jsonString = buffer.toString();
 
-        // Parse JSON
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class);
         JsonObject queryResult = jsonObject.getAsJsonObject("queryResult");
         JsonObject parameters = queryResult.getAsJsonObject("parameters");
 
-        // Lấy tham số
         String taste = parameters.has("taste") && !parameters.get("taste").isJsonNull() ? parameters.get("taste").getAsString() : null;
         JsonArray restrictionsArray = parameters.has("restrictions") && !parameters.get("restrictions").isJsonNull() ? parameters.getAsJsonArray("restrictions") : new JsonArray();
         String category = parameters.has("category") && !parameters.get("category").isJsonNull() ? parameters.get("category").getAsString() : null;
         String product = parameters.has("product") && !parameters.get("product").isJsonNull() ? parameters.get("product").getAsString() : null;
         JsonArray ingredientsArray = parameters.has("ingredients") && !parameters.get("ingredients").isJsonNull() ? parameters.getAsJsonArray("ingredients") : new JsonArray();
 
-        // Chuyển JsonArray thành danh sách String
         List<String> restrictions = restrictionsArray.size() > 0 ?
                 restrictionsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
                 List.of();
@@ -60,14 +56,11 @@ public class ChatbotWebhook extends HttpServlet {
                 ingredientsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
                 List.of();
 
-        // Logic gợi ý món ăn
         List<Food> foods = foodDAO.getAll();
-        String reply;
+        JsonObject responseJson = new JsonObject();
 
-        // Kiểm tra câu hỏi gốc để ưu tiên xử lý product nếu có từ "thành phần" hoặc "nguyên liệu"
         String queryText = queryResult.get("queryText").getAsString().toLowerCase();
         if ((queryText.contains("thành phần") || queryText.contains("nguyên liệu")) && product == null) {
-            // Nếu không có product từ extractProduct, thử tìm tên món trong câu hỏi
             String[] words = queryText.split("\\s+");
             StringBuilder potentialProduct = new StringBuilder();
             for (int i = 0; i < words.length; i++) {
@@ -88,17 +81,11 @@ public class ChatbotWebhook extends HttpServlet {
         }
 
         if (product != null) {
-            // Debug: In danh sách món ăn từ DB
-            System.out.println("Danh sách món ăn trong DB:");
-            foods.forEach(food -> System.out.println(" - " + food.getFoodName() + " (Ingredients: " + food.getIngredients() + ")"));
-
-            // Tìm món ăn theo tên sản phẩm (cải thiện logic so khớp)
             String finalProduct = product.toLowerCase().trim();
             Food matchedFood = foods.stream()
                     .filter(food -> {
                         String foodName = food.getFoodName().toLowerCase().trim();
                         boolean matches = foodName.equals(finalProduct) || foodName.contains(finalProduct);
-                        System.out.println("So sánh: " + foodName + " với " + finalProduct + " -> " + matches);
                         return matches;
                     })
                     .findFirst()
@@ -106,22 +93,20 @@ public class ChatbotWebhook extends HttpServlet {
 
             if (matchedFood != null) {
                 if (queryText.contains("thành phần") || queryText.contains("nguyên liệu")) {
-                    reply = String.format("Thành phần của %s: %s.",
-                            matchedFood.getFoodName(), matchedFood.getIngredients());
+                    responseJson.addProperty("fulfillmentText", String.format("Thành phần của %s: %s.",
+                            matchedFood.getFoodName(), matchedFood.getIngredients()));
                 } else {
-                    reply = String.format("Thông tin về %s: Giá %dđ, Thành phần: %s.",
-                            matchedFood.getFoodName(), matchedFood.getPrice(), matchedFood.getIngredients());
+                    responseJson.addProperty("fulfillmentText", String.format("Thông tin về %s: Giá %dđ, Thành phần: %s.",
+                            matchedFood.getFoodName(), matchedFood.getPrice(), matchedFood.getIngredients()));
                 }
             } else {
-                reply = "Tôi không tìm thấy thông tin về " + product + ". Bạn có thể thử hỏi món khác!";
+                responseJson.addProperty("fulfillmentText", "Tôi không tìm thấy thông tin về " + product + ". Bạn có thể thử hỏi món khác!");
             }
         } else if (taste != null) {
-            // Lọc theo sở thích trước
             foods = foods.stream()
                     .filter(food -> food.getDescription().toLowerCase().contains(taste) || food.getFoodName().toLowerCase().contains(taste))
                     .collect(Collectors.toList());
 
-            // Áp dụng các restrictions nếu có
             for (String restriction : restrictions) {
                 switch (restriction) {
                     case "thịt bò":
@@ -142,13 +127,14 @@ public class ChatbotWebhook extends HttpServlet {
                         break;
                     default:
                         foods = foods.stream()
-                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains("restriction"))
+                                .filter(food -> !food.getDescription().toLowerCase().contains(restriction) && !food.getFoodName().toLowerCase().contains(restriction))
                                 .collect(Collectors.toList());
                         break;
                 }
             }
             foods = foods.stream().limit(3).collect(Collectors.toList());
-            reply = "Bạn muốn ăn " + taste + "? Tôi gợi ý: " + formatFoodList(foods, request);
+            responseJson.addProperty("fulfillmentText", "Bạn muốn ăn " + taste + "? Tôi gợi ý:");
+            responseJson.add("foods", gson.toJsonTree(foods)); // Trả về danh sách món ăn dưới dạng JSON
         } else if (!restrictions.isEmpty()) {
             for (String restriction : restrictions) {
                 switch (restriction) {
@@ -176,7 +162,8 @@ public class ChatbotWebhook extends HttpServlet {
                 }
             }
             foods = foods.stream().limit(3).collect(Collectors.toList());
-            reply = "Bạn không ăn được " + String.join(" và ", restrictions) + "? Tôi gợi ý: " + formatFoodList(foods, request);
+            responseJson.addProperty("fulfillmentText", "Bạn không ăn được " + String.join(" và ", restrictions) + "? Tôi gợi ý:");
+            responseJson.add("foods", gson.toJsonTree(foods));
         } else if (category != null) {
             switch (category) {
                 case "nước":
@@ -184,54 +171,47 @@ public class ChatbotWebhook extends HttpServlet {
                             .filter(food -> food.getCategoryId() == 4)
                             .limit(3)
                             .collect(Collectors.toList());
-                    reply = "Bạn khát nước à? Tôi gợi ý vài món nước: " + formatFoodList(foods, request);
+                    responseJson.addProperty("fulfillmentText", "Bạn khát nước à? Tôi gợi ý vài món nước:");
+                    responseJson.add("foods", gson.toJsonTree(foods));
                     break;
                 case "cơm":
                     foods = foods.stream()
                             .filter(food -> food.getCategoryId() == 1)
                             .limit(3)
                             .collect(Collectors.toList());
-                    reply = "Bạn muốn món cơm? Tôi gợi ý: " + formatFoodList(foods, request);
+                    responseJson.addProperty("fulfillmentText", "Bạn muốn món cơm? Tôi gợi ý:");
+                    responseJson.add("foods", gson.toJsonTree(foods));
                     break;
                 case "bún":
                     foods = foods.stream()
                             .filter(food -> food.getCategoryId() == 2)
                             .limit(3)
                             .collect(Collectors.toList());
-                    reply = "Bạn muốn món bún? Tôi gợi ý: " + formatFoodList(foods, request);
+                    responseJson.addProperty("fulfillmentText", "Bạn muốn món bún? Tôi gợi ý:");
+                    responseJson.add("foods", gson.toJsonTree(foods));
                     break;
                 case "phở":
                     foods = foods.stream()
                             .filter(food -> food.getCategoryId() == 3)
                             .limit(3)
                             .collect(Collectors.toList());
-                    reply = "Bạn muốn món phở? Tôi gợi ý: " + formatFoodList(foods, request);
+                    responseJson.addProperty("fulfillmentText", "Bạn muốn món phở? Tôi gợi ý:");
+                    responseJson.add("foods", gson.toJsonTree(foods));
                     break;
                 default:
                     foods = foods.stream().limit(3).collect(Collectors.toList());
-                    reply = "Bạn chưa nói rõ lắm, đây là vài gợi ý ngẫu nhiên: " + formatFoodList(foods, request);
+                    responseJson.addProperty("fulfillmentText", "Bạn chưa nói rõ lắm, đây là vài gợi ý ngẫu nhiên:");
+                    responseJson.add("foods", gson.toJsonTree(foods));
                     break;
             }
         } else {
             foods = foods.stream().limit(3).collect(Collectors.toList());
-            reply = "Bạn chưa nói rõ lắm, đây là vài gợi ý ngẫu nhiên: " + formatFoodList(foods, request);
+            responseJson.addProperty("fulfillmentText", "Bạn chưa nói rõ lắm, đây là vài gợi ý ngẫu nhiên:");
+            responseJson.add("foods", gson.toJsonTree(foods));
         }
 
-        // Tạo JSON phản hồi
-        JsonObject responseJson = new JsonObject();
-        responseJson.addProperty("fulfillmentText", reply);
-
-        // Gửi phản hồi
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(gson.toJson(responseJson));
-    }
-
-    private String formatFoodList(List<Food> foods, HttpServletRequest request) {
-        if (foods.isEmpty()) return "Không tìm thấy món nào phù hợp.";
-        String contextPath = request.getContextPath();
-        return foods.stream()
-                .map(food -> food.getFoodName() + " (" + food.getPrice() + "đ)")
-                .collect(Collectors.joining(", "));
     }
 }
