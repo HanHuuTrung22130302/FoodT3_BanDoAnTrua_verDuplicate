@@ -56,11 +56,35 @@
                 </c:forEach>
                 <div class="line_end"></div>
                 <div class="order-total">
-                    <strong>Tổng tiền:</strong>
+                    <strong>Thành tiền:</strong>
                     <span class="total-money">${String.format("%06d",order.totalAmount)} đ</span>
+                </div>
+                <div class="order-total">
+                    <strong>Phương thức thanh toán: </strong>
+                    <span class="codBanking">
+                        <c:choose>
+                            <c:when test="${order.paymentMethod == 2}">Tài khoản ngân hàng</c:when>
+                            <c:when test="${order.paymentMethod == 1}">Nhận hàng thanh toán</c:when>
+                        </c:choose>
+                    </span>
                 </div>
 
             </div>
+        </div>
+        <div class="order-footer">
+
+            <c:if test="${order.orderStatus == 4 }">
+                <a class="cancel-order-button" href=""
+                   style="text-decoration: none">Đánh giá</a>
+            </c:if>
+
+            <c:if test="${order.orderStatus == 1 || order.orderStatus == 2 || order.orderStatus == 3 }">
+                <a class="cancel-order-button" href="javascript:void(0);"
+                   onclick="confirmCancel(${order.invoiceId})" style="text-decoration: none">Hủy đơn
+                    hàng</a>
+            </c:if>
+
+
         </div>
     </div>
 
@@ -239,9 +263,9 @@
             <div class="tracking-item">
 
                 <div class="details">
-                    <p class="status-text" style="color: #b5292f ; font-size: 50px ">Đơn hàng đã hủy</p>
+                    <p class="status-text" style="color: #b5292f ; font-size: 30px ">Đơn hàng đã hủy</p>
                     <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với chúng tôi</p>
-                    <p class="description">Có gì không vừa ý, mong quý khách hãy liên hệ với chúng tôi</p>
+
                 </div>
 
             </div>
