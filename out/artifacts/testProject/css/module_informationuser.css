@@ -1,0 +1,171 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  display: flex;
+  max-width: 900px;
+  margin: 20px auto;
+  border-radius: 5px;
+  border: 1px solid #bebdbd;
+}
+.sidebar {
+  width: 150px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.sidebar img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+.sidebar .username {
+  font-weight: bold;
+  margin-top: 10px;
+}
+.sidebar .edit-profile {
+  color: #888;
+  font-size: 12px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; 
+  line-height: 0;
+}
+.sidebar ul li {
+  margin: 0; 
+
+}
+.sidebar ul li a:hover {
+  background-color: #b5292f;
+  padding: 10px 0px;
+  color: white;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+.sidebar ul li a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.sidebar ul li a i {
+  margin-right: 10px;
+  width: 20%;
+  text-align: end;
+}
+.sidebar ul li .namemenu {
+  width: 80%;
+}
+
+.sidebar ul li a span.new {
+  background-color: #ff424e;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-left: 5px;
+}
+.content {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-left: 1px solid #ddd;
+  height: 570px; /* Chiều cao cố định */
+  overflow-y: auto;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.content h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.content form {
+  max-width: 600px;
+}
+.content form .form-group {
+  margin-bottom: 15px;
+}
+.content form .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.content form .form-group input[type="text"],
+.content form .form-group input[type="email"],
+.content form .form-group input[type="password"],
+.content form .form-group textarea,
+.content form .form-group input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.content form .form-group textarea {
+  resize: none;
+  height: 100px;
+}
+.content form .gender-picker {
+  display: flex;
+  gap: 10px;
+}
+.content form .gender-picker label {
+  font-weight: normal;
+}
+.content form .form-group .save-btn {
+  background-color: #ff424e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.linehead{
+  width: 100%;
+  height: 1px;
+  background-color: #bebdbd;
+  margin-bottom: 25px;
+}
+.linename{
+  width: 100%;
+  height: 1px;
+  background-color: #bebdbd;
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+.usernamediv{
+  font-weight:700;
+  text-align: center;
+}
+.container button{
+  background-color: #b5292f;
+  color: #fff;
+  border: none;
+  padding: 10px 50px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.container button:hover{
+  transform: translateY(-5px);
+  transition: all 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng */
+}
+#password .save-btn{
+  background-color: #b5292f;
+  color: #fff;
+  border: none;
+  padding: 10px 50px;
+  border-radius: 5px;
+  cursor: pointer;
+}

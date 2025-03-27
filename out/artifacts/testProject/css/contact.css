@@ -1,0 +1,337 @@
+body,html{
+    margin: 0;
+    padding: 0px;
+    font-family: 'Poppins', sans-serif;
+    height: 100%;
+}
+#header{
+    width: 100%;
+    box-sizing: border-box;
+    height: 140px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #e6e6e6;
+}
+#header .containerheaderAll{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#header .containers{
+    max-width: 1200px;
+    max-height: 140px;
+}
+#header .containerss{
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; 
+    max-width: 1200px;
+    max-height: 95px;
+}
+#header .containerss .left{
+    width: 50%;
+}
+#header .containerss  img{
+    width: 310px;
+    height: 100px;
+}
+#header .containerss .right{
+    width: 50%;
+    display: flex;
+    justify-content: end;
+    gap: 40px;
+    margin-right: 30px;
+}
+#header .containerss .right .nav_item_shop {
+    position: relative;
+}
+#header .containerss .right .count {
+    position: absolute;
+    margin: 5px;
+    background-color: #ffe600;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    border-radius: 50%;
+    top: -2px;
+    line-height: 28px;
+  }
+#header .containerss .right .fa-solid{
+    color: #B5292F;
+    margin: 10px;
+}
+#header .containerss .right a{
+    color: rgb(2, 2, 2);
+    text-decoration: none;
+    font-weight: 550;
+}
+#header .bottom  {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    z-index: 1000;
+}
+#header .bottom .menu{
+    width: 50%;
+    height: 45px;
+    z-index: 1000;
+}
+#header .bottom   .menu .menu-item .tabbar .fa-solid{
+margin-left: 20px;
+color: #B5292F;
+margin-right: 10px;
+}
+#header .bottom   .menu .menu-list{
+    padding: 0px;
+}
+#header .bottom   .menu a{
+    text-decoration: none;
+    color: rgb(39, 39, 39);
+}
+#header .bottom   .menu ul{
+    height: 100%;
+}
+#header .bottom .menu ul>li {
+    list-style-type: none;
+    width: max-content;
+    float: left;
+    font-weight: 600;
+    cursor: pointer;
+    padding-right: 40px;
+}
+#header .bottom .menu  ul>li>a:hover {
+    color: #B5292F;
+}
+#header .bottom   .menu .menu-item{
+    position: relative;
+    height: 100%;
+}
+#header .bottom .menu ul .submenu {
+    position: absolute;
+    height: 150px;
+    width: auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    
+    border-top: none;
+    top: 29px;
+    left: 20px;
+    display: none;
+    background-color: white;
+    color: black;
+    border-radius: 0;
+  }
+  #header .menu ul > li:hover .submenu {
+    display: block;
+    border-radius: 0 0 10px 10px;
+    padding-top: 10px;
+  }
+  #header .menu ul.submenu > li {
+    float: none;
+    width: 80px;
+    height: 30px;
+    
+  }
+#header .menu .submenu a{
+    position: relative;
+}
+#header .menu .submenu i{
+    position: absolute;
+    left: -25px;
+    width: auto;
+    height: auto;
+}
+#header .bottom .search{
+    width: 50%;
+    height: 35px;
+    display: flex;
+    justify-content: end;
+    position: relative;
+}
+#header .bottom .search input{
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #918f8f;
+    border-radius: 20px;
+    margin-right: 20px;
+    font-weight: 600;
+    background: #f9f9f9;
+    color: #222222;
+    margin: 0;
+}
+#header .bottom .search button{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #B5292F;
+    border-radius: 50%;
+    background-color: #B5292F;
+    color: white;
+    right: 10px;
+    top: 5px;
+}
+
+/* Xử lý footer */
+#footer {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #b5292f;
+    border-top: 2px solid #e6e6e6;
+    
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+  }
+  #footer .footer-info {
+    width: 100%;
+    width: 800px;
+    height: 50%;
+    display: flex;
+  }
+  #footer .footer-info .left {
+    width: 70%;
+    color: white;
+  }
+  #footer .footer-info .right {
+    width: 30%;
+    color: white;
+  }
+  #footer .footer-info .right i {
+    color: white;
+    font-size: 20px;
+    margin: 5px;
+  }
+#footer .footer-social {
+    display: flex;
+    gap: 10px;
+    color: #e6e6e6;
+    margin-top:20px ;
+}
+#footer .footer-social a{
+    color: white;
+    text-decoration: none;
+}
+#footer .footer-social .mid{
+    margin-left: 100px;
+}
+
+
+/* Xử lý container */
+.container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    overflow: hidden;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    border: 1px solid #cecece;
+    
+}
+.form-section {
+    padding: 40px;
+    width: 45%;
+}
+.form-section h2 {
+    color: #a60e0e;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.form-group {
+    
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-group input, .form-group textarea {
+    width: calc(100% - 10px);
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.form-group textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+}
+.form-group .full-width {
+    width: 100%;
+}
+.submit-btn {
+    background-color: #b5292f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.submit-btn i {
+    margin-left: 10px;
+}
+.submit-btn:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+.containerright{
+    width: 55%;
+    border-left: 1px solid #cecece;
+}
+
+.container2{
+    max-width: 1200px;
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 50px;
+}.contact_address_item {
+    border: 5px solid black;
+}
+
+ul li p::before {
+    display: inline-block;
+    font-family: "Font Awesome 6 Free"; 
+    font-weight: 900; 
+    margin-right: 8px; 
+}
+
+
+.location::before {
+    content: "\f54f"; 
+}
+
+.phone::before {
+    content: "\f879"; 
+}
+
+.email::before {
+    content: "\f0e0"; 
+}
+.line{
+    margin-top: 70px;
+    max-width: 1200px;
+    height: 1px;
+    background-color: black;
+}
+
+
+
+
+
+
+
+

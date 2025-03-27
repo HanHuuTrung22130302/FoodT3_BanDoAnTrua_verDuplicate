@@ -3,6 +3,8 @@
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="testProject" />
+      <artifact name="testProject:war" />
+      <artifact name="testProject:war exploded" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -11,9 +13,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="[#63] Feat: Thêm tùy chọn đăng nhập bằng tài khoản FaceBook">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/ChatbotWebhook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/ChatbotWebhook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/chatbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/chatbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/UnlockController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/VerifyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/VerifyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/signUpAjax.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/signUpAjax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +44,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="signin,signup" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -114,7 +118,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "chucnangchatbox",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
@@ -135,6 +139,12 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\Nam3HocKy1\BTLapTrinhWeb\gitdoanck\LTWEB_FINAL_TERM\src\main\webapp\js" />
       <recent name="G:\Nam3HocKy1\BTLapTrinhWeb\gitdoanck\LTWEB_FINAL_TERM\src\main\webapp\css" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\LTWEB_FINAL_TERM\src\main\webapp\js" />
+      <recent name="D:\LTWEB_FINAL_TERM\src\main\java\hcmuaf\nlu\edu\vn\testproject\services" />
+      <recent name="D:\LTWEB_FINAL_TERM\src\main\java\hcmuaf\nlu\edu\vn\testproject\controllers\user" />
+      <recent name="D:\LTWEB_FINAL_TERM\src\main\webapp\views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="hcmuaf.nlu.edu.vn.testproject.daos" />
@@ -247,6 +257,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.DbContext" />
         <item itemvalue="Application.DbContext" />
       </list>
     </recent_temporary>

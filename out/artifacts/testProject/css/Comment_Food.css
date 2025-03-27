@@ -1,0 +1,100 @@
+
+    .cmt-header {
+        font-size: 25px;
+        font-weight: bold;
+        color: #d32f2f;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .rating-section {
+        margin-left: 10px;
+        margin-bottom: 30px;
+    }
+    .rating-section label {
+        font-size: 20px;
+        color: #333;
+        
+    }
+    .stars {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    .stars button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 30px;
+        color: #ccc;
+    }
+    
+    .comment-section {
+        margin-left: 10px;
+        margin-bottom: 30px;
+    }
+
+    .comment-section label{
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .comment-section textarea {
+        
+        width: 95%;
+        height: 100px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 14px;
+    }
+    .comment-section small {
+        display: block;
+        margin-top: 5px;
+        color: #999;
+    }
+    .buttons {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .buttons button {
+        background-color: #d32f2f;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 10px;
+    }
+   
+    .rating-info {
+        background-color: #fff9c4;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        color: #333;
+    }
+    .rating-info .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .rating-info .info-item i {
+        color: #ffcc00;
+        margin-right: 5px;
+    }
+    .rating-info .info-item span {
+        margin-left: 5px;
+    }
+    .rating-info .info-item:last-child {
+        margin-bottom: 0;
+    }
+    .rating-info .info-item .description {
+        flex-grow: 1;
+    }
+   
