@@ -50,6 +50,7 @@ public class VerificationController extends HttpServlet {
         account.setName(pendingAccount.getName());
         account.setPassword(pendingAccount.getPassword()); // Mật khẩu đã được mã hóa
         account.setEmail(pendingAccount.getEmail());
+        account.setLoginType("normal"); // Set loginType là normal cho tài khoản đăng ký thông thường
         accountDAO.insertAccount(account);
 
         // Xóa bản ghi tạm

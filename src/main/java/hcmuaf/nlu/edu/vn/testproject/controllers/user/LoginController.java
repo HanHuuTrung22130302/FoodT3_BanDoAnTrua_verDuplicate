@@ -73,13 +73,19 @@ public class LoginController extends HttpServlet {
             logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thành công", "Người dùng đã đăng nhập");
             out.print("{\"status\": \"success\", \"message\": \"Đăng nhập thành công\"}");
         } else {
-            int attempts = dao.getAccountByName(name).getFailedAttempts();
-            if (attempts >= MAX_FAILED_ATTEMPTS) {
-                logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thất bại", "Tài khoản bị khóa do quá số lần thử");
-                out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
+            Account failedAccount = dao.getAccountByName(name);
+            if (failedAccount != null) {
+                int attempts = failedAccount.getFailedAttempts();
+                if (attempts >= MAX_FAILED_ATTEMPTS) {
+                    logService.logActivity(failedAccount.getAccountId(), failedAccount.getRoleId(), "Đăng nhập", "Thất bại", "Tài khoản bị khóa do quá số lần thử");
+                    out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
+                } else {
+                    logService.logActivity(failedAccount.getAccountId(), failedAccount.getRoleId(), "Đăng nhập", "Thất bại", "Sai mật khẩu, còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử");
+                    out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
+                }
             } else {
-                logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thất bại", "Sai mật khẩu, còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử");
-                out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
+                logService.logActivity(0, 0, "Đăng nhập", "Thất bại", "Tài khoản không tồn tại: " + name);
+                out.print("{\"status\": \"error\", \"message\": \"Tài khoản không tồn tại\"}");
             }
         }
     }
