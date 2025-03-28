@@ -18,7 +18,7 @@ public class VerifyService {
     }
 
     public LocalDateTime expireDateTime() {
-        return LocalDateTime.now().plusMinutes(5); // Thời gian hết hạn là 5 phút
+        return LocalDateTime.now().plusMinutes(20); // Thời gian hết hạn là 5 phút
     }
 
     public boolean isExpireTime(LocalDateTime expiryTime) {
@@ -59,7 +59,7 @@ public class VerifyService {
 
             String link = "http://localhost:8080/testProject/verify?token=" + token;
             String content = "<h1>Xin chào " + name + "</h1>" +
-                    "<p>Vui lòng nhấp vào liên kết dưới đây để xác thực email của bạn (hết hạn sau 1 phút):</p>" +
+                    "<p>Vui lòng nhấp vào liên kết dưới đây để xác thực email của bạn (hết hạn sau 20 phút):</p>" +
                     "<a href='" + link + "'>Xác thực email</a>";
             msg.setContent(content, "text/html; charset=UTF-8");
 

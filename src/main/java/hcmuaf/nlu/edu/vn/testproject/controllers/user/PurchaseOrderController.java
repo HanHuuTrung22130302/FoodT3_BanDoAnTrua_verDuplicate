@@ -3,6 +3,7 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.OrderInvoice;
 import hcmuaf.nlu.edu.vn.testproject.services.InvoiceOrderServices;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @WebServlet(name = "PurchaseOrderController", value = "/PurchaseOrder")
 public class PurchaseOrderController extends HttpServlet {
-
+    private LogService logService = new LogService();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
