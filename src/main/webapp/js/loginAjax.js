@@ -1,35 +1,21 @@
 $(document).ready(function () {
-    $("#loginForm").on("submit", function (event) {
-        event.preventDefault();
-
-        let formData = $(this).serialize();
-        let captchaResponse = grecaptcha.getResponse();
-        if (captchaResponse) {
-            formData += "&g-recaptcha-response=" + captchaResponse;
-        }
+    $("form[action='login']").on("submit", function (event) {
+        event.preventDefault(); // Ngăn chặn hành động submit mặc định
 
         $.ajax({
             type: "POST",
-            url: "/testProject/login", // Cứng URL để đảm bảo đúng
-            data: formData,
-            dataType: "json",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
             success: function (response) {
-                console.log("Login response:", response); // Thêm log để kiểm tra
-                $("#login_messageContainer").text(response.message);
                 if (response.status === "success") {
-                    $("#login_messageContainer").css("color", "green");
-                    setTimeout(() => {
-                        window.location.href = response.redirect || "/testProject/home";
-                    }, 2000);
+                    window.location.href = "home"; // Chuyển hướng đến trang home
+                } else if (response.status === "locked") {
+                    $("#login_messageContainer").css("color", "red").text(response.message);
                 } else {
-                    $("#login_messageContainer").css("color", "red");
-                    if (response.message.includes("CAPTCHA")) {
-                        $("#captchaContainer").show();
-                    }
+                    $("#login_messageContainer").css("color", "red").text(response.message);
                 }
             },
-            error: function (xhr, status, error) {
-                console.log("Login error:", xhr, status, error); // Thêm log để kiểm tra lỗi
+            error: function () {
                 $("#login_messageContainer").css("color", "red").text("Có lỗi xảy ra. Vui lòng thử lại.");
             }
         });
