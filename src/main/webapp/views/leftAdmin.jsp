@@ -39,8 +39,8 @@
             </li>
 
             <li>
-                <a href="views/log_management.jsp">
-                    <i class="fas fa-shopping-cart"> </i>
+                <a href="LogManagement">
+                    <i class="fas fa-chart-bar"> </i>
                     Quản lý log
                 </a>
             </li>
