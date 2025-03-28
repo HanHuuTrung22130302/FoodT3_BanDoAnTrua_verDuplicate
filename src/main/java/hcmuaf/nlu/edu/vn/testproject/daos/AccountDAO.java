@@ -22,13 +22,15 @@ public class AccountDAO {
             ps.setString(1, email);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(
+                Account account = new Account(
                         rs.getInt("account_id"),
                         rs.getInt("role_id"),
                         rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
+                account.setLoginType(rs.getString("login_type"));
+                return account;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,13 +50,15 @@ public class AccountDAO {
             ps.setInt(1, userId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(
+                Account account = new Account(
                         rs.getInt("account_id"),
                         rs.getInt("role_id"),
                         rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
+                account.setLoginType(rs.getString("login_type"));
+                return account;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,13 +78,15 @@ public class AccountDAO {
             ps.setString(1, name);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(
+                Account account = new Account(
                         rs.getInt("account_id"),
                         rs.getInt("role_id"),
                         rs.getString("password"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
+                account.setLoginType(rs.getString("login_type"));
+                return account;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,7 +112,7 @@ public class AccountDAO {
     }
 
     public void insertAccount(Account account) {
-        String query = "INSERT INTO account (role_id, password, name, email) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO account (role_id, password, name, email, login_type) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -116,6 +122,7 @@ public class AccountDAO {
             ps.setString(2, account.getPassword());
             ps.setString(3, account.getName());
             ps.setString(4, account.getEmail());
+            ps.setString(5, account.getLoginType());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

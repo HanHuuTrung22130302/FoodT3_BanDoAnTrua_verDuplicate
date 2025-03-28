@@ -59,6 +59,7 @@ public class LoginWithGoogleController extends HttpServlet {
                 session.setAttribute("currentUser", existingAccount);
             } else {
                 Account newAccount = new Account(0, 2, "", googleAccount.getName(), googleAccount.getEmail());
+                newAccount.setLoginType("google"); // Đánh dấu là tài khoản Google
                 accountDAO.insertAccount(newAccount);
                 session.setAttribute("currentUser", newAccount);
             }
