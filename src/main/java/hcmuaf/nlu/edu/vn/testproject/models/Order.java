@@ -18,6 +18,11 @@ public class Order {
         this.status = status;
     }
 
+    // Thêm constructor mới nhận List<Item>
+    public Order(List<Item> items) {
+        this.items = items;
+    }
+
     public int getIdFood() {
         return orderId;
     }
