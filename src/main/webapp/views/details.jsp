@@ -27,7 +27,7 @@
 
 <div id="containe">
     <div class="address">
-        <h2>Địa Chỉ Nhận Hàng</h2>
+        <h2 style="border-bottom: solid 1px #dddddd; margin-right: 5px">Địa Chỉ Nhận Hàng</h2>
         <p>${order.recipientName}</p>
         <p>${order.phoneNumber}</p>
         <p>${order.deliveryAddress}</p>
