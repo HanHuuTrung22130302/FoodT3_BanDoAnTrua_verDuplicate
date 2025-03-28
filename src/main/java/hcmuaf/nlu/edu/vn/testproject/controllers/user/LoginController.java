@@ -1,7 +1,8 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
-import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.daos.LoginDAO;
+import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 public class LoginController extends HttpServlet {
     private static final int MAX_FAILED_ATTEMPTS = 5;
     private static final int LOCK_DURATION_MINUTES = 15;
+    private LogService logService = new LogService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,46 +35,50 @@ public class LoginController extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-                String name = request.getParameter("user");
+        String name = request.getParameter("user");
         String password = request.getParameter("pass");
 
         if (name == null || password == null || name.trim().isEmpty() || password.trim().isEmpty()) {
+            logService.logActivity(0, 0, "Đăng nhập", "Thất bại", "Tên người dùng hoặc mật khẩu trống");
             sendErrorResponse(out, request, response, "Tên người dùng và mật khẩu không được để trống");
             return;
         }
 
         LoginDAO dao = new LoginDAO();
-        Account account = dao.getAccountByName(name); // Lấy thông tin tài khoản trước
+        Account account = dao.getAccountByName(name);
 
         if (account == null) {
+            logService.logActivity(0, 0, "Đăng nhập", "Thất bại", "Tài khoản không tồn tại: " + name);
             sendErrorResponse(out, request, response, "Tài khoản không tồn tại");
             return;
         }
 
-        // Kiểm tra trạng thái khóa
         if (account.isLocked()) {
             long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), account.getLockTime().plusMinutes(LOCK_DURATION_MINUTES));
             if (minutesLeft > 0) {
+                logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thất bại", "Tài khoản bị khóa còn " + minutesLeft + " phút");
                 out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa. Vui lòng thử lại sau " + minutesLeft + " phút.\"}");
                 return;
             } else {
-                dao.resetFailedAttempts(account.getAccountId()); // Mở khóa nếu hết thời gian
+                dao.resetFailedAttempts(account.getAccountId());
                 account.setLocked(false);
                 account.setLockTime(null);
             }
         }
 
-        // Kiểm tra đăng nhập
         account = dao.login(name, password);
         if (account != null) {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", account);
+            logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thành công", "Người dùng đã đăng nhập");
             out.print("{\"status\": \"success\", \"message\": \"Đăng nhập thành công\"}");
         } else {
             int attempts = dao.getAccountByName(name).getFailedAttempts();
             if (attempts >= MAX_FAILED_ATTEMPTS) {
+                logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thất bại", "Tài khoản bị khóa do quá số lần thử");
                 out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
             } else {
+                logService.logActivity(account.getAccountId(), account.getRoleId(), "Đăng nhập", "Thất bại", "Sai mật khẩu, còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử");
                 out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
             }
         }

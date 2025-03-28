@@ -2,9 +2,7 @@ package hcmuaf.nlu.edu.vn.testproject.services;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.BannerDao;
 import hcmuaf.nlu.edu.vn.testproject.models.Banner;
-import jakarta.servlet.annotation.MultipartConfig;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BannerService {
@@ -15,12 +13,14 @@ public class BannerService {
         return banners;
     }
 
-    public void addBanner(Banner banner) {
+    public boolean addBanner(Banner banner) {
         dao.addBanner(banner);
+        return false;
     }
 
-    public void deleteBanner(int id) {
+    public boolean deleteBanner(int id) {
         dao.deleteBaner(id);
+        return false;
     }
 
     public static void main(String[] args) {

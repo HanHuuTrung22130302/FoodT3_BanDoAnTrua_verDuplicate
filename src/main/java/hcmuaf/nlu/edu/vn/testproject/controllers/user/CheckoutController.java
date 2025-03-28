@@ -6,6 +6,7 @@ import hcmuaf.nlu.edu.vn.testproject.daos.DistanceCheck;
 import hcmuaf.nlu.edu.vn.testproject.models.*;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
 import hcmuaf.nlu.edu.vn.testproject.daos.Config;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -20,6 +21,7 @@ import java.util.*;
 public class CheckoutController extends HttpServlet {
 
     private FoodService foodService;
+    private LogService logService = new LogService();
     private static final String STORE_ADDRESS = "Trường Đại học Nông Lâm TP. Hồ Chí Minh, khu phố 6, Thủ Đức, Hồ Chí Minh, Việt Nam";
     private static final double MAX_DELIVERY_DISTANCE = 40.0;
     private static final double FREE_SHIPPING_DISTANCE = 10.0;
@@ -37,6 +39,7 @@ public class CheckoutController extends HttpServlet {
         Account currentUser = (Account) session.getAttribute("currentUser");
 
         if (currentUser == null) {
+            logService.logActivity(0, 0, "Thanh toán", "Thất bại", "Người dùng chưa đăng nhập");
             response.sendRedirect("login");
         } else {
             Order order = (Order) session.getAttribute("order");
@@ -83,6 +86,7 @@ public class CheckoutController extends HttpServlet {
             );
 
             if (distance > MAX_DELIVERY_DISTANCE) {
+                logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Địa chỉ giao hàng quá xa (> " + MAX_DELIVERY_DISTANCE + "km)");
                 request.setAttribute("errorMessage", "Không thể giao hàng vì địa chỉ quá xa cửa hàng (> " + MAX_DELIVERY_DISTANCE + "km).");
                 request.setAttribute("order", session.getAttribute("order"));
                 request.setAttribute("totalAmount", totalAmount);
@@ -96,6 +100,7 @@ public class CheckoutController extends HttpServlet {
                 shippingFee = (int) Math.ceil(extraDistance / 10) * SHIPPING_FEE_PER_10KM;
             }
         } catch (IOException e) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi kiểm tra địa chỉ: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi khi kiểm tra địa chỉ: " + e.getMessage());
             request.setAttribute("order", session.getAttribute("order"));
@@ -122,9 +127,11 @@ public class CheckoutController extends HttpServlet {
                 pendingInvoice.setIsPaid(0); // Chưa thanh toán
                 session.setAttribute("pendingInvoice", pendingInvoice);
                 session.setAttribute("shippingFee", shippingFee); // Lưu phí vận chuyển
+                logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Đang xử lý", "Chuyển hướng đến VNPay, Tổng tiền: " + finalAmount);
                 response.sendRedirect(paymentUrl);
                 return;
             } else {
+                logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi tạo yêu cầu thanh toán VNPay");
                 request.setAttribute("errorMessage", "Lỗi khi tạo yêu cầu thanh toán VNPay.");
                 request.setAttribute("order", session.getAttribute("order"));
                 request.setAttribute("totalAmount", totalAmount);
@@ -163,11 +170,13 @@ public class CheckoutController extends HttpServlet {
                 detail.setTotalAmount(item.getQuantity() * item.getFood().getPrice());
                 invoiceDAO.addInvoiceDetail(detail);
             }
-
+            String paymentMethodStr = paymentMethod == 1 ? "COD" : "Thẻ ngân hàng";
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thành công", "Mã đơn hàng: " + invoice.getInvoiceId() + ", Phương thức: " + paymentMethodStr + ", Tổng tiền: " + finalAmount);
             session.removeAttribute("order");
             session.setAttribute("paymentSuccessMessage", "Thanh toán thành công!");
             response.sendRedirect("cart");
         } catch (Exception e) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi hệ thống: " + e.getMessage() + ", Tổng tiền: " + finalAmount);
             e.printStackTrace();
             response.sendRedirect("checkout.jsp?error=true");
         }
