@@ -7,9 +7,13 @@ import hcmuaf.nlu.edu.vn.testproject.models.*;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
 import hcmuaf.nlu.edu.vn.testproject.daos.Config;
 import hcmuaf.nlu.edu.vn.testproject.services.LogService;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -41,28 +45,42 @@ public class CheckoutController extends HttpServlet {
         if (currentUser == null) {
             logService.logActivity(0, 0, "Thanh toán", "Thất bại", "Người dùng chưa đăng nhập");
             response.sendRedirect("login");
-        } else {
-            Order order = (Order) session.getAttribute("order");
-            if (order == null || order.getItems().isEmpty()) {
-                response.sendRedirect("cart");
-            } else {
-                int totalAmount = 0;
-                for (Item item : order.getItems()) {
-                    totalAmount += item.getQuantity() * item.getFood().getPrice();
-                }
-                request.setAttribute("order", order);
-                request.setAttribute("totalAmount", totalAmount);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
-                dispatcher.forward(request, response);
-            }
+            return;
         }
+
+        FoodCartDAO cartDAO = (FoodCartDAO) foodService;
+        List<Item> cartItems = cartDAO.getCartItems(currentUser.getAccountId());
+        if (cartItems.isEmpty()) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Thanh toán", "Thất bại", "Giỏ hàng trống");
+            response.sendRedirect("cart");
+            return;
+        }
+
+        int totalAmount = 0;
+        for (Item item : cartItems) {
+            totalAmount += item.getQuantity() * item.getFood().getPrice();
+        }
+
+        Order order = new Order(cartItems); // Sử dụng constructor mới
+        request.setAttribute("order", order);
+        request.setAttribute("totalAmount", totalAmount);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login");
+            return;
+        }
         int idAcc = currentUser.getAccountId();
+
+        // Khai báo cartDAO trong doPost
+        FoodCartDAO cartDAO = (FoodCartDAO) foodService;
 
         String recipientName = request.getParameter("tennguoinhan");
         String phoneNumber = request.getParameter("sdtnhan");
@@ -88,7 +106,7 @@ public class CheckoutController extends HttpServlet {
             if (distance > MAX_DELIVERY_DISTANCE) {
                 logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Địa chỉ giao hàng quá xa (> " + MAX_DELIVERY_DISTANCE + "km)");
                 request.setAttribute("errorMessage", "Không thể giao hàng vì địa chỉ quá xa cửa hàng (> " + MAX_DELIVERY_DISTANCE + "km).");
-                request.setAttribute("order", session.getAttribute("order"));
+                request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
                 request.setAttribute("totalAmount", totalAmount);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
                 dispatcher.forward(request, response);
@@ -101,9 +119,8 @@ public class CheckoutController extends HttpServlet {
             }
         } catch (IOException e) {
             logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi kiểm tra địa chỉ: " + e.getMessage());
-            e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi khi kiểm tra địa chỉ: " + e.getMessage());
-            request.setAttribute("order", session.getAttribute("order"));
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
             request.setAttribute("totalAmount", totalAmount);
             RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
             dispatcher.forward(request, response);
@@ -126,14 +143,14 @@ public class CheckoutController extends HttpServlet {
                 pendingInvoice.setPaymentMethod(paymentMethod);
                 pendingInvoice.setIsPaid(0); // Chưa thanh toán
                 session.setAttribute("pendingInvoice", pendingInvoice);
-                session.setAttribute("shippingFee", shippingFee); // Lưu phí vận chuyển
+                session.setAttribute("shippingFee", shippingFee);
                 logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Đang xử lý", "Chuyển hướng đến VNPay, Tổng tiền: " + finalAmount);
                 response.sendRedirect(paymentUrl);
                 return;
             } else {
                 logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi tạo yêu cầu thanh toán VNPay");
                 request.setAttribute("errorMessage", "Lỗi khi tạo yêu cầu thanh toán VNPay.");
-                request.setAttribute("order", session.getAttribute("order"));
+                request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
                 request.setAttribute("totalAmount", totalAmount);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
                 dispatcher.forward(request, response);
@@ -154,15 +171,15 @@ public class CheckoutController extends HttpServlet {
         invoice.setOrderDate(orderDate);
         invoice.setTotalAmount(finalAmount);
         invoice.setPaymentMethod(paymentMethod);
-        invoice.setIsPaid(paymentMethod == 2 ? 1 : 0); // Thẻ ngân hàng coi như đã thanh toán, COD chưa thanh toán
+        invoice.setIsPaid(paymentMethod == 2 ? 1 : 0); // Thẻ ngân hàng đã thanh toán, COD chưa thanh toán
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
 
         try {
             invoiceDAO.addInvoice(invoice);
-            Order order = (Order) session.getAttribute("order");
+            List<Item> cartItems = cartDAO.getCartItems(idAcc);
 
-            for (Item item : order.getItems()) {
+            for (Item item : cartItems) {
                 InvoiceDetail detail = new InvoiceDetail();
                 detail.setInvoiceId(invoice.getInvoiceId());
                 detail.setFoodId(item.getFood().getFoodId());
@@ -170,15 +187,21 @@ public class CheckoutController extends HttpServlet {
                 detail.setTotalAmount(item.getQuantity() * item.getFood().getPrice());
                 invoiceDAO.addInvoiceDetail(detail);
             }
+
+            // Xóa giỏ hàng sau khi thanh toán thành công
+            cartDAO.clearCart(idAcc);
+
             String paymentMethodStr = paymentMethod == 1 ? "COD" : "Thẻ ngân hàng";
             logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thành công", "Mã đơn hàng: " + invoice.getInvoiceId() + ", Phương thức: " + paymentMethodStr + ", Tổng tiền: " + finalAmount);
-            session.removeAttribute("order");
             session.setAttribute("paymentSuccessMessage", "Thanh toán thành công!");
             response.sendRedirect("cart");
         } catch (Exception e) {
             logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi hệ thống: " + e.getMessage() + ", Tổng tiền: " + finalAmount);
-            e.printStackTrace();
-            response.sendRedirect("checkout.jsp?error=true");
+            request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            request.setAttribute("totalAmount", totalAmount);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+            dispatcher.forward(request, response);
         }
     }
 
