@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<div class="priceFood">
+    <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>
+</div>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,14 +53,15 @@
                                 </c:if>
                                 <c:if test="${sessionScope.currentUser.roleId == 2}">
                                     <a href="AccDetail" id="user-link">Thông tin</a>
-<%--                                    <a href="user?idAcc=${sessionScope.currentUser.idAcc}" id="user-link">Thông tin</a>--%>
+                                    <%--                                    <a href="user?idAcc=${sessionScope.currentUser.idAcc}" id="user-link">Thông tin</a>--%>
                                 </c:if>
                                 <a href="logout" id="logout">Đăng xuất</a>
                             </div>
                         </div>
                     </c:if>
                     <div class="nav_item_shop">
-                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>" class="nav-item">
+                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>"
+                           class="nav-item">
                             <i class="fa-solid fa-truck-fast"></i> Đơn hàng
                         </a>
                         <a href="order" class="count">
@@ -123,7 +129,7 @@
 
 <div id="container">
     <div class="w3-content w3-display-container">
-        <c:forEach var ="bann" items="${bans}" >
+        <c:forEach var="bann" items="${bans}">
             <img class="mySlides" src="${pageContext.request.contextPath}/${bann.url}" style="width:100%">
         </c:forEach>
     </div>
@@ -132,7 +138,7 @@
     <button class="w3-button w3-black right" onclick="plusDivs(1)">&#10095;</button>
 
     <div class="dot-container">
-        <c:forEach var ="cd" items="${countDot}" >
+        <c:forEach var="cd" items="${countDot}">
             <span class="dot" onclick="currentSlide(${cd})"></span>
         </c:forEach>
     </div>
@@ -146,12 +152,15 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                    <h3>${food.foodName}</h3>
-                    <p>${food.price}đ</p>
+                        <div class="nameFood">${food.foodName}</div>
+                        <div class="priceFood">
+                            <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                        </div>
                     <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
                     <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
                         Thêm vào giỏ hàng
                     </a>
+                    <div class="reviewFood">ngon vl</div>
                 </div>
             </div>
 
@@ -166,7 +175,7 @@
                     </span>
                     <button class="button-cart">
 
-                        <a class="linktocart"  href="${addtoCart}">
+                        <a class="linktocart" href="${addtoCart}">
                             Thêm vào giỏ hàng
                         </a>
                     </button>
@@ -209,7 +218,7 @@
                     </span>
                     <button class="button-cart">
 
-                        <a class="linktocart"  href="${addtoCart}">
+                        <a class="linktocart" href="${addtoCart}">
                             Thêm vào giỏ hàng
                         </a>
                     </button>
@@ -252,7 +261,7 @@
                     </span>
                     <button class="button-cart">
 
-                        <a class="linktocart"  href="${addtoCart}">
+                        <a class="linktocart" href="${addtoCart}">
                             Thêm vào giỏ hàng
                         </a>
                     </button>
@@ -295,7 +304,7 @@
                     </span>
                     <button class="button-cart">
 
-                        <a class="linktocart"  href="${addtoCart}">
+                        <a class="linktocart" href="${addtoCart}">
                             Thêm vào giỏ hàng
                         </a>
                     </button>
@@ -350,7 +359,8 @@
         <div class="message bot-message">Chào bạn! Bạn muốn ăn gì hôm nay?</div>
     </div>
     <div class="chatbox-input">
-        <input type="text" id="user-input" placeholder="Nhập sở thích của bạn..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <input type="text" id="user-input" placeholder="Nhập sở thích của bạn..."
+               onkeypress="if(event.key === 'Enter') sendMessage()">
         <button onclick="sendMessage()">Gửi</button>
     </div>
 </div>
