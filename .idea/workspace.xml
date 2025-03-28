@@ -10,12 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="Fix loi allmenu mat het san pham">
-      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/LoginDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/LoginDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/OtpRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/loginAjax.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/loginAjax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginWithFacebookController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginWithGoogleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/LoginWithGoogleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/GoogleAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Account3rd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/FacebookLogin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/GoogleLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/GoogleLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/Iconstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/Iconstant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/signin.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -340,7 +341,7 @@
       <workItem from="1742821335168" duration="7562000" />
       <workItem from="1742865617520" duration="609000" />
       <workItem from="1742982333647" duration="1895000" />
-      <workItem from="1743136850407" duration="4315000" />
+      <workItem from="1743136850407" duration="9594000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />

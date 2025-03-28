@@ -2,7 +2,7 @@ package hcmuaf.nlu.edu.vn.testproject.services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.GoogleAccount;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -28,10 +28,11 @@ public class GoogleLogin {
         return accessToken;
     }
 
-    public static Account getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
+    public static GoogleAccount getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
         String link = Iconstant.GOOGLE_LINK_GET_USER_INFO + accessToken;
         String response = Request.Get(link).execute().returnContent().asString();
-        Account googlePojo = new Gson().fromJson(response, Account.class);
+        System.out.println("JSON response from Google: " + response); // Thêm log
+        GoogleAccount googlePojo = new Gson().fromJson(response, GoogleAccount.class);
         return googlePojo;
     }
 }
