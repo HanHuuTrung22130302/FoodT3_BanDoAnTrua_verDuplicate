@@ -152,15 +152,26 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                        <div class="nameFood">${food.foodName}</div>
-                        <div class="priceFood">
-                            <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    <div class="nameFood">${food.foodName}</div>
+                    <div class="priceFood">
+                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    </div>
+                    <div class="card_footer">
+                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                            Thêm vào giỏ
+                        </a>
+                        <div class="reviewFood">
+                            <div class="ratingFood">
+                                <i class="fas fa-star"></i>
+                                <span class="rating-value">4.7</span>
+                            </div>
+                            <div class="soldFood">
+                                <span class="sales-text">Đã bán</span>
+                                <span class="sales-value">2.3k</span>
+                            </div>
                         </div>
-                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                    <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                        Thêm vào giỏ hàng
-                    </a>
-                    <div class="reviewFood">ngon vl</div>
+                    </div>
                 </div>
             </div>
 
@@ -198,12 +209,26 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                    <h3>${food.foodName}</h3>
-                    <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                    <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                        Thêm vào giỏ hàng
-                    </a>
+                    <div class="nameFood">${food.foodName}</div>
+                    <div class="priceFood">
+                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    </div>
+                    <div class="card_footer">
+                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                            Thêm vào giỏ
+                        </a>
+                        <div class="reviewFood">
+                            <div class="ratingFood">
+                                <i class="fas fa-star"></i>
+                                <span class="rating-value">4.7</span>
+                            </div>
+                            <div class="soldFood">
+                                <span class="sales-text">Đã bán</span>
+                                <span class="sales-value">2.3k</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -241,12 +266,26 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                    <h3>${food.foodName}</h3>
-                    <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                    <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                        Thêm vào giỏ hàng
-                    </a>
+                    <div class="nameFood">${food.foodName}</div>
+                    <div class="priceFood">
+                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    </div>
+                    <div class="card_footer">
+                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                            Thêm vào giỏ
+                        </a>
+                        <div class="reviewFood">
+                            <div class="ratingFood">
+                                <i class="fas fa-star"></i>
+                                <span class="rating-value">4.7</span>
+                            </div>
+                            <div class="soldFood">
+                                <span class="sales-text">Đã bán</span>
+                                <span class="sales-value">2.3k</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -284,12 +323,26 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                    <h3>${food.foodName}</h3>
-                    <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                    <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                        Thêm vào giỏ hàng
-                    </a>
+                    <div class="nameFood">${food.foodName}</div>
+                    <div class="priceFood">
+                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    </div>
+                    <div class="card_footer">
+                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                            Thêm vào giỏ
+                        </a>
+                        <div class="reviewFood">
+                            <div class="ratingFood">
+                                <i class="fas fa-star"></i>
+                                <span class="rating-value">4.7</span>
+                            </div>
+                            <div class="soldFood">
+                                <span class="sales-text">Đã bán</span>
+                                <span class="sales-value">2.3k</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
