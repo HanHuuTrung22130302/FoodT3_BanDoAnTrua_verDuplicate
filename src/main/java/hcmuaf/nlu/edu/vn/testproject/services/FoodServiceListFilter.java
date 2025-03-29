@@ -81,9 +81,10 @@ public class FoodServiceListFilter {
         return lsFood;
     }
 
-    public void deleteFood(int idFood) {
+    public boolean deleteFood(int idFood) {
         foodDAO.deleteFood(idFood);
         foodDAO.getAllFood();
+        return false;
     }
 
     public boolean addFood(Food food) {

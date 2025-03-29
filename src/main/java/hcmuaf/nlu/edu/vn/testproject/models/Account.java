@@ -12,8 +12,10 @@ public class Account {
     private int failedAttempts; // Số lần đăng nhập sai
     private boolean isLocked; // Trạng thái khóa
     private LocalDateTime lockTime; // Thời gian khóa
+    private String loginType; // Loại đăng nhập (normal/google)
 
     public Account() {
+        this.loginType = "normal"; // Khởi tạo loginType mặc định là normal
     }
 
     public Account(int accountId, int roleId, String password, String name, String email) {
@@ -22,6 +24,7 @@ public class Account {
         this.password = password;
         this.name = name;
         this.email = email;
+        this.loginType = "normal"; // Mặc định là đăng nhập thông thường
     }
 
     public int getAccountId() {
@@ -96,6 +99,14 @@ public class Account {
         this.lockTime = lockTime;
     }
 
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -108,6 +119,7 @@ public class Account {
                 ", failedAttempts=" + failedAttempts +
                 ", isLocked=" + isLocked +
                 ", lockTime=" + lockTime +
+                ", loginType='" + loginType + '\'' +
                 '}';
     }
 }

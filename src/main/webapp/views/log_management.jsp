@@ -44,8 +44,8 @@
       <c:forEach var="log" items="${logs}">
         <tr>
           <td>${log.timestamp}</td>
-          <td>${log.userId}</td>
-          <td>${log.role}</td>
+          <td>${log.accountId}</td>
+          <td>${log.roleId}</td>
           <td>${log.action}</td>
           <td>${log.result}</td>
           <td>${log.details}</td>

@@ -6,9 +6,15 @@ import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodServiceListFilter;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +28,12 @@ import java.util.List;
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
-
 @WebServlet(name = "ManageFoodController", value = "/foodservice")
 public class ManageFoodController extends HttpServlet {
-    FoodDAO foodDAO = new FoodDAO();
-    CategoryService cs = new CategoryService();
-    FoodServiceListFilter foodServiceListFilter = new FoodServiceListFilter();
+    private FoodDAO foodDAO = new FoodDAO();
+    private CategoryService cs = new CategoryService();
+    private FoodServiceListFilter foodServiceListFilter = new FoodServiceListFilter();
+    private LogService logService = new LogService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,83 +42,72 @@ public class ManageFoodController extends HttpServlet {
         Account currentUser = (Account) session.getAttribute("currentUser");
 
         if (currentUser == null || currentUser.getRoleId() == 2) {
-            // Chuyển hướng về trang home nếu người dùng chưa đăng nhập
+            logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;
         }
 
-        String txtSearch = request.getParameter("text");  // Lấy từ khóa tìm kiếm từ form
-
-        // Lấy số trang, nếu không có thì mặc định là trang 1
+        String txtSearch = request.getParameter("text");
         int page = 1;
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
 
-        // Tính toán offset
-        int pageSize = 10; // Kích thước trang
+        int pageSize = 10;
         int offset = (page - 1) * pageSize;
         List<Food> foodList = new ArrayList<>();
         int totalFoods = 0;
 
-        // Lấy giá trị option từ request
         String option = request.getParameter("option");
         if (option == null || option.isEmpty()) {
-            option = "tatca"; // Mặc định là "Tất cả"
+            option = "tatca";
         }
 
-        // Nếu có từ khóa tìm kiếm
         if (txtSearch != null && !txtSearch.isEmpty()) {
-            // Tìm kiếm theo tên món ăn
             foodList = foodDAO.searchByName(txtSearch);
         } else {
-            // Nếu không có tìm kiếm, lấy danh sách món ăn theo danh mục
-            if ("tatca".equals(option)) {
-                foodList = foodServiceListFilter.getOption("tatca"); // Lấy tất cả món ăn
-            } else {
-                foodList = foodServiceListFilter.getOption(option); // Lấy món ăn theo danh mục
-            }
+            foodList = foodServiceListFilter.getOption(option);
         }
 
         totalFoods = foodList.size();
 
-        // Áp dụng phân trang
         if (offset < totalFoods) {
-            foodList = foodList.subList(
-                    Math.min(offset, totalFoods),
-                    Math.min(offset + pageSize, totalFoods)
-            );
+            foodList = foodList.subList(Math.min(offset, totalFoods), Math.min(offset + pageSize, totalFoods));
         } else {
-            foodList = new ArrayList<>(); // Trả về danh sách rỗng nếu offset vượt tổng số món
+            foodList = new ArrayList<>();
         }
 
-        // Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalFoods / pageSize);
-
-        // Lấy danh sách danh mục
         List<Category> categoryList = cs.getCategories();
 
-        // Đặt thuộc tính cho JSP
         request.setAttribute("list", foodList);
         request.setAttribute("listC", categoryList);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("currentCategory", option); // Truyền danh mục hiện tại
+        request.setAttribute("currentCategory", option);
         request.setAttribute("search", txtSearch);
 
-        // Chuyển tiếp đến JSP
         request.getRequestDispatcher("views/food_service.jsp").forward(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
 
+        if (currentUser == null || currentUser.getRoleId() == 2) {
+            logService.logActivity(0, 0, "Quản lý món ăn", "Thất bại", "Không có quyền truy cập");
+            response.sendRedirect("home");
+            return;
+        }
+
+        String action = request.getParameter("action");
         int idFood = 0;
+
         if ("delete".equals(action)) {
             idFood = Integer.parseInt(request.getParameter("idFood"));
-            foodServiceListFilter.deleteFood(idFood);
+            boolean success = foodServiceListFilter.deleteFood(idFood);
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xóa món ăn", success ? "Thành công" : "Thất bại", "Mã món ăn: " + idFood);
             response.sendRedirect("foodservice");
         } else if ("add".equals(action)) {
             String foodName = request.getParameter("foodName");
@@ -121,31 +116,19 @@ public class ManageFoodController extends HttpServlet {
             String description = request.getParameter("description");
             String ingredients = request.getParameter("ingredients");
 
-            // Xử lý file upload
             Part filePath = request.getPart("img");
-            String fileName = Paths.get(filePath.getSubmittedFileName()).getFileName().toString(); // Tên file gốc
-            String uploadPath = getServletContext().getRealPath("/") + "Images/Food/"; // Thư mục lưu file
-
-            // Tạo thư mục nếu chưa tồn tại
+            String fileName = Paths.get(filePath.getSubmittedFileName()).getFileName().toString();
+            String uploadPath = getServletContext().getRealPath("/") + "Images/Food/";
             File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            // Lưu file vào thư mục
+            if (!uploadDir.exists()) uploadDir.mkdirs();
             filePath.write(uploadPath + fileName);
-
-            // Đường dẫn vào database
             String imgPath = "Images/Food/" + fileName;
 
-            Food newFood = new Food(0, foodName, price, 0, 0, imgPath, description,ingredients, category, 0, 0, new Timestamp(System.currentTimeMillis()), null);
-
+            Food newFood = new Food(0, foodName, price, 0, 0, imgPath, description, ingredients, category, 0, 0, new Timestamp(System.currentTimeMillis()), null);
             boolean result = foodServiceListFilter.addFood(newFood);
-            if (result) {
-                response.sendRedirect("foodservice?status=success");
-            } else {
-                response.sendRedirect("foodservice?status=error");
-            }
+
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Thêm món ăn", result ? "Thành công" : "Thất bại", "Tên món ăn: " + foodName);
+            response.sendRedirect("foodservice?status=" + (result ? "success" : "error"));
         } else if ("update".equals(action)) {
             idFood = Integer.parseInt(request.getParameter("idFood"));
             String foodName = request.getParameter("foodName");
@@ -154,30 +137,23 @@ public class ManageFoodController extends HttpServlet {
             String description = request.getParameter("description");
             String ingredients = request.getParameter("ingredients");
 
-            // Xử lý file upload
             Part filePath = request.getPart("img");
             String fileName = Paths.get(filePath.getSubmittedFileName()).getFileName().toString();
-            String imgPath;
+            String imgPath = request.getParameter("currentImage");
 
             if (!fileName.isEmpty()) {
                 String uploadPath = getServletContext().getRealPath("/") + "Images/Food/";
                 File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
+                if (!uploadDir.exists()) uploadDir.mkdirs();
                 filePath.write(uploadPath + fileName);
                 imgPath = "Images/Food/" + fileName;
-            } else {
-                imgPath = request.getParameter("currentImage"); // Giữ nguyên ảnh cũ nếu không cập nhật
             }
 
-            Food updatedFood = new Food(idFood, foodName, price, 0, 0, imgPath, description,ingredients, category, 0, 0, new Timestamp(System.currentTimeMillis()), null);
+            Food updatedFood = new Food(idFood, foodName, price, 0, 0, imgPath, description, ingredients, category, 0, 0, new Timestamp(System.currentTimeMillis()), null);
             boolean result = foodServiceListFilter.updateFood(updatedFood);
-            if (result) {
-                response.sendRedirect("foodservice?status=success");
-            } else {
-                response.sendRedirect("foodservice?status=error");
-            }
+
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Cập nhật món ăn", result ? "Thành công" : "Thất bại", "Mã món ăn: " + idFood);
+            response.sendRedirect("foodservice?status=" + (result ? "success" : "error"));
         }
     }
 }

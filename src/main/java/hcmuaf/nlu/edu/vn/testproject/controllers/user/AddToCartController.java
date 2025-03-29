@@ -1,20 +1,22 @@
-package hcmuaf.nlu.edu.vn.testproject.controllers.user; import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
+package hcmuaf.nlu.edu.vn.testproject.controllers.user;
+
+import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
+import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.models.Item;
-import hcmuaf.nlu.edu.vn.testproject.models.Order;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
+import java.io.IOException;
 
 @WebServlet(name = "AddToCartController", value = "/addtoCart")
 public class AddToCartController extends HttpServlet {
     private FoodService foodService;
-
 
     @Override
     public void init() throws ServletException {
@@ -22,127 +24,68 @@ public class AddToCartController extends HttpServlet {
         super.init();
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login"); // Yêu cầu đăng nhập để thêm vào giỏ hàng
+            return;
+        }
+        int accountId = currentUser.getAccountId();
+
         int quantity = 1;
-        int id;
         String removeFoodID = request.getParameter("removeFoodID");
         String removeAll = request.getParameter("removeAll");
         String increment = request.getParameter("increment");
         String decrement = request.getParameter("decrement");
 
+        FoodCartDAO cartDAO = (FoodCartDAO) foodService;
 
         if (removeAll != null) {
-            // Xóa tất cả món ăn khỏi giỏ
-            HttpSession session = request.getSession();
-            Order order = (Order) session.getAttribute("order");
-
-
-            if (order != null) {
-                order.setItems(new ArrayList<Item>());
-                session.setAttribute("order", order);
-
-            }
+            cartDAO.clearCart(accountId);
             response.sendRedirect("cart");
         } else if (removeFoodID != null) {
-            // Xóa món ăn cụ thể khỏi giỏ
-            int foodIDToRemove = Integer.parseInt(removeFoodID);
-            HttpSession session = request.getSession();
-            Order order = (Order) session.getAttribute("order");
-
-
-            if (order != null) {
-                List<Item> list = order.getItems();
-                list.removeIf(item -> item.getFood().getFoodId() == foodIDToRemove);
-                order.setItems(list);
-                session.setAttribute("order", order);
-            }
+            int foodIdToRemove = Integer.parseInt(removeFoodID);
+            cartDAO.removeFromCart(accountId, foodIdToRemove);
             response.sendRedirect("cart");
-
-
-        }else if(increment != null) {
+        } else if (increment != null) {
             int foodIdToIncrement = Integer.parseInt(increment);
-            HttpSession session = request.getSession();
-            Order order = (Order) session.getAttribute("order");
-            if (order != null) {
-                List<Item> list = order.getItems();
-                for (Item item : list) {
-                    if (item.getFood().getFoodId() == foodIdToIncrement) {
-                        item.setQuantity(item.getQuantity() + 1);
-                    }
-                }
-                session.setAttribute("order", order);
+            int currentQuantity = cartDAO.getCartItems(accountId).stream()
+                    .filter(item -> item.getFood().getFoodId() == foodIdToIncrement)
+                    .findFirst().map(Item::getQuantity).orElse(0);
+            cartDAO.updateCartItem(accountId, foodIdToIncrement, currentQuantity + 1);
+            response.sendRedirect("cart");
+        } else if (decrement != null) {
+            int foodIdToDecrement = Integer.parseInt(decrement);
+            int currentQuantity = cartDAO.getCartItems(accountId).stream()
+                    .filter(item -> item.getFood().getFoodId() == foodIdToDecrement)
+                    .findFirst().map(Item::getQuantity).orElse(0);
+            if (currentQuantity > 1) {
+                cartDAO.updateCartItem(accountId, foodIdToDecrement, currentQuantity - 1);
+            } else {
+                cartDAO.removeFromCart(accountId, foodIdToDecrement);
             }
             response.sendRedirect("cart");
-        }else if(decrement != null) {
-            int foodIdDecrement = Integer.parseInt(decrement);
-            HttpSession session = request.getSession();
-            Order order = (Order) session.getAttribute("order");
-            if (order != null) {
-                List<Item> list = order.getItems();
-                for (Item item : list) {
-                    if (item.getFood().getFoodId() == foodIdDecrement) {
-                        if (item.getQuantity() > 1) {
-                            item.setQuantity(item.getQuantity() - 1);
-                        } else {
-                            list.remove(item);
-                        }
-                        break;
-                    }
-                }
-                order.setItems(list);
-                session.setAttribute("order", order);
-            }
-            response.sendRedirect("cart");
-
         } else if (request.getParameter("foodID") != null) {
-            // Xử lý thêm món ăn vào giỏ hàng
-            id = Integer.parseInt(request.getParameter("foodID"));
-            Food food = foodService.getFoodByID(id);
+            int foodId = Integer.parseInt(request.getParameter("foodID"));
+            Food food = foodService.getFoodByID(foodId);
             if (food != null) {
                 if (request.getParameter("quantity") != null) {
                     quantity = Integer.parseInt(request.getParameter("quantity"));
                 }
-                HttpSession session = request.getSession();
-                if (session.getAttribute("order") == null) {
-                    Order order = new Order();
-                    List<Item> list = new ArrayList<Item>();
-                    Item item = new Item();
-                    item.setQuantity(quantity);
-                    item.setFood(food);
-                    item.setPrice(food.getPrice());
-                    list.add(item);
-                    order.setItems(list);
-                    session.setAttribute("order", order);
-                } else {
-                    Order order = (Order) session.getAttribute("order");
-                    List<Item> list = order.getItems();
-                    boolean found = false;
-                    for (Item item : list) {
-                        if (item.getFood().getFoodId() == food.getFoodId()) {
-                            item.setQuantity(item.getQuantity() + quantity);
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        Item item = new Item();
-                        item.setQuantity(quantity);
-                        item.setFood(food);
-                        item.setPrice(food.getPrice());
-                        list.add(item);
-                    }
-                    session.setAttribute("order", order);
-                }
+                cartDAO.addToCart(accountId, foodId, quantity);
+                response.sendRedirect("cart");
+            } else {
+                response.sendRedirect("home");
             }
-            response.sendRedirect("cart");
         } else {
             response.sendRedirect("home");
         }
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
+        doGet(request, response);
     }
 }

@@ -3,14 +3,12 @@ package hcmuaf.nlu.edu.vn.testproject.daos;
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
 import hcmuaf.nlu.edu.vn.testproject.libs.MD5;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
-import hcmuaf.nlu.edu.vn.testproject.models.OtpRequest;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 
 public class LoginDAO {
-    private static final int CAPTCHA_THRESHOLD = 5;
-    private static final int MAX_FAILED_ATTEMPTS = 10;
+    private static final int MAX_FAILED_ATTEMPTS = 5;
     private static final int LOCK_DURATION_MINUTES = 15;
 
     public Account login(String name, String password) {
@@ -119,46 +117,6 @@ public class LoginDAO {
         }
     }
 
-    public void insertOtpRequest(OtpRequest otpRequest) {
-        String query = "INSERT INTO otp_requests (account_id, otp_code, expiry_time) VALUES (?, ?, ?)";
-        try (Connection con = new DbContext().getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, otpRequest.getAccountId());
-            ps.setString(2, otpRequest.getOtpCode());
-            ps.setTimestamp(3, Timestamp.valueOf(otpRequest.getExpiryTime()));
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public OtpRequest getOtpRequest(int accountId, String otpCode) {
-        String query = "SELECT * FROM otp_requests WHERE account_id = ? AND otp_code = ?";
-        try (Connection con = new DbContext().getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, accountId);
-            ps.setString(2, otpCode);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    OtpRequest otpRequest = new OtpRequest();
-                    otpRequest.setOtpId(rs.getInt("otp_id"));
-                    otpRequest.setAccountId(rs.getInt("account_id"));
-                    otpRequest.setOtpCode(rs.getString("otp_code"));
-                    otpRequest.setExpiryTime(rs.getTimestamp("expiry_time").toLocalDateTime());
-                    return otpRequest;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void deleteOtpRequest(int otpId) {
-        String query = "DELETE FROM otp_requests WHERE otp_id = ?";
-        executeUpdate(query, otpId);
-    }
-
     private void executeUpdate(String query, int param) {
         try (Connection con = new DbContext().getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -167,13 +125,5 @@ public class LoginDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static int getCaptchaThreshold() {
-        return CAPTCHA_THRESHOLD;
-    }
-
-    public static int getMaxFailedAttempts() {
-        return MAX_FAILED_ATTEMPTS;
     }
 }

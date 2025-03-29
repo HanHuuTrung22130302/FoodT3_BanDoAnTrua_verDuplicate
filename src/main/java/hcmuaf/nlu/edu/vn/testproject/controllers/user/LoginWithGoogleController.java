@@ -2,6 +2,7 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.GoogleAccount;
 import hcmuaf.nlu.edu.vn.testproject.services.GoogleLogin;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -42,7 +43,7 @@ public class LoginWithGoogleController extends HttpServlet {
         try {
             // Lấy access token và thông tin người dùng từ Google
             String accessToken = GoogleLogin.getToken(code);
-            Account googleAccount = GoogleLogin.getUserInfo(accessToken);
+            GoogleAccount googleAccount = GoogleLogin.getUserInfo(accessToken);
 
             if (googleAccount == null || googleAccount.getEmail() == null) {
                 response.sendRedirect("login?error=google_auth_failed");
@@ -57,10 +58,9 @@ public class LoginWithGoogleController extends HttpServlet {
                 // Nếu tài khoản đã tồn tại, đăng nhập
                 session.setAttribute("currentUser", existingAccount);
             } else {
-                // Nếu chưa tồn tại, tạo tài khoản mới (idRole mặc định là 1, pass để trống hoặc random)
                 Account newAccount = new Account(0, 2, "", googleAccount.getName(), googleAccount.getEmail());
-                // Lưu vào database (cần thêm hàm insert vào AccountDAO)
-                accountDAO.insertAccount(newAccount); // Bạn cần tự viết hàm này
+                newAccount.setLoginType("google"); // Đánh dấu là tài khoản Google
+                accountDAO.insertAccount(newAccount);
                 session.setAttribute("currentUser", newAccount);
             }
 
@@ -68,7 +68,8 @@ public class LoginWithGoogleController extends HttpServlet {
             response.sendRedirect("home");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("login?error=server_error");
+            System.out.println("Lỗi chi tiết: " + e.getMessage());
+            response.sendRedirect("login?error=server_error&message=" + e.getMessage());
         }
     }
 }
