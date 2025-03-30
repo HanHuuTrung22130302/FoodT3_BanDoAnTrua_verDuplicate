@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Food {
     private int foodId;
@@ -16,9 +17,9 @@ public class Food {
     private int views;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private double rating;
 
     public Food() {
-
     }
 
     public Food(int foodId, String foodName, int price, int discountPrice, int quantity, String image, String description, String ingredients, int categoryId, int sold, int views, Timestamp createdAt, Timestamp updatedAt) {
@@ -50,6 +51,30 @@ public class Food {
         this.views = views;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+    public Food(int foodId, String foodName, int price, int discountPrice, int quantity, String image, String description, String ingredients, int categoryId, int sold, int views,double rating, Timestamp createdAt, Timestamp updatedAt) {
+        this.foodId = foodId;
+        this.foodName = foodName;
+        this.price = price;
+        this.discountPrice = discountPrice;
+        this.quantity = quantity;
+        this.image = image;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.categoryId = categoryId;
+        this.sold = sold;
+        this.views = views;
+        this.rating = rating;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public int getFoodId() {

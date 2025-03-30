@@ -28,7 +28,7 @@ public class ReviewDAO {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllReview() {
-        String query = "SELECT  name, rv.account_id, review_id, food_id, rating, rv.created_at from review rv join account ac on rv.account_id = ac.account_id ";
+        String query = "SELECT  name, rv.account_id, review_id, food_id, rating,comment, rv.created_at from review rv join account ac on rv.account_id = ac.account_id ";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -49,7 +49,7 @@ public class ReviewDAO {
             // Thực thi câu lệnh
             rs = ps.executeQuery();
 
-            // Duyệt qua kết quả trả về và tạo danh sách món ăn
+
             while (rs.next()) {
                 dataReviewFood.put(rs.getInt("review_id"), new ReviewFood(
                         rs.getString("name"),
@@ -57,7 +57,8 @@ public class ReviewDAO {
                         rs.getInt("food_id"),
                         rs.getInt("rating"),
                         rs.getInt("account_id"),
-                        rs.getDate("created_at")
+                        rs.getDate("created_at"),
+                        rs.getString("comment")
                 ));
             }
 

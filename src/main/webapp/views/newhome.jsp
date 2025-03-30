@@ -164,11 +164,21 @@
                         <div class="reviewFood">
                             <div class="ratingFood">
                                 <i class="fas fa-star"></i>
-                                <span class="rating-value">4.7</span>
+                                <span class="rating-value">${food.rating}</span>
                             </div>
+                            <c:set var="soldValue" value="${food.sold}"/>
                             <div class="soldFood">
                                 <span class="sales-text">Đã bán</span>
-                                <span class="sales-value">2.3k</span>
+                                <span class="sales-value">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -221,11 +231,21 @@
                         <div class="reviewFood">
                             <div class="ratingFood">
                                 <i class="fas fa-star"></i>
-                                <span class="rating-value">4.7</span>
+                                <span class="rating-value">${food.rating}</span>
                             </div>
+                            <c:set var="soldValue" value="${food.sold}"/>
                             <div class="soldFood">
                                 <span class="sales-text">Đã bán</span>
-                                <span class="sales-value">2.3k</span>
+                                <span class="sales-value">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -278,11 +298,21 @@
                         <div class="reviewFood">
                             <div class="ratingFood">
                                 <i class="fas fa-star"></i>
-                                <span class="rating-value">4.7</span>
+                                <span class="rating-value">${food.rating}</span>
                             </div>
+                            <c:set var="soldValue" value="${food.sold}"/>
                             <div class="soldFood">
                                 <span class="sales-text">Đã bán</span>
-                                <span class="sales-value">2.3k</span>
+                                <span class="sales-value">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -335,11 +365,21 @@
                         <div class="reviewFood">
                             <div class="ratingFood">
                                 <i class="fas fa-star"></i>
-                                <span class="rating-value">4.7</span>
+                                <span class="rating-value">${food.rating}</span>
                             </div>
+                            <c:set var="soldValue" value="${food.sold}"/>
                             <div class="soldFood">
                                 <span class="sales-text">Đã bán</span>
-                                <span class="sales-value">2.3k</span>
+                                <span class="sales-value">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
                             </div>
                         </div>
                     </div>
