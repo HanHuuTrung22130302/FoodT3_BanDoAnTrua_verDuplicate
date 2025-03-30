@@ -9,8 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="Fix loi allmenu mat het san pham">
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 update giao dien the san pham moi&#10;chinh giao dien, them rating, sold">
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/ReviewService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/FoodController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/FoodController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/ReviewDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/ReviewDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Food.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/ReviewFood.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/ReviewFood.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,12 +55,12 @@
     &quot;assignee&quot;: &quot;NguyenAnhTuan22130311&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git&quot;,
-    &quot;accountId&quot;: &quot;c34bc670-8096-4858-b8b6-89be7e2d289c&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git",
+    "accountId": "c745f288-5286-45cb-93c8-1861ec480dbe"
   }
-}</component>
+}]]></component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -96,6 +102,7 @@
     "Application.DbContext.executor": "Run",
     "Application.DistanceCheck.executor": "Run",
     "Application.FoodCartDAO.executor": "Run",
+    "Application.FoodController.executor": "Run",
     "Application.FoodDAO.executor": "Run",
     "Application.InvoiceDAO.executor": "Run",
     "Application.InvoiceOrderDao.executor": "Run",
@@ -104,6 +111,7 @@
     "Application.LoginDAO.executor": "Run",
     "Application.MD5.executor": "Run",
     "Application.Order.executor": "Run",
+    "Application.ReviewService.executor": "Run",
     "Application.SignUpDAO.executor": "Run",
     "Application.ViewpDao.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -144,20 +152,7 @@
       <recent name="hcmuaf.nlu.edu.vn.testproject.daos" />
     </key>
   </component>
-  <component name="RunManager" selected="Tomcat Server.Tomcat 10.1.31">
-    <configuration name="DbContext" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="hcmuaf.nlu.edu.vn.testproject.context.DbContext" />
-      <module name="testProject" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hcmuaf.nlu.edu.vn.testproject.context.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="Tomcat 10.1.31" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.31" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
@@ -245,13 +240,8 @@
         </option>
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Application.DbContext" />
-      <item itemvalue="Tomcat Server.Tomcat 10.1.31" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DbContext" />
         <item itemvalue="Application.DbContext" />
       </list>
     </recent_temporary>
@@ -603,7 +593,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743088482584</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="#64 update giao dien the san pham moi&#10;chinh giao dien, them rating, sold">
+      <option name="closed" value="true" />
+      <created>1743243172952</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1743243172952</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -621,7 +619,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix menu, do an theo category" />
     <MESSAGE value="toi uu foodcontroller, da fix duoc phan trang" />
     <MESSAGE value="fix contact" />
     <MESSAGE value="fix duoc banner" />
@@ -646,7 +643,8 @@
     <MESSAGE value="check point" />
     <MESSAGE value="Fix loi allmenu mat het san pham" />
     <MESSAGE value="loloi" />
-    <option name="LAST_COMMIT_MESSAGE" value="loloi" />
+    <MESSAGE value="#64 update giao dien the san pham moi&#10;chinh giao dien, them rating, sold" />
+    <option name="LAST_COMMIT_MESSAGE" value="#64 update giao dien the san pham moi&#10;chinh giao dien, them rating, sold" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

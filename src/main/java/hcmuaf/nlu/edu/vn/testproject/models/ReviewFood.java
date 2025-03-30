@@ -9,6 +9,7 @@ public class ReviewFood {
     private int rating;
     private int accountId;
     private Date date;
+    private String comment;
 
     public ReviewFood(String name, int reviewId, int foodId, int rating, int accountId, Date date) {
         this.name = name;
@@ -17,6 +18,25 @@ public class ReviewFood {
         this.rating = rating;
         this.accountId = accountId;
         this.date = date;
+    }
+
+    public ReviewFood(String name, int reviewId, int foodId, int rating, int accountId, Date date, String comment) {
+        this.name = name;
+        this.reviewId = reviewId;
+        this.foodId = foodId;
+        this.rating = rating;
+        this.accountId = accountId;
+        this.date = date;
+        this.comment = comment;
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getName() {
