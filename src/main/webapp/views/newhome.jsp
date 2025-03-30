@@ -187,7 +187,9 @@
 
             <!-- Popup chi tiết món ăn -->
             <div id="${food.foodId}" class="popup">
+
                 <div class="popup-content">
+                    <div class="close" onclick="closePopup('${food.foodId}')">&times;</div>
                     <img src="${food.image}" alt="${food.foodName}"/>
                     <h3>${food.foodName}</h3>
                     <p>Giá: ${food.price}đ</p>
@@ -201,7 +203,7 @@
                         </a>
                     </button>
                 </div>
-                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
+
             </div>
         </c:forEach>
     </div>
