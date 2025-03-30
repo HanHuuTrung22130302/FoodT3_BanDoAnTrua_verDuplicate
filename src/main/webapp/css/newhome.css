@@ -336,49 +336,118 @@ html {
   padding: 20px;
 }
 
+
+
 #container-monban .card {
-  background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 230px;
+  width: 240px;
+  height: 310px;
   text-align: center;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #dddddd;
+}
+
+
+#container-monban .card_content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 50%;
 }
 
 #container-monban .card img {
-  width: auto;
-  height: 180px;
+  width: 240px;
+  height: 50%;
+  object-fit: cover;
 }
 
-#container-monban .card_content {
-  padding: 12px;
-}
-
-#container-monban .card_content h3 {
-  margin: 10px 0;
-  font-size: 15px;
+#container-monban .card_content .nameFood {
+  font-size: 16px;
   color: #333;
+  font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 20px;
+  max-height: 40px;
+  white-space: normal;
+
 }
 
-#container-monban .card_content p {
+#container-monban .card_content .priceFood {
   margin: 5px 0;
-  font-size: 20px;
-  font-weight: 500;
-  color: darkred;
+  font-size: 15px;
+  font-weight: bold;
+  color: #B5292F;
+}
+
+
+.card_footer {
+  margin-top: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
 }
 
 #container-monban .card_content .btn {
-  display: block;
-  margin: 10px 0;
-  padding: 4px;
+  width: max-content;
+  padding: 7px 17px;
   border: none;
   outline: none;
   text-decoration: none;
   background-color: #b12704;
   color: white;
   border-radius: 15px;
-  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  align-items: center;
+  display: block;
+}
+
+.reviewFood {
+  font-size: 14px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+}
+
+.ratingFood {
+  display: flex;
+  align-items: center;
+  color: #f9a825;
+}
+
+.ratingFood i {
+  margin-right: 5px;
+  color: #ffbe1a;
+}
+
+.rating-value {
+  font-weight: bold;
+}
+
+.soldFood {
+  display: flex;
+  align-items: center;
+  color: #555;
+}
+
+.sales-text {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.sales-value {
+  font-weight: bold;
+  color: #b5292f;
 }
 #container-monban .tag {
   display: flex;
