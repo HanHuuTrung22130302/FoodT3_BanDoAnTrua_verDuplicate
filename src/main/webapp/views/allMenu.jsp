@@ -59,7 +59,8 @@
                         </div>
                     </c:if>
                     <div class="nav_item_shop">
-                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>" class="nav-item">
+                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>"
+                           class="nav-item">
                             <i class="fa-solid fa-truck-fast"></i> Đơn hàng
                         </a>
 
@@ -158,28 +159,28 @@
 
     <div id="content_section">
         <div class="content_section">
-        <c:forEach var="food" items="${list}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
-                <img src="${food.image}" alt="${food.foodName}"/>
-                <div class="card_content">
-                    <div class="nameFood">${food.foodName}</div>
-                    <div class="priceFood">
-                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
-                    </div>
-                    <div class="card_footer">
-                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                            Thêm vào giỏ
-                        </a>
-                        <div class="reviewFood">
-                            <div class="ratingFood">
-                                <i class="fas fa-star"></i>
-                                <span class="rating-value">${food.rating}</span>
-                            </div>
-                            <c:set var="soldValue" value="${food.sold}"/>
-                            <div class="soldFood">
-                                <span class="sales-text">Đã bán</span>
-                                <span class="sales-value">
+            <c:forEach var="food" items="${list}">
+                <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                    <img src="${food.image}" alt="${food.foodName}"/>
+                    <div class="card_content">
+                        <div class="nameFood">${food.foodName}</div>
+                        <div class="priceFood">
+                            <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                        </div>
+                        <div class="card_footer">
+                            <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                            <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                                Thêm vào giỏ
+                            </a>
+                            <div class="reviewFood">
+                                <div class="ratingFood">
+                                    <i class="fas fa-star"></i>
+                                    <span class="rating-value">${food.rating}</span>
+                                </div>
+                                <c:set var="soldValue" value="${food.sold}"/>
+                                <div class="soldFood">
+                                    <span class="sales-text">Đã bán</span>
+                                    <span class="sales-value">
                                 <c:choose>
                                     <c:when test="${soldValue >= 1000}">
                                         <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
@@ -189,36 +190,37 @@
                                     </c:otherwise>
                                 </c:choose>
                                 </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Popup chi tiết món ăn -->
-            <div id="${food.foodId}" class="popup">
-                <div class="popup-content">
-                    <img src="${food.image}" alt="${food.foodName}"/>
-                    <h3>${food.foodName}</h3>
-                    <p>Giá: ${food.price}đ</p>
-                    <span>
+                <!-- Popup chi tiết món ăn -->
+                <div id="${food.foodId}" class="popup">
+                    <div class="popup-content">
+                        <img src="${food.image}" alt="${food.foodName}"/>
+                        <h3>${food.foodName}</h3>
+                        <p>Giá: ${food.price}đ</p>
+                        <span>
                             ${food.description} <br>
                     </span>
-                    <button class="button-cart">
+                        <button class="button-cart">
 
-                        <a class="linktocart" href="${addtoCart}" >
-                            Thêm vào giỏ hàng
-                        </a>
-                    </button>
+                            <a class="linktocart" href="${addtoCart}">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </button>
+                    </div>
+                    <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
                 </div>
-                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
-            </div>
-        </c:forEach>
+            </c:forEach>
         </div>
         <div class="pagination" style="width:1200px;margin:0px auto; padding-left:35px; text-align:center;">
 
             <c:forEach begin="1" end="${totalPages}" var="i">
-                <button onclick="loadSP('${param.option}', ${i})" class="${currentPage == i ? 'active' : ''}">${i}</button>
+                <button onclick="loadSP('${param.option}', ${i})"
+                        class="${currentPage == i ? 'active' : ''}">${i}</button>
             </c:forEach>
 
         </div>
