@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
+
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
@@ -11,18 +12,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
+import java.util.List;
+
 
 @WebServlet(name = "AddToCartController", value = "/addtoCart")
 public class AddToCartController extends HttpServlet {
     private FoodService foodService;
+
 
     @Override
     public void init() throws ServletException {
         foodService = new FoodCartDAO();
         super.init();
     }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,20 +38,25 @@ public class AddToCartController extends HttpServlet {
         }
         int accountId = currentUser.getAccountId();
 
+
         int quantity = 1;
         String removeFoodID = request.getParameter("removeFoodID");
         String removeAll = request.getParameter("removeAll");
         String increment = request.getParameter("increment");
         String decrement = request.getParameter("decrement");
 
+
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
+
 
         if (removeAll != null) {
             cartDAO.clearCart(accountId);
+            session.setAttribute("totalItems", 0); // Cập nhật totalItems
             response.sendRedirect("cart");
         } else if (removeFoodID != null) {
             int foodIdToRemove = Integer.parseInt(removeFoodID);
             cartDAO.removeFromCart(accountId, foodIdToRemove);
+            updateTotalItems(session, cartDAO, accountId); // Cập nhật totalItems
             response.sendRedirect("cart");
         } else if (increment != null) {
             int foodIdToIncrement = Integer.parseInt(increment);
@@ -55,6 +64,7 @@ public class AddToCartController extends HttpServlet {
                     .filter(item -> item.getFood().getFoodId() == foodIdToIncrement)
                     .findFirst().map(Item::getQuantity).orElse(0);
             cartDAO.updateCartItem(accountId, foodIdToIncrement, currentQuantity + 1);
+            updateTotalItems(session, cartDAO, accountId); // Cập nhật totalItems
             response.sendRedirect("cart");
         } else if (decrement != null) {
             int foodIdToDecrement = Integer.parseInt(decrement);
@@ -66,6 +76,7 @@ public class AddToCartController extends HttpServlet {
             } else {
                 cartDAO.removeFromCart(accountId, foodIdToDecrement);
             }
+            updateTotalItems(session, cartDAO, accountId); // Cập nhật totalItems
             response.sendRedirect("cart");
         } else if (request.getParameter("foodID") != null) {
             int foodId = Integer.parseInt(request.getParameter("foodID"));
@@ -75,6 +86,7 @@ public class AddToCartController extends HttpServlet {
                     quantity = Integer.parseInt(request.getParameter("quantity"));
                 }
                 cartDAO.addToCart(accountId, foodId, quantity);
+                updateTotalItems(session, cartDAO, accountId); // Cập nhật totalItems
                 response.sendRedirect("cart");
             } else {
                 response.sendRedirect("home");
@@ -84,8 +96,21 @@ public class AddToCartController extends HttpServlet {
         }
     }
 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
+
+
+    // Phương thức cập nhật totalItems
+    private void updateTotalItems(HttpSession session, FoodCartDAO cartDAO, int accountId) {
+        List<Item> cartItems = cartDAO.getCartItems(accountId);
+        int totalItems = 0;
+        for (Item item : cartItems) {
+            totalItems += item.getQuantity();
+        }
+        session.setAttribute("totalItems", totalItems);
+    }
 }
+

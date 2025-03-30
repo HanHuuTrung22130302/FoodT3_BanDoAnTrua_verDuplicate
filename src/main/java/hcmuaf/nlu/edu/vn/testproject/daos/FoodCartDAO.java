@@ -1,9 +1,11 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
+
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.models.Item;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FoodCartDAO implements FoodService {
+
 
     @Override
     public Food getFoodByID(int id) {
@@ -26,6 +30,7 @@ public class FoodCartDAO implements FoodService {
             ps = con.prepareStatement(query);
             ps.setInt(1, id);
             rs = ps.executeQuery();
+
 
             if (rs.next()) {
                 food = new Food();
@@ -42,6 +47,7 @@ public class FoodCartDAO implements FoodService {
         }
         return food;
     }
+
 
     // Thêm món ăn vào giỏ hàng
     public void addToCart(int accountId, int foodId, int quantity) {
@@ -63,6 +69,7 @@ public class FoodCartDAO implements FoodService {
         }
     }
 
+
     // Cập nhật số lượng món ăn trong giỏ hàng
     public void updateCartItem(int accountId, int foodId, int quantity) {
         String query = "UPDATE cart SET quantity = ?, updated_at = NOW() WHERE account_id = ? AND food_id = ?";
@@ -82,6 +89,7 @@ public class FoodCartDAO implements FoodService {
         }
     }
 
+
     // Xóa món ăn khỏi giỏ hàng
     public void removeFromCart(int accountId, int foodId) {
         String query = "DELETE FROM cart WHERE account_id = ? AND food_id = ?";
@@ -100,6 +108,7 @@ public class FoodCartDAO implements FoodService {
         }
     }
 
+
     // Xóa toàn bộ giỏ hàng
     public void clearCart(int accountId) {
         String query = "DELETE FROM cart WHERE account_id = ?";
@@ -116,6 +125,7 @@ public class FoodCartDAO implements FoodService {
             closeResources(null, ps, con);
         }
     }
+
 
     // Lấy danh sách món ăn trong giỏ hàng
     public List<Item> getCartItems(int accountId) {
@@ -138,6 +148,7 @@ public class FoodCartDAO implements FoodService {
                 food.setImage(rs.getString("image"));
                 food.setDescription(rs.getString("description"));
 
+
                 Item item = new Item();
                 item.setFood(food);
                 item.setQuantity(rs.getInt("quantity"));
@@ -152,6 +163,7 @@ public class FoodCartDAO implements FoodService {
         return items;
     }
 
+
     // Phương thức đóng tài nguyên
     private void closeResources(ResultSet rs, PreparedStatement ps, Connection con) {
         try {
@@ -163,3 +175,4 @@ public class FoodCartDAO implements FoodService {
         }
     }
 }
+
