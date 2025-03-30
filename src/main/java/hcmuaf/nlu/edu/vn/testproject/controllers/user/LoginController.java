@@ -109,6 +109,7 @@ public class LoginController extends HttpServlet {
                 if (attempts >= MAX_FAILED_ATTEMPTS) {
 
 
+
                     out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
                 } else {
 

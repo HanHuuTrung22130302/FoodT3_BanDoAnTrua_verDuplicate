@@ -4,6 +4,7 @@ import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodServiceListFilter;
+import hcmuaf.nlu.edu.vn.testproject.services.ReviewService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -20,6 +21,7 @@ public class FoodController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         FoodServiceListFilter foodServiceListFilter = new FoodServiceListFilter();
+        ReviewService reviewService = new ReviewService();
 
         // Lấy số trang, nếu không có thì mặc định là trang 1
         int page = 1;
@@ -51,7 +53,12 @@ public class FoodController extends HttpServlet {
         // Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalFoods / pageSize);
 
-        // Lấy danh sách danh mục
+
+        for(Food food : foodList){
+            food.setRating(reviewService.getRating(food.getFoodId()));
+
+        }
+
         CategoryService cs = new CategoryService();
         List<Category> categoryList = cs.getCategories();
 
@@ -68,4 +75,5 @@ public class FoodController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
+
 }
