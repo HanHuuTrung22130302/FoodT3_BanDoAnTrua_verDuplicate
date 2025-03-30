@@ -12,44 +12,66 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  
+
 }
 
 .popup-content {
+  position: relative;
+  width: 565px;
+  height: 780px;
   background-color: white;
   max-height: calc(100vh - 60px);
   box-shadow: 0px 4px 30px rgb(0 0 0 / 25%);
   border-radius: 5px;
-  width: 600px;
-  padding: 10px;
-  text-align: left;
-  overflow-y: auto;
-  display: block;
+  padding: 5px;
+
   justify-content: center;
   align-items: center;
+
+  text-align: left;
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
 }
 
-.popup-content::-webkit-scrollbar {
-  width: 8px; /* Chiều rộng thanh cuộn */
+.popup-body {
+  flex: 1; /* Tự động co giãn */
+  overflow-y: auto; /* Kéo lên xuống nếu nội dung dài */
+  padding: 10px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: transparent transparent;
 }
 
-.popup-content::-webkit-scrollbar-thumb {
-  background: #b12704; /* Màu của thanh cuộn */
+/* Hiển thị thanh cuộn khi di chuột vào */
+.popup-body:hover {
+  scrollbar-color: #b12704 #f1f1f1; /* Màu thanh cuộn và nền */
+}
+
+/* Tùy chỉnh thanh cuộn trên Chrome & Edge */
+.popup-body::-webkit-scrollbar {
+  width: 6px; /* Thu nhỏ thanh cuộn */
+}
+
+.popup-body::-webkit-scrollbar-thumb {
+  background: rgba(177, 39, 4, 0.7); /* Màu thanh cuộn */
   border-radius: 4px; /* Bo góc */
 }
 
+.popup-body::-webkit-scrollbar-track {
+  background: transparent; /* Ẩn thanh cuộn khi không di chuột */
+}
+
 .close {
-  background-color: rgb(0 0 0 / 40%);
-  height: 20px;
-  width: 20px;
+  background-color: #dddddd;
   border-radius: 50%;
+  width: 0;
+  height: 0;
+  border: solid 1px black;
   font-size: 28px;
-  color: white;
-  border: 0;
+  color: black;
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 0;
+  right: 0;
   padding: 20px;
   cursor: pointer;
   display: flex;
@@ -59,94 +81,121 @@
 
 .popup-content img {
   width: 100%;
+  height: 340px;
   object-fit: cover;
   max-height: 375px;
 }
 
-.popup-content h2 {
-  margin-left: 20px;
+.rating-filter {
+  display: flex;
+  gap: 5px; /* Khoảng cách giữa các nút */
+  margin-top: 10px;
+  width: 100%;
+}
+
+.rating-filter button {
+  flex-grow: 1; /* Cho phép các nút mở rộng đều */
+  background-color: #f5f5f5;
+  border: none;
+  cursor: pointer;
   font-size: 18px;
-  font-weight: 600;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 50px; /* Đảm bảo không quá nhỏ */
 }
 
-.popup-content p {
+.rating-filter button:hover {
+  background-color: #B5292F;
+}
+
+
+.review-list {
+  max-height: 200px;
+}
+
+.containePopup{
+  margin: 6px;
+}
+.popup-content .nameAndSold {
+  display: flex;
+  justify-content: space-between;
+}
+.popup-content .nameFoodPopup {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+  width: 60%;
+}
+.popup-content .ratingAndSold {
+  width: 40%;
+  display: flex;
+  justify-content: end;
+}
+.popup-content .soldFoodPopup{
+  margin-top: 12px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #222222;
+}
+.popup-content .soldFoodPopup .sales-valuePopup{
+  color: #B5292F;
+}
+
+.popup-content .ratingFoodPopup{
+  margin-top: 12px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  text-align: end;
+  color: #ffbe1a;
+  margin-left: 10px;
+  border-left: solid 1px #dddddd;
+  padding-left: 10px;
+}
+
+
+.popup-content .priceFoodPopup {
   color: #b5292f;
+  margin-top: 10px;
   font-weight: 600;
-  font-size: 17px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
-.popup-content span {
+.popup-content .descriptionFoodPopup {
   font-size: 17px;
   margin-bottom: 10px;
 }
 
-.popup-content .button-cart {
-  background-color: #b5292f;
-  color: white;
-  padding: 10px 40px;
-  border: none;
-  outline: none;
-  border-radius: 25px;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 15px;
-  margin-top: 30px;
+.popup-footer {
   width: 100%;
-  height: max-content;
-
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.popup-content .button-cart .linktocart {
+/* Nút thêm vào giỏ */
+.button-cart {
+  width: 100%;
+  background-color: #b5292f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.button-cart .linktocart {
   text-decoration: none;
   color: white;
 }
 
-
-.popup-content .button-cart:hover {
+/* Hiệu ứng hover */
+.button-cart:hover {
   background-color: #c0392b;
-  color: white;
-}
-
-/* Xử lý comment  */
-/* Xử lý popup của đánh giá món ăn */
-.popup-content  .user-reviews {
-  margin-top: 20px;
-}
-
-.popup-content .user-reviews h4 {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.popup-content .user-reviews .review-item {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-}
-
-.popup-content .user-reviews .review-item:last-child {
-  border-bottom: none;
-}
-
-.popup-content .user-reviews .review-item .user-name {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.popup-content .user-reviews .review-item .review-date{
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.popup-content .user-reviews .review-item .review-text {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-}
-
-.popup-content .user-reviews .review-item .info-review{
-  display: flex;
-  justify-content: space-between; 
-  align-items: center;
 }

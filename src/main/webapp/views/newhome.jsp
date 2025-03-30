@@ -190,19 +190,69 @@
 
                 <div class="popup-content">
                     <div class="close" onclick="closePopup('${food.foodId}')">&times;</div>
-                    <img src="${food.image}" alt="${food.foodName}"/>
-                    <h3>${food.foodName}</h3>
-                    <p>Giá: ${food.price}đ</p>
-                    <span>
-                            ${food.description}
-                    </span>
-                    <button class="button-cart">
 
-                        <a class="linktocart" href="${addtoCart}">
-                            Thêm vào giỏ hàng
-                        </a>
-                    </button>
+                    <div class="popup-body">
+                        <img src="${food.image}" alt="${food.foodName}"/>
+                        <div class="containePopup">
+
+                            <div class="nameAndSold">
+                                <div class="nameFoodPopup">${food.foodName}</div>
+                                <div class="ratingAndSold">
+                                    <c:set var="soldValuePopup" value="${food.sold}"/>
+                                    <div class="soldFoodPopup">
+                                        <span class="sales-textPopup">Đã bán</span>
+                                        <span class="sales-valuePopup">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                                    </div>
+                                    <div class="ratingFoodPopup">
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-valuePopup">${food.rating}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="priceFoodPopup">
+                                <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                            </div>
+
+                            <div class="descriptionFoodPopup">${food.description}</div>
+
+                            <h4>Đánh giá sản phẩm</h4>
+                            <div class="rating-filter">
+                                <button onclick="filterReviews(${food.foodId}, 1)">5⭐</button>
+                                <button onclick="filterReviews(${food.foodId}, 2)">4⭐</button>
+                                <button onclick="filterReviews(${food.foodId}, 3)">3⭐</button>
+                                <button onclick="filterReviews(${food.foodId}, 4)">2⭐</button>
+                                <button onclick="filterReviews(${food.foodId}, 5)">1⭐</button>
+                            </div>
+
+                            <!-- Khu vực bình luận có thể kéo -->
+                            <div class="user-reviews">
+
+                                <div id="review-list">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút thêm vào giỏ hàng cố định ở cuối -->
+                    <div class="popup-footer">
+                        <button class="button-cart">
+                            <a class="linktocart" href="${addtoCart}">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </button>
+                    </div>
                 </div>
+
 
             </div>
         </c:forEach>
