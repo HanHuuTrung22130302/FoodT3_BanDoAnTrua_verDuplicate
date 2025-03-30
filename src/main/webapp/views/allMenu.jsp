@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -162,12 +162,36 @@
             <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
-                    <h3>${food.foodName}</h3>
-                    <p>${food.price}đ</p>
-                    <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                    <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
-                        Thêm vào giỏ hàng
-                    </a>
+                    <div class="nameFood">${food.foodName}</div>
+                    <div class="priceFood">
+                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                    </div>
+                    <div class="card_footer">
+                        <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
+                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                            Thêm vào giỏ
+                        </a>
+                        <div class="reviewFood">
+                            <div class="ratingFood">
+                                <i class="fas fa-star"></i>
+                                <span class="rating-value">${food.rating}</span>
+                            </div>
+                            <c:set var="soldValue" value="${food.sold}"/>
+                            <div class="soldFood">
+                                <span class="sales-text">Đã bán</span>
+                                <span class="sales-value">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
