@@ -28,7 +28,7 @@
             <li>
                 <a href="customersevice">
                     <i class="fas fa-users"> </i>
-                    Khách hàng
+                    Thành viên
                 </a>
             </li>
             <li>

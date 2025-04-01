@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Service</title>
     <link href="Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer_service.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customers_service.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -20,8 +20,12 @@
 
     <div class="content">
         <div class="header">
-            <form action="customersevice" method="get">
-                <input value="${search}" name="text" type="text" placeholder="Tìm kiếm khách hàng..."/>
+            <form action="customersevice" method="get" id="searchForm">
+                <select name="filterRole" onchange="this.form.submit()">
+                    <option value="user" ${selectedRole == 'user' ? 'selected' : ''}>Người dùng</option>
+                    <option value="admin" ${selectedRole == 'admin' ? 'selected' : ''}>Admin</option>
+                </select>
+                <input value="${search}" name="text" type="text" placeholder="Tìm kiếm theo tên, số điện thoại hoặc email..."/>
                 <button type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>
@@ -51,6 +55,8 @@
                 <th>EMAIL</th>
 
                 <th></th>
+
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -64,8 +70,6 @@
                     <td>
                             ${listAcc.email != "" ? listAcc.email : '<span style="color: red;">chưa cập nhật email</span>'}
                     </td>
-
-
                     <td>
                         <button class="detail_btn"
                                 data-account='{"fullName":"${listAcc.fullName}","gender":
@@ -75,6 +79,17 @@
                             CHI TIẾT
                         </button>
                     </td>
+                    <td>
+                        <c:if test="${currentUser.roleId == 3 && listAcc.accountId != null}">
+                            <form action="customersevice" method="post" style="display: inline">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="${listAcc.accountId}">
+                                <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản admin này?')">
+                                    <i class="fas fa-trash"></i> Vô hiệu hóa
+                                </button>
+                            </form>
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -83,5 +98,17 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/cus_service.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý khi nhấn Enter trong ô tìm kiếm
+    const searchInput = document.querySelector('input[name="text"]');
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('searchForm').submit();
+        }
+    });
+});
+</script>
 </body>
 </html>

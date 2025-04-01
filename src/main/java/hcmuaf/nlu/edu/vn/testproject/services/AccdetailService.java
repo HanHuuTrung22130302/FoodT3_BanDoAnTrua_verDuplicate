@@ -6,9 +6,8 @@ import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import java.util.List;
 
 public class AccdetailService {
-    public List<AccountDetail> getAccDetails() {
+    public List<AccountDetail> getAccDetails(int roleId) {
         AccdetailDAO accDetailDAO = new AccdetailDAO();
-        List<AccountDetail> listAcc = accDetailDAO.getAllAccDetail();
-        return listAcc;
+        return accDetailDAO.getAllAccDetail(roleId);
     }
 }

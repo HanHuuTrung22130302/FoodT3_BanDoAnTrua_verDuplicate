@@ -26,7 +26,7 @@
                                     ${sessionScope.currentUser.name}
                             </a>
                             <div class="submenu" id="submenu">
-                                <c:if test="${sessionScope.currentUser.roleId == 1}">
+                                <c:if test="${sessionScope.currentUser.roleId == 1 || sessionScope.currentUser.roleId == 3}">
                                     <a href="admin" id="admin-link">Quản trị</a>
                                 </c:if>
                                 <c:if test="${sessionScope.currentUser.roleId == 2}">

@@ -42,7 +42,7 @@ public class AdminController extends HttpServlet {
 
             List<Food> lst4Sold = foodServiceListFilter.getTop4Sold();
 
-            List<AccountDetail> allAcc = accdetailService.getAccDetails();
+            List<AccountDetail> allAcc = accdetailService.getAccDetails(2);
             int totalAcc = allAcc.size();
 
             InvoiceDAO dao = new InvoiceDAO();

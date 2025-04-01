@@ -135,4 +135,25 @@ public class AccountDAO {
             }
         }
     }
+
+    public void softDeleteAccount(int accountId) {
+        String query = "UPDATE account SET is_deleted = 1 WHERE account_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

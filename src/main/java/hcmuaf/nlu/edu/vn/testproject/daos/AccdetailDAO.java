@@ -13,11 +13,11 @@ import java.util.List;
 
 public class AccdetailDAO {
 
-    public List<AccountDetail> getAllAccDetail() {
-
+    public List<AccountDetail> getAllAccDetail(int roleId) {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
         String query = "SELECT account_detail.*, account.email" +
-                " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id WHERE account.role_id = 2";
+                " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
+                "WHERE account.role_id = ? AND account.is_deleted = 0";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -25,6 +25,7 @@ public class AccdetailDAO {
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
+            ps.setInt(1, roleId);
             rs = ps.executeQuery();
             while (rs.next()) {
                 listAcc.add(new AccountDetail(
@@ -37,12 +38,9 @@ public class AccdetailDAO {
                         rs.getString("email")
                 ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            // Đảm bảo rằng kết nối, câu lệnh và result set được đóng đúng cách
             closeResources(rs, ps, conn);
         }
         return listAcc;
@@ -115,18 +113,40 @@ public class AccdetailDAO {
     }
 
     // Phương thức tìm kiếm theo tên
-    public List<AccountDetail> searchAcc(String textSearch) {
-        List<AccountDetail> listAcc = new ArrayList<>();
+    public List<AccountDetail> searchAcc(String textSearch, int roleId) {
+        List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
+        String query = "SELECT account_detail.*, account.email " +
+                "FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
+                "WHERE account.role_id = ? AND account.is_deleted = 0 " +
+                "AND (account_detail.full_name LIKE ? OR account_detail.phone_number LIKE ? OR account.email LIKE ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        // Duyệt qua danh sách các AccDetail
-        for (AccountDetail accDetail : getAllAccDetail()) {
-            // Kiểm tra nếu bất kỳ thuộc tính nào của AccDetail trong textSearch (không phân biệt chữ hoa/thường)
-            if ((accDetail.getEmail() != null && accDetail.getEmail().toLowerCase().contains(textSearch.toLowerCase())) ||
-                    (accDetail.getFullName() != null && accDetail.getFullName().toLowerCase().contains(textSearch.toLowerCase())) ||
-                    (accDetail.getAddress() != null && accDetail.getAddress().toLowerCase().contains(textSearch.toLowerCase())) ||
-                    (accDetail.getPhoneNumber() != null && accDetail.getPhoneNumber().toLowerCase().contains(textSearch.toLowerCase()))) {
-                listAcc.add(accDetail);
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, roleId);
+            String searchPattern = "%" + textSearch + "%";
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            ps.setString(4, searchPattern);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                listAcc.add(new AccountDetail(
+                        rs.getInt("account_id"),
+                        rs.getString("full_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("address"),
+                        rs.getInt("gender"),
+                        rs.getString("birth_date"),
+                        rs.getString("email")
+                ));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
         }
         return listAcc;
     }
