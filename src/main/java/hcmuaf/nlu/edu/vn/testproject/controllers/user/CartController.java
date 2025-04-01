@@ -38,6 +38,9 @@ public class CartController extends HttpServlet {
         List<Item> cartItems = cartDAO.getCartItems(currentUser.getAccountId());
         int totalItems = cartItems.stream().mapToInt(Item::getQuantity).sum();
 
+
+        int subtotal = cartItems.stream().mapToInt(item -> item.getQuantity() * item.getFood().getPrice()).sum();
+
         request.setAttribute("cartItems", cartItems); // Truyền danh sách món ăn vào JSP
         session.setAttribute("totalItems", totalItems);
 
