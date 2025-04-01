@@ -65,6 +65,85 @@ public class DiscountDAO {
         return discounts;
     }
 
+    // Lấy mã giảm giá theo code
+    public Discount getDiscountByCode(String code) {
+        String query = "SELECT * FROM discount_code WHERE code_name = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Discount discount = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, code);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                discount = new Discount(
+                        rs.getInt("discount_code_id"),
+                        rs.getString("code_name"),
+                        rs.getDouble("discount_rate"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getDate("start_date"),
+                        rs.getDate("end_date")
+                );
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi lấy mã giảm giá: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return discount;
+    }
+
+    // Kiểm tra xem tài khoản đã sử dụng mã giảm giá chưa
+    public boolean hasUsedDiscount(int accountId, int discountCodeId) {
+        String query = "SELECT COUNT(*) FROM discount_usage WHERE account_id = ? AND discount_code_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            ps.setInt(2, discountCodeId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi kiểm tra mã giảm giá đã sử dụng: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return false;
+    }
+
+    // Ghi lại việc sử dụng mã giảm giá
+    public boolean recordDiscountUsage(int accountId, int discountCodeId) {
+        String query = "INSERT INTO discount_usage (account_id, discount_code_id) VALUES (?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            ps.setInt(2, discountCodeId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi ghi lại việc sử dụng mã giảm giá: " + e.getMessage());
+            return false;
+        } finally {
+            closeResources(null, ps, conn);
+        }
+    }
+
     // Phương thúc thêm mã giảm giá
     public boolean addDiscount(Discount discount) {
         String query = "INSERT INTO discount_code (code_name, discount_rate, title, description, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)";

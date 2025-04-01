@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.DiscountDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.InvoiceDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.DistanceCheck;
@@ -56,14 +57,16 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
-        int totalAmount = 0;
-        for (Item item : cartItems) {
-            totalAmount += item.getQuantity() * item.getFood().getPrice();
-        }
+        int subtotal = cartItems.stream().mapToInt(item -> item.getQuantity() * item.getFood().getPrice()).sum();
+        int discountAmount = session.getAttribute("discountAmount") != null ? (int) session.getAttribute("discountAmount") : 0;
+        int totalAmount = subtotal - discountAmount;
 
-        Order order = new Order(cartItems); // Sử dụng constructor mới
+        Order order = new Order(cartItems);
         request.setAttribute("order", order);
+        request.setAttribute("subtotal", subtotal);
+        request.setAttribute("discountAmount", discountAmount);
         request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("discountCode", session.getAttribute("discountCode"));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
         dispatcher.forward(request, response);
@@ -78,8 +81,6 @@ public class CheckoutController extends HttpServlet {
             return;
         }
         int idAcc = currentUser.getAccountId();
-
-        // Khai báo cartDAO trong doPost
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
 
         String recipientName = request.getParameter("tennguoinhan");
@@ -89,7 +90,6 @@ public class CheckoutController extends HttpServlet {
         String city = request.getParameter("thanhpho");
         String country = "Việt Nam";
         String deliveryAddress = houseNumber + ", " + district + ", " + city + ", " + country;
-
         String note = request.getParameter("note-order");
         int totalAmount = Integer.parseInt(request.getParameter("totalAmount"));
         int paymentMethod = Integer.parseInt(request.getParameter("paymentMethod"));
@@ -141,7 +141,8 @@ public class CheckoutController extends HttpServlet {
                 pendingInvoice.setNote(note);
                 pendingInvoice.setTotalAmount(finalAmount);
                 pendingInvoice.setPaymentMethod(paymentMethod);
-                pendingInvoice.setIsPaid(0); // Chưa thanh toán
+                pendingInvoice.setIsPaid(0);
+                pendingInvoice.setDiscountCode((String) session.getAttribute("discountCode")); // Lưu mã giảm giá vào hóa đơn
                 session.setAttribute("pendingInvoice", pendingInvoice);
                 session.setAttribute("shippingFee", shippingFee);
                 logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Đang xử lý", "Chuyển hướng đến VNPay, Tổng tiền: " + finalAmount);
@@ -171,9 +172,11 @@ public class CheckoutController extends HttpServlet {
         invoice.setOrderDate(orderDate);
         invoice.setTotalAmount(finalAmount);
         invoice.setPaymentMethod(paymentMethod);
-        invoice.setIsPaid(paymentMethod == 2 ? 1 : 0); // Thẻ ngân hàng đã thanh toán, COD chưa thanh toán
+        invoice.setIsPaid(paymentMethod == 2 ? 1 : 0);
+        invoice.setDiscountCode((String) session.getAttribute("discountCode")); // Lưu mã giảm giá vào hóa đơn
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
+        DiscountDAO discountDAO = new DiscountDAO();
 
         try {
             invoiceDAO.addInvoice(invoice);
@@ -188,15 +191,23 @@ public class CheckoutController extends HttpServlet {
                 invoiceDAO.addInvoiceDetail(detail);
             }
 
-            // Xóa giỏ hàng sau khi thanh toán thành công
+            // Ghi lại việc sử dụng mã giảm giá nếu có
+            Discount appliedDiscount = (Discount) session.getAttribute("appliedDiscount");
+            if (appliedDiscount != null) {
+                discountDAO.recordDiscountUsage(idAcc, appliedDiscount.getDiscountCodeId());
+            }
+
             cartDAO.clearCart(idAcc);
 
             String paymentMethodStr = paymentMethod == 1 ? "COD" : "Thẻ ngân hàng";
             logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thành công", "Mã đơn hàng: " + invoice.getInvoiceId() + ", Phương thức: " + paymentMethodStr + ", Tổng tiền: " + finalAmount);
             session.setAttribute("paymentSuccessMessage", "Thanh toán thành công!");
+            session.removeAttribute("appliedDiscount");
+            session.removeAttribute("discountAmount");
+            session.removeAttribute("discountCode");
             response.sendRedirect("cart");
         } catch (Exception e) {
-            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi hệ thống: " + e.getMessage() + ", Tổng tiền: " + finalAmount);
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
             request.setAttribute("totalAmount", totalAmount);
