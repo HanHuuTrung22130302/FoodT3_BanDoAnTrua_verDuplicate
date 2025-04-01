@@ -114,10 +114,19 @@
                     </c:forEach>
                     ${subtotal}₫
                 </div>
+                <c:if test="${discountAmount > 0}">
+                    <div class="summary-item">
+                        <span>Giảm giá (${discountCode}):</span>
+                        <span>-${discountAmount}₫</span>
+                    </div>
+                </c:if>
             </div>
             <div class="summary-item total">
                 <span>Tổng cộng:</span>
-                <span id="total">${subtotal}₫</span>
+                <span id="total">
+                    <c:set var="finalTotal" value="${subtotal - (discountAmount != null ? discountAmount : 0)}"/>
+                    ${finalTotal}₫
+                </span>
             </div>
             <button class="checkout-btn">
                 <a href="checkout" style="text-decoration: none">Tiến hành thanh toán</a>
@@ -125,8 +134,9 @@
 
             <div class="voucher">
                 <label for="voucher">Phiếu ưu đãi</label>
-                <input type="text" id="voucher" placeholder="Mã ưu đãi"/>
+                <input type="text" id="voucher" name="voucher" placeholder="Mã ưu đãi"/>
                 <button class="apply-btn" onclick="applyVoucher()">Áp dụng</button>
+                <span id="voucherMessage" style="color: red; font-size: 12px;"></span>
             </div>
         </div>
     </div>
@@ -135,5 +145,42 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script src="${pageContext.request.contextPath}/js/cart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.applyVoucher = function() {
+            const voucherCode = document.getElementById('voucher').value;
+            if (!voucherCode) {
+                document.getElementById('voucherMessage').textContent = 'Vui lòng nhập mã ưu đãi!';
+                return;
+            }
+
+            fetch('${pageContext.request.contextPath}/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'voucher=' + encodeURIComponent(voucherCode)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        document.getElementById('voucherMessage').textContent = 'Lỗi khi áp dụng mã giảm giá!';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('voucherMessage').textContent = 'Lỗi hệ thống!';
+                    console.error('Error:', error);
+                });
+        };
+
+        setTimeout(() => {
+            const successMsg = document.getElementById('success-message');
+            const emptyMsg = document.getElementById('empty-cart-message');
+            if (successMsg) successMsg.style.display = 'none';
+            if (emptyMsg) emptyMsg.style.display = 'none';
+        }, 5000);
+    });
+</script>
 </body>
 </html>

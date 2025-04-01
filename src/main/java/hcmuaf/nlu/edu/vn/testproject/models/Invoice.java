@@ -12,11 +12,12 @@ public class Invoice {
     private int discountCodeId;
     private int paymentMethod;
     private int isPaid;
+    private String discountCode;
 
     public Invoice() {
     }
 
-    public Invoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int discountCodeId, int paymentMethod, int isPaid) {
+    public Invoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int discountCodeId, int paymentMethod, int isPaid, String discountCode) {
         this.invoiceId = invoiceId;
         this.accountId = accountId;
         this.recipientName = recipientName;
@@ -28,7 +29,12 @@ public class Invoice {
         this.discountCodeId = discountCodeId;
         this.paymentMethod = paymentMethod;
         this.isPaid = isPaid;
+        this.discountCode = discountCode;
     }
+
+    public String getDiscountCode() { return discountCode; }
+
+    public void setDiscountCode(String discountCode) { this.discountCode = discountCode; }
 
     public int getInvoiceId() {
         return invoiceId;
