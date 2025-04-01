@@ -41,7 +41,7 @@ public class VNPayReturnController extends HttpServlet {
 
         int idAcc = currentUser.getAccountId();
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
-        List<Item> cartItems = cartDAO.getCartItems(idAcc); // Lấy lại giỏ hàng
+        List<Item> cartItems = cartDAO.getCartItems(idAcc);
 
         // Lấy thông tin từ VNPay
         Map<String, String> vnp_Params = new HashMap<>();
@@ -65,11 +65,11 @@ public class VNPayReturnController extends HttpServlet {
             InvoiceDAO invoiceDAO = new InvoiceDAO();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             pendingInvoice.setOrderDate(sdf.format(new Date()));
-            pendingInvoice.setIsPaid(1); // Đánh dấu đã thanh toán
+            pendingInvoice.setIsPaid(1);
 
             try {
                 invoiceDAO.addInvoice(pendingInvoice);
-                for (Item item : cartItems) { // Sử dụng cartItems thay vì order.getItems()
+                for (Item item : cartItems) {
                     InvoiceDetail detail = new InvoiceDetail();
                     detail.setInvoiceId(pendingInvoice.getInvoiceId());
                     detail.setFoodId(item.getFood().getFoodId());
@@ -78,9 +78,13 @@ public class VNPayReturnController extends HttpServlet {
                     invoiceDAO.addInvoiceDetail(detail);
                 }
                 logger.info("Invoice saved successfully: " + pendingInvoice.getInvoiceId());
-                cartDAO.clearCart(idAcc); // Xóa giỏ hàng sau khi thanh toán thành công
+                cartDAO.clearCart(idAcc);
+                // Xóa các thuộc tính giảm giá khỏi session
                 session.removeAttribute("pendingInvoice");
                 session.removeAttribute("shippingFee");
+                session.removeAttribute("appliedDiscount");
+                session.removeAttribute("discountAmount");
+                session.removeAttribute("discountCode");
                 session.setAttribute("paymentSuccessMessage", "Thanh toán VNPay thành công!");
                 response.sendRedirect("cart");
             } catch (Exception e) {
