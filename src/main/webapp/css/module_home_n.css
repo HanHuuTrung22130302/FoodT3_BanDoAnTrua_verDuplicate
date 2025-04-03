@@ -91,28 +91,73 @@
   gap: 5px; /* Khoảng cách giữa các nút */
   margin-top: 10px;
   width: 100%;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+
 }
 
 .rating-filter button {
   flex-grow: 1; /* Cho phép các nút mở rộng đều */
   background-color: #f5f5f5;
-  border: none;
+  border: solid 1px #dddddd;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 5px 10px;
   text-align: center;
   min-width: 50px; /* Đảm bảo không quá nhỏ */
+  transition: all 0.5s ease-in-out;
 }
 
 .rating-filter button:hover {
   background-color: #B5292F;
+  color: white;
 }
 
+.danhgiasanpham{
+  padding-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  border-top: solid 1px #dddddd;
+}
 
 .review-list {
   max-height: 200px;
 }
+
+.user-reviews .fragmentReview{
+  margin: 10px 5px;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+
+.user-reviews .fragmentReview .nameAndDateRatingUser{
+display: flex;
+}
+
+.user-reviews .fragmentReview .nameUser{
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+  width: 50%;
+  text-align: left;
+}
+.user-reviews .fragmentReview .dateRatingUser{
+  color: #B5292F;
+  width: 50%;
+  text-align: right;
+  font-size: 15px;
+}
+
+.user-reviews .fragmentReview .ratingUser{
+font-size: 12px;
+  color: #ffbe1a;
+  margin-bottom: 10px;
+}
+
+
 
 .containePopup{
   margin: 6px;
