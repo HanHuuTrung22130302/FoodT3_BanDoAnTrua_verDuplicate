@@ -6,7 +6,6 @@ import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Discount;
 import hcmuaf.nlu.edu.vn.testproject.models.Item;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import org.json.JSONObject;
 
 @WebServlet(name = "CartController", value = "/cart")
 public class CartController extends HttpServlet {
@@ -45,14 +45,21 @@ public class CartController extends HttpServlet {
         int discountAmount = session.getAttribute("discountAmount") != null ? (int) session.getAttribute("discountAmount") : 0;
         String discountCode = (String) session.getAttribute("discountCode");
 
+        if (cartItems.isEmpty()) {
+            session.removeAttribute("appliedDiscount");
+            session.removeAttribute("discountAmount");
+            session.removeAttribute("discountCode");
+            discountAmount = 0;
+            discountCode = null;
+        }
+
         request.setAttribute("cartItems", cartItems);
         request.setAttribute("subtotal", subtotal);
         request.setAttribute("discountAmount", discountAmount);
         request.setAttribute("discountCode", discountCode);
         session.setAttribute("totalItems", totalItems);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("views/cart.jsp");
-        dispatcher.forward(request, response);
+        request.getRequestDispatcher("views/cart.jsp").forward(request, response);
     }
 
     @Override
@@ -69,26 +76,47 @@ public class CartController extends HttpServlet {
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
         List<Item> cartItems = cartDAO.getCartItems(accountId);
 
+        JSONObject jsonResponse = new JSONObject();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Kiểm tra nếu giỏ hàng trống trước khi áp dụng mã
+        if (cartItems.isEmpty()) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Giỏ hàng trống, không thể áp dụng mã giảm giá!");
+            response.getWriter().write(jsonResponse.toString());
+            return;
+        }
+
         if (voucherCode != null && !voucherCode.trim().isEmpty()) {
             DiscountDAO discountDAO = new DiscountDAO();
             Discount discount = discountDAO.getDiscountByCode(voucherCode);
             if (discount != null && isValidDiscount(discount)) {
                 if (discountDAO.hasUsedDiscount(accountId, discount.getDiscountCodeId())) {
-                    session.setAttribute("cartEmptyMessage", "Bạn đã sử dụng mã giảm giá này trước đây!");
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("message", "Bạn đã sử dụng mã giảm giá này trước đây!");
                 } else {
                     int subtotal = cartItems.stream().mapToInt(item -> item.getQuantity() * item.getFood().getPrice()).sum();
                     int discountAmount = (int) (subtotal * discount.getDiscountRate());
                     session.setAttribute("appliedDiscount", discount);
                     session.setAttribute("discountAmount", discountAmount);
                     session.setAttribute("discountCode", voucherCode);
-                    session.setAttribute("cartEmptyMessage", "Áp dụng mã giảm giá thành công!");
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Áp dụng mã giảm giá thành công!");
+                    jsonResponse.put("discountAmount", discountAmount);
+                    jsonResponse.put("discountCode", voucherCode);
+                    jsonResponse.put("subtotal", subtotal);
                 }
             } else {
-                session.setAttribute("cartEmptyMessage", "Mã giảm giá không hợp lệ hoặc đã hết hạn!");
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Mã giảm giá không hợp lệ hoặc đã hết hạn!");
             }
+        } else {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Vui lòng nhập mã ưu đãi!");
         }
 
-        response.sendRedirect("cart");
+        response.getWriter().write(jsonResponse.toString());
     }
 
     private boolean isValidDiscount(Discount discount) {

@@ -108,18 +108,20 @@
             <div class="cart-summary">
                 <div class="summary-item">
                     <span>Tạm tính:</span>
-                    <c:set var="subtotal" value="0"/>
-                    <c:forEach var="item" items="${cartItems}">
-                        <c:set var="subtotal" value="${subtotal + item.quantity * item.food.price}"/>
-                    </c:forEach>
-                    ${subtotal}₫
+                    <span id="subtotal">
+                        <c:set var="subtotal" value="0"/>
+                        <c:forEach var="item" items="${cartItems}">
+                            <c:set var="subtotal" value="${subtotal + item.quantity * item.food.price}"/>
+                        </c:forEach>
+                        ${subtotal}₫
+                    </span>
                 </div>
-                <c:if test="${discountAmount > 0}">
+                <div id="discount-section" <c:if test="${discountAmount <= 0}">style="display: none;"</c:if>>
                     <div class="summary-item">
-                        <span>Giảm giá (${discountCode}):</span>
-                        <span>-${discountAmount}₫</span>
+                        <span>Giảm giá (<span id="discountCode">${discountCode}</span>):</span>
+                        <span id="discountAmount">-${discountAmount}₫</span>
                     </div>
-                </c:if>
+                </div>
             </div>
             <div class="summary-item total">
                 <span>Tổng cộng:</span>
@@ -134,8 +136,10 @@
 
             <div class="voucher">
                 <label for="voucher">Phiếu ưu đãi</label>
-                <input type="text" id="voucher" name="voucher" placeholder="Mã ưu đãi"/>
-                <button class="apply-btn" onclick="applyVoucher()">Áp dụng</button>
+                <div class=voucher-input-group">
+                    <input type="text" id="voucher" name="voucher" placeholder="Mã ưu đãi"/>
+                    <button class="apply-btn" onclick="applyVoucher()">Áp dụng</button>
+                </div>
                 <span id="voucherMessage" style="color: red; font-size: 12px;"></span>
             </div>
         </div>
@@ -149,8 +153,16 @@
     document.addEventListener('DOMContentLoaded', function() {
         window.applyVoucher = function() {
             const voucherCode = document.getElementById('voucher').value;
+            const voucherMessage = document.getElementById('voucherMessage');
+            const discountSection = document.getElementById('discount-section');
+            const discountAmountEl = document.getElementById('discountAmount');
+            const discountCodeEl = document.getElementById('discountCode');
+            const subtotalEl = document.getElementById('subtotal');
+            const totalEl = document.getElementById('total');
+
             if (!voucherCode) {
-                document.getElementById('voucherMessage').textContent = 'Vui lòng nhập mã ưu đãi!';
+                voucherMessage.textContent = 'Vui lòng nhập mã ưu đãi!';
+                voucherMessage.style.color = 'red';
                 return;
             }
 
@@ -161,15 +173,24 @@
                 },
                 body: 'voucher=' + encodeURIComponent(voucherCode)
             })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload();
+                .then(response => response.json())
+                .then(data => {
+                    voucherMessage.textContent = data.message;
+                    if (data.success) {
+                        voucherMessage.style.color = 'green';
+                        discountSection.style.display = 'block';
+                        discountAmountEl.textContent = '-' + data.discountAmount + '₫';
+                        discountCodeEl.textContent = data.discountCode;
+                        subtotalEl.textContent = data.subtotal + '₫';
+                        totalEl.textContent = (data.subtotal - data.discountAmount) + '₫';
                     } else {
-                        document.getElementById('voucherMessage').textContent = 'Lỗi khi áp dụng mã giảm giá!';
+                        voucherMessage.style.color = 'red';
+                        discountSection.style.display = 'none';
                     }
                 })
                 .catch(error => {
-                    document.getElementById('voucherMessage').textContent = 'Lỗi hệ thống!';
+                    voucherMessage.textContent = 'Lỗi hệ thống!';
+                    voucherMessage.style.color = 'red';
                     console.error('Error:', error);
                 });
         };
