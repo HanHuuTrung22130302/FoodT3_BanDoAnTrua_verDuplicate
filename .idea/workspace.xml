@@ -9,7 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="" />
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/SuppliersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/SuppliersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/SupplierDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/SupplierDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/suppliers.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/suppliers.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,18 +30,18 @@
         <option value="filter" />
         <option value="servlet" />
         <option value="Interface" />
-        <option value="Jsp File" />
         <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="Jsp File" />
         <option value="Servlet" />
         <option value="Class" />
-        <option value="CSS File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="DonHang" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,12 +52,12 @@
     &quot;assignee&quot;: &quot;NguyenAnhTuan22130311&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git",
-    "accountId": "c745f288-5286-45cb-93c8-1861ec480dbe"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git&quot;,
+    &quot;accountId&quot;: &quot;287fcd86-8e2f-4809-bff0-eb935f7028da&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -111,7 +117,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "DoAn",
+    "git-widget-placeholder": "nhacungcap",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
@@ -124,7 +130,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15039062",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "editor.preferences.tabs",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -154,7 +160,7 @@
         </artifact>
       </deployment>
       <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="ec2a9e57-cb0a-4567-b32e-e1582de2e697" />
+        <option name="BASE_DIRECTORY_NAME" value="9c0a6102-a768-4d8a-9729-ad3f037344ce" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -162,7 +168,7 @@
       <predefined_log_file id="Tomcat Host Manager" />
       <predefined_log_file id="Tomcat Localhost Access" />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="49427" />
+        <option name="DEBUG_PORT" value="42911" />
       </RunnerSettings>
       <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
         <option name="USE_ENV_VARIABLES" value="true" />
@@ -235,8 +241,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
       </set>
     </attachedChunks>
   </component>
@@ -317,7 +323,10 @@
       <workItem from="1743315870583" duration="25496000" />
       <workItem from="1743360891441" duration="115000" />
       <workItem from="1743500974857" duration="3424000" />
-      <workItem from="1743655340369" duration="305000" />
+      <workItem from="1743535779033" duration="49000" />
+      <workItem from="1743643825852" duration="2428000" />
+      <workItem from="1743647994058" duration="27000" />
+      <workItem from="1743648262605" duration="4514000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />
