@@ -149,7 +149,7 @@
     </div>
     <div id="content_section lst4Sold" class="content_section">
         <c:forEach var="food" items="${lst4Sold}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}');ajaxGetReview(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -221,22 +221,50 @@
                             <div class="priceFoodPopup">
                                 <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
                             </div>
-
                             <div class="descriptionFoodPopup">${food.description}</div>
 
-                            <h4>Đánh giá sản phẩm</h4>
+                            <div class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="filterReviews(${food.foodId}, 1)">5⭐</button>
-                                <button onclick="filterReviews(${food.foodId}, 2)">4⭐</button>
-                                <button onclick="filterReviews(${food.foodId}, 3)">3⭐</button>
-                                <button onclick="filterReviews(${food.foodId}, 4)">2⭐</button>
-                                <button onclick="filterReviews(${food.foodId}, 5)">1⭐</button>
+                                <button onclick="ajaxGetReview(${food.foodId},0)">Tất cả</button>
+                                <button onclick="ajaxGetReview(${food.foodId},5)">5⭐</button>
+                                <button onclick="ajaxGetReview(${food.foodId},4)">4⭐</button>
+                                <button onclick="ajaxGetReview(${food.foodId},3)">3⭐</button>
+                                <button onclick="ajaxGetReview(${food.foodId},2)">2⭐</button>
+                                <button onclick="ajaxGetReview(${food.foodId},1)">1⭐</button>
                             </div>
-
-                            <!-- Khu vực bình luận có thể kéo -->
                             <div class="user-reviews">
-
                                 <div id="review-list">
+
+<%--                                    <div class="fragmentReview">--%>
+<%--                                        <div class="nameAndDateRatingUser">--%>
+<%--                                            <div class="nameUser">Hán Hữu Trung</div>--%>
+<%--                                            <div class="dateRatingUser">6/12/2004</div>--%>
+<%--                                        </div>--%>
+<%--                                        <div class="ratingUser">--%>
+<%--                                            <c:forEach var="i" begin="1" end="5">--%>
+<%--                                                <i class="fa-solid fa-star"></i>--%>
+<%--                                            </c:forEach>--%>
+<%--                                            <c:forEach var="i" begin="6" end="5">--%>
+<%--                                                <i class="fa-regular fa-star"></i>--%>
+<%--                                            </c:forEach>--%>
+<%--                                        </div>--%>
+<%--                                        <div class="cmtRatingUser">ngon tuyet vời</div>--%>
+<%--                                    </div>--%>
+<%--                                    <div class="fragmentReview">--%>
+<%--                                        <div class="nameAndDateRatingUser">--%>
+<%--                                            <div class="nameUser">Hán Hữu Trung</div>--%>
+<%--                                            <div class="dateRatingUser">6/12/2004</div>--%>
+<%--                                        </div>--%>
+<%--                                        <div class="ratingUser">--%>
+<%--                                            <c:forEach var="i" begin="1" end="5">--%>
+<%--                                                <i class="fa-solid fa-star"></i>--%>
+<%--                                            </c:forEach>--%>
+<%--                                            <c:forEach var="i" begin="${review.rating + 1}" end="5">--%>
+<%--                                                <i class="fa-regular fa-star"></i>--%>
+<%--                                            </c:forEach>--%>
+<%--                                        </div>--%>
+<%--                                        <div class="cmtRatingUser">ngon tuyet vời</div>--%>
+<%--                                    </div>--%>
 
                                 </div>
                             </div>
@@ -519,6 +547,8 @@
 </script>
 <script src="${pageContext.request.contextPath}/js/ViewU.js"></script>
 <script src="${pageContext.request.contextPath}/js/chatbox.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
 </body>
 
 </html>
