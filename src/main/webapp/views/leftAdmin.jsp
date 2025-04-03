@@ -60,6 +60,13 @@
             </li>
 
             <li>
+                <a href="suppliers">
+                    <i class="fas fa-chart-bar"> </i>
+                    Quản lý nhà cung cấp
+                </a>
+            </li>
+
+            <li>
                 <a id="logout" href="logout">
                     <i class="fas fa-sign-out-alt"> </i>
                     Đăng xuất

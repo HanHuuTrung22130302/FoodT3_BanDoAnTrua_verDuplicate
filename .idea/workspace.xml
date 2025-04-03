@@ -10,10 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/SuppliersController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/SupplierDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Supplier.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/css/suppliers.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/CartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/user/CartController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/cart.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/cart.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/cart.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/cart.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,11 +32,11 @@
         <option value="filter" />
         <option value="servlet" />
         <option value="Interface" />
-        <option value="Jsp File" />
         <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="Jsp File" />
         <option value="Servlet" />
         <option value="Class" />
-        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -116,7 +119,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "chucnangmagiamgia",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
