@@ -429,6 +429,9 @@ html {
 
 .voucher {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Sắp xếp các phần tử theo cột */
+    align-items: flex-start; /* Căn trái */
 }
 
 .voucher label {
@@ -437,13 +440,41 @@ html {
     font-size: 14px;
 }
 
+.voucher-input-group {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của .voucher */
+    gap: 10px; /* Khoảng cách giữa input và button */
+}
+
 .voucher input {
-    width: calc(100% - 90px);
+    flex: 1; /* Chiếm toàn bộ không gian còn lại */
     padding: 10px;
-    margin-right: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tràn */
 }
+
+.voucher .apply-btn {
+    background-color: #b5292f;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+    white-space: nowrap; /* Ngăn button bị xuống dòng */
+}
+
+.voucher #voucher-message {
+    padding: 20px;
+    margin-top: 10px; /* Khoảng cách từ input/button đến thông báo */
+    font-size: 12px;
+    color: red; /* Màu mặc định là đỏ */
+    width: 100%; /* Đảm bảo không tràn khung */
+    word-wrap: break-word; /* Xuống dòng nếu thông báo dài */
+}
+
 
 .apply-btn {
     background-color: #b5292f;
