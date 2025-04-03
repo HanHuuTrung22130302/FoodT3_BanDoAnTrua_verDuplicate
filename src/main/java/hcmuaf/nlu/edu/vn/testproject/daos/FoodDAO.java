@@ -20,7 +20,7 @@ public class FoodDAO {
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllFood() {
 
-        String query = "SELECT * FROM Food";
+        String query = "SELECT * FROM food";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
