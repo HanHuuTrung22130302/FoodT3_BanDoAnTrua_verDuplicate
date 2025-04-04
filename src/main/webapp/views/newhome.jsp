@@ -149,7 +149,8 @@
     </div>
     <div id="content_section lst4Sold" class="content_section">
         <c:forEach var="food" items="${lst4Sold}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}');ajaxGetReview(${food.foodId},0)">
+            <div class="card"
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -189,7 +190,7 @@
             <div id="${food.foodId}" class="popup">
 
                 <div class="popup-content">
-                    <div class="close" onclick="closePopup('${food.foodId}')">&times;</div>
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
 
                     <div class="popup-body">
                         <img src="${food.image}" alt="${food.foodName}"/>
@@ -218,60 +219,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="priceFoodPopup">
+                            <div class="priceFoodPopup"><span style="color: black;font-size: 15px">Giá: </span>
                                 <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
                             </div>
                             <div class="descriptionFoodPopup">${food.description}</div>
 
-                            <div class="danhgiasanpham">Đánh giá sản phẩm</div>
+                            <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="ajaxGetReview(${food.foodId},0)">Tất cả</button>
-                                <button onclick="ajaxGetReview(${food.foodId},5)">5⭐</button>
-                                <button onclick="ajaxGetReview(${food.foodId},4)">4⭐</button>
-                                <button onclick="ajaxGetReview(${food.foodId},3)">3⭐</button>
-                                <button onclick="ajaxGetReview(${food.foodId},2)">2⭐</button>
-                                <button onclick="ajaxGetReview(${food.foodId},1)">1⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
                             </div>
                             <div class="user-reviews">
-                                <div id="review-list">
-
-<%--                                    <div class="fragmentReview">--%>
-<%--                                        <div class="nameAndDateRatingUser">--%>
-<%--                                            <div class="nameUser">Hán Hữu Trung</div>--%>
-<%--                                            <div class="dateRatingUser">6/12/2004</div>--%>
-<%--                                        </div>--%>
-<%--                                        <div class="ratingUser">--%>
-<%--                                            <c:forEach var="i" begin="1" end="5">--%>
-<%--                                                <i class="fa-solid fa-star"></i>--%>
-<%--                                            </c:forEach>--%>
-<%--                                            <c:forEach var="i" begin="6" end="5">--%>
-<%--                                                <i class="fa-regular fa-star"></i>--%>
-<%--                                            </c:forEach>--%>
-<%--                                        </div>--%>
-<%--                                        <div class="cmtRatingUser">ngon tuyet vời</div>--%>
-<%--                                    </div>--%>
-<%--                                    <div class="fragmentReview">--%>
-<%--                                        <div class="nameAndDateRatingUser">--%>
-<%--                                            <div class="nameUser">Hán Hữu Trung</div>--%>
-<%--                                            <div class="dateRatingUser">6/12/2004</div>--%>
-<%--                                        </div>--%>
-<%--                                        <div class="ratingUser">--%>
-<%--                                            <c:forEach var="i" begin="1" end="5">--%>
-<%--                                                <i class="fa-solid fa-star"></i>--%>
-<%--                                            </c:forEach>--%>
-<%--                                            <c:forEach var="i" begin="${review.rating + 1}" end="5">--%>
-<%--                                                <i class="fa-regular fa-star"></i>--%>
-<%--                                            </c:forEach>--%>
-<%--                                        </div>--%>
-<%--                                        <div class="cmtRatingUser">ngon tuyet vời</div>--%>
-<%--                                    </div>--%>
+                                <div id="review-list${food.foodId}">
 
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Nút thêm vào giỏ hàng cố định ở cuối -->
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
                     <div class="popup-footer">
                         <button class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
@@ -296,7 +265,8 @@
     </div>
     <div id="content_section lst4View" class="content_section">
         <c:forEach var="food" items="${lst4View}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+            <div class="card"
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -334,21 +304,69 @@
 
             <!-- Popup chi tiết món ăn -->
             <div id="${food.foodId}" class="popup">
-                <div class="popup-content">
-                    <img src="${food.image}" alt="${food.foodName}"/>
-                    <h3>${food.foodName}</h3>
-                    <p>Giá: ${food.price}đ</p>
-                    <span>
-                            ${food.description}
-                    </span>
-                    <button class="button-cart">
 
-                        <a class="linktocart" href="${addtoCart}">
-                            Thêm vào giỏ hàng
-                        </a>
-                    </button>
+                <div class="popup-content">
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+
+                    <div class="popup-body">
+                        <img src="${food.image}" alt="${food.foodName}"/>
+                        <div class="containePopup">
+
+                            <div class="nameAndSold">
+                                <div class="nameFoodPopup">${food.foodName}</div>
+                                <div class="ratingAndSold">
+                                    <c:set var="soldValuePopup" value="${food.sold}"/>
+                                    <div class="soldFoodPopup">
+                                        <span class="sales-textPopup">Đã bán</span>
+                                        <span class="sales-valuePopup">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                                    </div>
+                                    <div class="ratingFoodPopup">
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-valuePopup">${food.rating}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="priceFoodPopup"><span style="color: black;font-size: 15px">Giá: </span>
+                                <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                            </div>
+                            <div class="descriptionFoodPopup">${food.description}</div>
+
+                            <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
+                            <div class="rating-filter">
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                            </div>
+                            <div class="user-reviews">
+                                <div id="review-list${food.foodId}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <div class="popup-footer">
+                        <button class="button-cart">
+                            <a class="linktocart" href="${addtoCart}">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </button>
+                    </div>
                 </div>
-                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
+
+
             </div>
         </c:forEach>
     </div>
@@ -363,7 +381,8 @@
     </div>
     <div id="content_section lst4Propose" class="content_section">
         <c:forEach var="food" items="${lst4Propose}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+            <div class="card"
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -401,21 +420,69 @@
 
             <!-- Popup chi tiết món ăn -->
             <div id="${food.foodId}" class="popup">
-                <div class="popup-content">
-                    <img src="${food.image}" alt="${food.foodName}"/>
-                    <h3>${food.foodName}</h3>
-                    <p>Giá: ${food.price}đ</p>
-                    <span>
-                            ${food.description}
-                    </span>
-                    <button class="button-cart">
 
-                        <a class="linktocart" href="${addtoCart}">
-                            Thêm vào giỏ hàng
-                        </a>
-                    </button>
+                <div class="popup-content">
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+
+                    <div class="popup-body">
+                        <img src="${food.image}" alt="${food.foodName}"/>
+                        <div class="containePopup">
+
+                            <div class="nameAndSold">
+                                <div class="nameFoodPopup">${food.foodName}</div>
+                                <div class="ratingAndSold">
+                                    <c:set var="soldValuePopup" value="${food.sold}"/>
+                                    <div class="soldFoodPopup">
+                                        <span class="sales-textPopup">Đã bán</span>
+                                        <span class="sales-valuePopup">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                                    </div>
+                                    <div class="ratingFoodPopup">
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-valuePopup">${food.rating}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="priceFoodPopup"><span style="color: black;font-size: 15px">Giá: </span>
+                                <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                            </div>
+                            <div class="descriptionFoodPopup">${food.description}</div>
+
+                            <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
+                            <div class="rating-filter">
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                            </div>
+                            <div class="user-reviews">
+                                <div id="review-list${food.foodId}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <div class="popup-footer">
+                        <button class="button-cart">
+                            <a class="linktocart" href="${addtoCart}">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </button>
+                    </div>
                 </div>
-                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
+
+
             </div>
         </c:forEach>
     </div>
@@ -430,7 +497,8 @@
     </div>
     <div id="content_section" class="content_section">
         <c:forEach var="food" items="${lst4Rate}">
-            <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+            <div class="card"
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -468,21 +536,69 @@
 
             <!-- Popup chi tiết món ăn -->
             <div id="${food.foodId}" class="popup">
-                <div class="popup-content">
-                    <img src="${food.image}" alt="${food.foodName}"/>
-                    <h3>${food.foodName}</h3>
-                    <p>Giá: ${food.price}đ</p>
-                    <span>
-                            ${food.description}
-                    </span>
-                    <button class="button-cart">
 
-                        <a class="linktocart" href="${addtoCart}">
-                            Thêm vào giỏ hàng
-                        </a>
-                    </button>
+                <div class="popup-content">
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+
+                    <div class="popup-body">
+                        <img src="${food.image}" alt="${food.foodName}"/>
+                        <div class="containePopup">
+
+                            <div class="nameAndSold">
+                                <div class="nameFoodPopup">${food.foodName}</div>
+                                <div class="ratingAndSold">
+                                    <c:set var="soldValuePopup" value="${food.sold}"/>
+                                    <div class="soldFoodPopup">
+                                        <span class="sales-textPopup">Đã bán</span>
+                                        <span class="sales-valuePopup">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                                    </div>
+                                    <div class="ratingFoodPopup">
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-valuePopup">${food.rating}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="priceFoodPopup"><span style="color: black;font-size: 15px">Giá: </span>
+                                <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                            </div>
+                            <div class="descriptionFoodPopup">${food.description}</div>
+
+                            <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
+                            <div class="rating-filter">
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                            </div>
+                            <div class="user-reviews">
+                                <div id="review-list${food.foodId}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <div class="popup-footer">
+                        <button class="button-cart">
+                            <a class="linktocart" href="${addtoCart}">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </button>
+                    </div>
                 </div>
-                <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
+
+
             </div>
         </c:forEach>
     </div>

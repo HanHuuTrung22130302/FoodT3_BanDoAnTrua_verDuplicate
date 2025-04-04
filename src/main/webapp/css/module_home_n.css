@@ -89,12 +89,15 @@
 .rating-filter {
   display: flex;
   gap: 5px; /* Khoảng cách giữa các nút */
-  margin-top: 10px;
+  margin-top: 20px;
   width: 100%;
   margin-bottom: 20px;
   position: sticky;
-  top: 0;
-
+  top: 28px;
+  border: solid 1px #9e9c9c;
+  border-radius: 5px;
+  background-color: white ;
+  padding:  5px;
 }
 
 .rating-filter button {
@@ -120,6 +123,7 @@
   font-size: 18px;
   font-weight: bold;
   border-top: solid 1px #dddddd;
+
 }
 
 .review-list {
@@ -157,7 +161,19 @@ font-size: 12px;
   margin-bottom: 10px;
 }
 
-
+.scrollToTop{
+  position: absolute;
+  border: 1px solid #B5292F;
+  bottom: 80px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  z-index: 10;
+  font-size: 20px;
+  font-weight: bold;
+  color: #B5292F;
+}
 
 .containePopup{
   margin: 6px;
@@ -204,7 +220,7 @@ font-size: 12px;
   color: #b5292f;
   margin-top: 10px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 20px;
 }
 
