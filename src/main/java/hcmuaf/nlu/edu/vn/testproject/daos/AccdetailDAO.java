@@ -15,7 +15,7 @@ public class AccdetailDAO {
 
     public List<AccountDetail> getAllAccDetail(int roleId) {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
-        String query = "SELECT account_detail.*, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id" +
+        String query = "SELECT account_detail.*, account.account_id as acc_id, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id" +
                 " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
                 "WHERE account.role_id = ? AND account.is_deleted = 0";
         Connection conn = null;
@@ -29,7 +29,7 @@ public class AccdetailDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 AccountDetail accDetail = new AccountDetail(
-                        rs.getInt("account_id"),
+                        rs.getInt("acc_id"),
                         rs.getString("full_name"),
                         rs.getString("phone_number"),
                         rs.getString("address"),
@@ -121,7 +121,7 @@ public class AccdetailDAO {
     // Phương thức tìm kiếm theo tên
     public List<AccountDetail> searchAcc(String textSearch, int roleId) {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
-        String query = "SELECT account_detail.*, account.email " +
+        String query = "SELECT account_detail.*, account.account_id as acc_id, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id " +
                 "FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
                 "WHERE account.role_id = ? AND account.is_deleted = 0 " +
                 "AND (account_detail.full_name LIKE ? OR account_detail.phone_number LIKE ? OR account.email LIKE ?)";
@@ -139,15 +139,21 @@ public class AccdetailDAO {
             ps.setString(4, searchPattern);
             rs = ps.executeQuery();
             while (rs.next()) {
-                listAcc.add(new AccountDetail(
-                        rs.getInt("account_id"),
+                AccountDetail accDetail = new AccountDetail(
+                        rs.getInt("acc_id"),
                         rs.getString("full_name"),
                         rs.getString("phone_number"),
                         rs.getString("address"),
                         rs.getInt("gender"),
                         rs.getString("birth_date"),
                         rs.getString("email")
-                ));
+                );
+                accDetail.setLoginType(rs.getString("login_type"));
+                accDetail.setDeleted(rs.getBoolean("is_deleted"));
+                accDetail.setLocked(rs.getBoolean("is_locked"));
+                accDetail.setLockTime(rs.getTimestamp("lock_time").toLocalDateTime());
+                accDetail.setRoleId(rs.getInt("role_id"));
+                listAcc.add(accDetail);
             }
         } catch (Exception e) {
             e.printStackTrace();

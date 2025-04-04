@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Service</title>
     <link href="Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customers_service.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -99,15 +99,56 @@
                         </button>
                     </td>
                     <td>
-                        <c:if test="${(currentUser.roleId == 3) || (currentUser.roleId == 1 && listAcc.roleId == 2)}">
-                            <form action="customersevice" method="post" style="display: inline">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${listAcc.accountId}">
-                                <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')">
-                                    <i class="fas fa-trash"></i> Vô hiệu hóa
-                                </button>
-                            </form>
-                        </c:if>
+                        <div class="action-buttons">
+                            <c:if test="${(currentUser.roleId == 3) || (currentUser.roleId == 1 && listAcc.roleId == 2)}">
+                                <div class="dropdown">
+                                    <button class="lock_btn">
+                                        <i class="fas fa-lock"></i> Chặn
+                                    </button>
+                                    <div class="dropdown-content">
+                                        <form action="customersevice" method="post">
+                                            <input type="hidden" name="action" value="lock">
+                                            <input type="hidden" name="id" value="${listAcc.accountId}">
+                                            <input type="hidden" name="hours" value="24">
+                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 24 giờ?')">
+                                                <i class="fas fa-clock"></i> 24 giờ
+                                            </button>
+                                        </form>
+                                        <form action="customersevice" method="post">
+                                            <input type="hidden" name="action" value="lock">
+                                            <input type="hidden" name="id" value="${listAcc.accountId}">
+                                            <input type="hidden" name="hours" value="36">
+                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 36 giờ?')">
+                                                <i class="fas fa-clock"></i> 36 giờ
+                                            </button>
+                                        </form>
+                                        <form action="customersevice" method="post">
+                                            <input type="hidden" name="action" value="lock">
+                                            <input type="hidden" name="id" value="${listAcc.accountId}">
+                                            <input type="hidden" name="hours" value="48">
+                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 48 giờ?')">
+                                                <i class="fas fa-clock"></i> 48 giờ
+                                            </button>
+                                        </form>
+                                        <div class="dropdown-divider"></div>
+                                        <form action="customersevice" method="post">
+                                            <input type="hidden" name="action" value="unlock">
+                                            <input type="hidden" name="id" value="${listAcc.accountId}">
+                                            <button type="submit" class="unlock-btn" onclick="return confirm('Bạn có chắc chắn muốn hủy chặn tài khoản này?')">
+                                                <i class="fas fa-unlock"></i> Hủy chặn
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <form action="customersevice" method="post">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="${listAcc.accountId}">
+                                    <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')">
+                                        <i class="fas fa-trash"></i> Vô hiệu hóa
+                                    </button>
+                                </form>
+                            </c:if>
+                        </div>
                     </td>
                 </tr>
             </c:forEach>
@@ -117,6 +158,7 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/cus_service.js"></script>
+<script src="${pageContext.request.contextPath}/js/ban.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Xử lý khi nhấn Enter trong ô tìm kiếm
