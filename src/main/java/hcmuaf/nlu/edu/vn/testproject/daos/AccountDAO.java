@@ -30,6 +30,10 @@ public class AccountDAO {
                         rs.getString("email")
                 );
                 account.setLoginType(rs.getString("login_type"));
+                account.setFailedAttempts(rs.getInt("failed_attempts"));
+                account.setLocked(rs.getBoolean("is_locked"));
+                account.setLockTime(rs.getTimestamp("lock_time").toLocalDateTime());
+                account.setDeleted(rs.getBoolean("is_deleted"));
                 return account;
             }
         } catch (Exception e) {

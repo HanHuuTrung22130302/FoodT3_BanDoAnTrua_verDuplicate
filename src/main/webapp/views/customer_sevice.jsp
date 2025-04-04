@@ -47,15 +47,12 @@
             <thead>
             <tr>
                 <th>STT</th>
-
                 <th>HỌ VÀ TÊN</th>
-
                 <th>SỐ ĐIỆN THOẠI</th>
-
                 <th>EMAIL</th>
-
+                <th>LOẠI ĐĂNG NHẬP</th>
+                <th>TRẠNG THÁI</th>
                 <th></th>
-
                 <th></th>
             </tr>
             </thead>
@@ -64,11 +61,33 @@
                 <tr>
                     <td>${status.index + 1}</td>
                     <td>${listAcc.fullName != null ? listAcc.fullName : '<span style="color: red;">Chưa cập nhật Họ và Tên</span>'}</td>
-
                     <td>${listAcc.phoneNumber != null ? listAcc.phoneNumber : '<span style="color: red;">Chưa cập nhật SĐT</span>'}</td>
-
+                    <td>${listAcc.email != "" ? listAcc.email : '<span style="color: red;">chưa cập nhật email</span>'}</td>
                     <td>
-                            ${listAcc.email != "" ? listAcc.email : '<span style="color: red;">chưa cập nhật email</span>'}
+                        <c:choose>
+                            <c:when test="${listAcc.loginType == 'normal'}">
+                                <span style="color: blue;">Thông thường</span>
+                            </c:when>
+                            <c:when test="${listAcc.loginType == 'google'}">
+                                <span style="color: green;">Google</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: gray;">${listAcc.loginType}</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${listAcc.deleted}">
+                                <span style="color: red;">Vô hiệu hóa</span>
+                            </c:when>
+                            <c:when test="${listAcc.locked}">
+                                <span style="color: orange;">Đang chặn</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: green;">Hoạt động</span>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                     <td>
                         <button class="detail_btn"
@@ -80,11 +99,11 @@
                         </button>
                     </td>
                     <td>
-                        <c:if test="${currentUser.roleId == 3 && listAcc.accountId != null}">
+                        <c:if test="${(currentUser.roleId == 3) || (currentUser.roleId == 1 && listAcc.roleId == 2)}">
                             <form action="customersevice" method="post" style="display: inline">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${listAcc.accountId}">
-                                <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản admin này?')">
+                                <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')">
                                     <i class="fas fa-trash"></i> Vô hiệu hóa
                                 </button>
                             </form>

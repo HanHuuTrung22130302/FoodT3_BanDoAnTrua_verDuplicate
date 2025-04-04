@@ -13,9 +13,13 @@ public class Account {
     private boolean isLocked; // Trạng thái khóa
     private LocalDateTime lockTime; // Thời gian khóa
     private String loginType; // Loại đăng nhập (normal/google)
+    private boolean isDeleted; // Trạng thái vô hiệu hóa
 
     public Account() {
         this.loginType = "normal"; // Khởi tạo loginType mặc định là normal
+        this.failedAttempts = 0;
+        this.isLocked = false;
+        this.isDeleted = false;
     }
 
     public Account(int accountId, int roleId, String password, String name, String email) {
@@ -25,6 +29,9 @@ public class Account {
         this.name = name;
         this.email = email;
         this.loginType = "normal"; // Mặc định là đăng nhập thông thường
+        this.failedAttempts = 0;
+        this.isLocked = false;
+        this.isDeleted = false;
     }
 
     public int getAccountId() {
@@ -107,6 +114,14 @@ public class Account {
         this.loginType = loginType;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -120,6 +135,7 @@ public class Account {
                 ", isLocked=" + isLocked +
                 ", lockTime=" + lockTime +
                 ", loginType='" + loginType + '\'' +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 }

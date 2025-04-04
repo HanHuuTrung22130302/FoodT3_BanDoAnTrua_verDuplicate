@@ -15,7 +15,7 @@ public class AccdetailDAO {
 
     public List<AccountDetail> getAllAccDetail(int roleId) {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
-        String query = "SELECT account_detail.*, account.email" +
+        String query = "SELECT account_detail.*, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id" +
                 " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
                 "WHERE account.role_id = ? AND account.is_deleted = 0";
         Connection conn = null;
@@ -28,7 +28,7 @@ public class AccdetailDAO {
             ps.setInt(1, roleId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                listAcc.add(new AccountDetail(
+                AccountDetail accDetail = new AccountDetail(
                         rs.getInt("account_id"),
                         rs.getString("full_name"),
                         rs.getString("phone_number"),
@@ -36,7 +36,13 @@ public class AccdetailDAO {
                         rs.getInt("gender"),
                         rs.getString("birth_date"),
                         rs.getString("email")
-                ));
+                );
+                accDetail.setLoginType(rs.getString("login_type"));
+                accDetail.setDeleted(rs.getBoolean("is_deleted"));
+                accDetail.setLocked(rs.getBoolean("is_locked"));
+                accDetail.setLockTime(rs.getTimestamp("lock_time").toLocalDateTime());
+                accDetail.setRoleId(rs.getInt("role_id"));
+                listAcc.add(accDetail);
             }
         } catch (Exception e) {
             e.printStackTrace();

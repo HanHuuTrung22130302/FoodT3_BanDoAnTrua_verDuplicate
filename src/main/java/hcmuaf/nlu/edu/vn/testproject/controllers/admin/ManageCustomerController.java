@@ -56,20 +56,26 @@ public class ManageCustomerController extends HttpServlet {
         if ("delete".equals(action)) {
             HttpSession session = request.getSession();
             Account currentUser = (Account) session.getAttribute("currentUser");
-
-            // Chỉ owner (roleId = 3) mới có quyền vô hiệu hóa admin
-            if (currentUser.getRoleId() != 3) {
-                response.sendRedirect("customersevice?error=unauthorized");
-                return;
-            }
-
+            
             int accountId = Integer.parseInt(request.getParameter("id"));
             AccountDAO accountDAO = new AccountDAO();
-
-            // Kiểm tra xem tài khoản bị vô hiệu hóa có phải là admin không
             Account targetAccount = accountDAO.getUserById(accountId);
-            if (targetAccount != null && targetAccount.getRoleId() == 1) {
-                accountDAO.softDeleteAccount(accountId);
+            
+            // Kiểm tra quyền vô hiệu hóa
+            if (targetAccount != null) {
+                // Owner (roleId = 3) có toàn quyền
+                if (currentUser.getRoleId() == 3) {
+                    accountDAO.softDeleteAccount(accountId);
+                }
+                // Admin (roleId = 1) chỉ có thể vô hiệu hóa user (roleId = 2)
+                else if (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2) {
+                    accountDAO.softDeleteAccount(accountId);
+                }
+                // Các trường hợp khác không có quyền
+                else {
+                    response.sendRedirect("customersevice?error=unauthorized");
+                    return;
+                }
             }
         }
         response.sendRedirect("customersevice");
