@@ -19,13 +19,15 @@
 
   <div class="content">
     <div class="header">
-      <form action="suppliers" method="get" id="searchForm">
+      <form action="" method="get" id="searchForm">
         <input value="${search}" name="text" type="text" placeholder="Tìm kiếm theo tên, số điện thoại hoặc email..."/>
         <button type="submit">
           <i class="fa-solid fa-search"></i>
         </button>
+
       </form>
     </div>
+
 
     <div id="popup" class="popup hidden">
       <div class="popup_content">
@@ -49,22 +51,15 @@
       </tr>
       </thead>
       <tbody>
-      <c:forEach var="supplier" items="${supplierList}" varStatus="status">
+      <c:forEach var="supplier" items="${ingredientsList}">
         <tr>
-          <td>${status.index + 1}</td>
+          <td>${supplier.ingredientId}</td>
           <td>${supplier.supplierName}</td>
-          <td>${supplier.address}</td>
-          <td>${supplier.phone}</td>
-          <td>${supplier.email}</td>
-
-          <td>${supplier.status == 1 ? 'Hoạt động' : 'Ngừng hoạt động'}</td>
-          <td>
-            <button class="detail_btn"
-                    data-supplier='{"supplierName":"${supplier.supplierName}","address":"${supplier.address}",
-                                "phone":"${supplier.phone}","email":"${supplier.email}","status":"${supplier.status}"}'>
-              <i class="fas fa-eye"></i> CHI TIẾT
-            </button>
-          </td>
+          <td>${supplier.ingredientName}</td>
+          <td>${supplier.amount} kg</td>
+          <td>${supplier.price} triệu</td>
+          <td>${supplier.importDate}</td>
+          <td>${supplier.expirationDate}</td>
         </tr>
       </c:forEach>
       </tbody>

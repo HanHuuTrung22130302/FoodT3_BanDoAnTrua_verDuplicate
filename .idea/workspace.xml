@@ -10,13 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/IngredientDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Ingredients.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/IngredientsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/newhome.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/chatbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/chatbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,10 +31,10 @@
         <option value="servlet" />
         <option value="Interface" />
         <option value="CSS File" />
-        <option value="Servlet" />
         <option value="JavaScript File" />
         <option value="Jsp File" />
         <option value="Class" />
+        <option value="Servlet" />
       </list>
     </option>
   </component>
