@@ -14,6 +14,11 @@
   z-index: 9999;
 
 }
+body.no-scroll {
+  overflow: hidden !important;
+  touch-action: none; /* Ngăn scroll trên thiết bị di động */
+}
+
 
 .popup-content {
   position: relative;

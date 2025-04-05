@@ -1,15 +1,32 @@
+function preventBodyScroll(e) {
+  e.preventDefault();
+}
 
 function showPopup(popupId) {
-  // Ẩn tất cả các pop-up
+  console.log("Opening popup:", popupId); // Xác nhận hàm được gọi
+
+  // Ẩn tất cả pop-up
   var popups = document.querySelectorAll(".popup");
   popups.forEach(function (popup) {
     popup.style.display = "none";
   });
 
   // Hiển thị pop-up của sản phẩm được chọn
-  document.getElementById(popupId).style.display = "flex";
+  const popupElement = document.getElementById(popupId);
+  if (!popupElement) {
+    console.error("Không tìm thấy popup có ID:", popupId);
+    return;
+  }
+  popupElement.style.display = "flex";
+
+  document.body.classList.add('no-scroll'); // <- nên thấy class này
 }
+
 
 function closePopup(popupId) {
   document.getElementById(popupId).style.display = "none";
+  document.body.classList.remove('no-scroll');
+
+  document.removeEventListener('wheel', preventBodyScroll, { passive: false });
+  document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
 }

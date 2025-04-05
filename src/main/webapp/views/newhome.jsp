@@ -656,8 +656,8 @@
 
 <jsp:include page="footer.jsp"></jsp:include>
 
-<script src="js/home.js"></script>
-<script src="js/module_popup_home.js"></script>
+<script src="${pageContext.request.contextPath}/js/home.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_popup_home.js"></script>
 <script>
     const contextPath = '${pageContext.request.contextPath}';
 </script>

@@ -9,15 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="">
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/ManageCustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/ManageCustomerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AccdetailDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AccdetailDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AccountDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/AccountDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/AccountDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/AccountDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/customer_sevice.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/customer_sevice.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/header.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/module_home_n.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/module_home_n.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/module_popup_home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/module_popup_home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +142,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "feature/user-role-management",
+    "git-widget-placeholder": "#112 on DoAn",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
@@ -374,6 +371,7 @@
       <workItem from="1743647994058" duration="27000" />
       <workItem from="1743648262605" duration="4514000" />
       <workItem from="1743670552986" duration="22681000" />
+      <workItem from="1743824344647" duration="6697000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />
@@ -687,7 +685,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743328707777</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia">
+      <option name="closed" value="true" />
+      <created>1743797770456</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1743797770456</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -705,7 +711,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="dang loi contact" />
     <MESSAGE value="fix review roi" />
     <MESSAGE value="fix nhe card food" />
     <MESSAGE value="fix phan trang" />
@@ -730,7 +735,8 @@
     <MESSAGE value="cap nhat nhanh" />
     <MESSAGE value="#64 cap nhat animation" />
     <MESSAGE value="#64 savepoint update giao dien" />
-    <option name="LAST_COMMIT_MESSAGE" value="#64 savepoint update giao dien" />
+    <MESSAGE value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
+    <option name="LAST_COMMIT_MESSAGE" value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
