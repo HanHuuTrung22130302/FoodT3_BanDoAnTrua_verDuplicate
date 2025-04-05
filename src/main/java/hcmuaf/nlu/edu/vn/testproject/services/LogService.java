@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.io.UnsupportedEncodingException;
 
 public class LogService {
 
@@ -20,15 +19,9 @@ public class LogService {
             ps.setString(4, action);
             ps.setString(5, result);
             ps.setString(6, details);
-            
-            System.out.println("Logging activity: " + new String(action.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(result.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(details.getBytes("UTF-8"), "UTF-8"));
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
-        } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi khi ghi log: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
