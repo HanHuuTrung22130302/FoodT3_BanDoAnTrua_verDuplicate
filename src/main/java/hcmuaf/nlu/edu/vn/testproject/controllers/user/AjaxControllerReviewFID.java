@@ -16,8 +16,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "AjaxControllerReview", value = "/AjaxControllerReview")
-public class AjaxControllerReview extends HttpServlet {
+@WebServlet(name = "AjaxControllerReviewFID", value = "/AjaxControllerReviewFID")
+public class AjaxControllerReviewFID extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -64,7 +64,9 @@ public class AjaxControllerReview extends HttpServlet {
         if (filterRvf.isEmpty()) {
             out.println("<h2 style=\"max-width: 1200px; text-align: center;\">Chưa có đánh giá</h2>");
         } else {
+            out.println("<div id=\"review-list"+foodID+"\">");
             for (ReviewFood rf : filterRvf) {
+
                 out.println("<div class=\"fragmentReview\">");
                 out.println("    <div class=\"nameAndDateRatingUser\">");
                 out.println("        <div class=\"nameUser\">" + rf.getName() + "</div>");
@@ -80,7 +82,9 @@ public class AjaxControllerReview extends HttpServlet {
                 out.println("    </div>");
                 out.println("    <div class=\"cmtRatingUser\">" + rf.getComment() + "</div>");
                 out.println("</div>");
+
             }
+            out.println("</div>");
         }
     }
 
