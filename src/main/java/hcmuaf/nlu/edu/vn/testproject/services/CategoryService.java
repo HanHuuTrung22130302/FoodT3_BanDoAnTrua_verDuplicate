@@ -29,4 +29,8 @@ public class CategoryService {
         }
         return null;
     }
+
+    public boolean isCategoryExists(String categoryName) {
+        return categoryDAO.isCategoryExists(categoryName);
+    }
 }
