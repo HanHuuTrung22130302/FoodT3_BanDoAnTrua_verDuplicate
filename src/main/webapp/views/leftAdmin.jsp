@@ -66,6 +66,14 @@
                 </a>
             </li>
 
+
+            <li>
+                <a href="Ingredients">
+                    <i class="fas fa-chart-bar"> </i>
+                    Quản lý thực phẩm
+                </a>
+            </li>
+
             <li>
                 <a id="logout" href="logout">
                     <i class="fas fa-sign-out-alt"> </i>
