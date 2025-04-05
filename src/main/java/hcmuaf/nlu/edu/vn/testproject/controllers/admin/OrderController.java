@@ -63,7 +63,7 @@ public class OrderController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentCategory", option);
 
-        logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thành công", "Trang: " + page + ", Lọc theo: " + option);
+
         request.getRequestDispatcher("views/order.jsp").forward(request, response);
     }
 
