@@ -1,59 +1,81 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c" %>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quản lý log</title>
-  <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/log.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-</head>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý log</title>
+    <link
+      href="${pageContext.request.contextPath}/Images/LOGO_V2.png"
+      rel="icon"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/log.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
 
-<body>
-<div class="container">
-  <jsp:include page="leftAdmin.jsp"></jsp:include>
+  <body>
+    <div class="container">
+      <jsp:include page="leftAdmin.jsp"></jsp:include>
 
-  <div class="content">
-    <div class="header">
-      <form action="LogManagement" method="get">
-        <select name="filterRole">
-          <option value="all">Tất cả vai trò</option>
-          <option value="admin">Admin</option>
-          <option value="user">Người dùng</option>
-        </select>
-        <input type="date" name="filterDate" placeholder="Chọn ngày"/>
-        <input type="text" name="filterAction" placeholder="Tìm kiếm hành động"/>
-        <button type="submit"><i class="fa-solid fa-search"></i></button>
-      </form>
+      <div class="content">
+        <div class="header">
+          <form action="LogManagement" method="get">
+            <select name="filterRoleId">
+              <option value="all">Tất cả vai trò</option>
+              <option value="1">Admin</option>
+              <option value="2">Người dùng</option>
+            </select>
+            <input type="date" name="filterDate" placeholder="Chọn ngày" />
+            <input
+              type="text"
+              name="filterAction"
+              placeholder="Tìm kiếm hành động"
+            />
+            <button type="submit"><i class="fa-solid fa-search"></i></button>
+          </form>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>ID Người dùng</th>
+              <th>Vai trò</th>
+              <th>Hành động</th>
+              <th>Kết quả</th>
+              <th>Chi tiết</th>
+            </tr>
+          </thead>
+          <tbody>
+            <c:if test="${empty logs}">
+              <tr>
+                <td colspan="6" style="text-align: center">
+                  Không có dữ liệu log
+                </td>
+              </tr>
+            </c:if>
+            <c:forEach var="log" items="${logs}">
+              <tr>
+                <td>${log.timestamp}</td>
+                <td>${log.accountId}</td>
+                <td>${log.roleName}</td>
+                <td>${log.action}</td>
+                <td>${log.result}</td>
+                <td>${log.details}</td>
+              </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    <table>
-      <thead>
-      <tr>
-        <th>Thời gian</th>
-        <th>ID Người dùng</th>
-        <th>Vai trò</th>
-        <th>Hành động</th>
-        <th>Kết quả</th>
-        <th>Chi tiết</th>
-      </tr>
-      </thead>
-      <tbody>
-      <c:forEach var="log" items="${logs}">
-        <tr>
-          <td>${log.timestamp}</td>
-          <td>${log.accountId}</td>
-          <td>${log.roleId}</td>
-          <td>${log.action}</td>
-          <td>${log.result}</td>
-          <td>${log.details}</td>
-        </tr>
-      </c:forEach>
-      </tbody>
-    </table>
-  </div>
-</div>
-</body>
+  </body>
 </html>
