@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/allmenu_n.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/signinCssModule.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_submenu_catelory.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_home_n.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -133,34 +134,36 @@
         <h2>Khám Phá Thực Đơn Của Chúng Tôi</h2>
         <div class="category-container">
             <a href="allmenu?option=tatca">
-                <div class="category-item">Tất cả</div>
+                <div class="category-item status-button active">Tất cả</div>
             </a>
             <a href="allmenu?option=danhgiacao">
-                <div class="category-item">Món được đánh giá cao</div>
+                <div class="category-item status-button">Món được đánh giá cao</div>
             </a>
             <a href="allmenu?option=dexuat">
-                <div class="category-item">Món được đề xuất</div>
+                <div class="category-item status-button">Món được đề xuất</div>
             </a>
             <a href="allmenu?option=quantam">
-                <div class="category-item">Món được quan tâm nhiều</div>
+                <div class="category-item status-button">Món được quan tâm nhiều</div>
             </a>
             <a href="allmenu?option=banchay">
-                <div class="category-item">Món bán chạy</div>
+                <div class="category-item status-button">Món bán chạy</div>
             </a>
 
             <c:forEach var="category" items="${listC}">
                 <a href="allmenu?option=${category.categoryId}">
-                    <div class="category-item">${category.categoryName}</div>
+                    <div class="category-item status-button">${category.categoryName}</div>
                 </a>
             </c:forEach>
         </div>
+
     </div>
 
 
     <div id="content_section">
         <div class="content_section">
             <c:forEach var="food" items="${list}">
-                <div class="card" onclick="showPopup('${food.foodId}');getU('${food.foodId}')">
+                <div class="card"
+                     onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
                     <img src="${food.image}" alt="${food.foodName}"/>
                     <div class="card_content">
                         <div class="nameFood">${food.foodName}</div>
@@ -198,21 +201,69 @@
 
                 <!-- Popup chi tiết món ăn -->
                 <div id="${food.foodId}" class="popup">
-                    <div class="popup-content">
-                        <img src="${food.image}" alt="${food.foodName}"/>
-                        <h3>${food.foodName}</h3>
-                        <p>Giá: ${food.price}đ</p>
-                        <span>
-                            ${food.description} <br>
-                    </span>
-                        <button class="button-cart">
 
-                            <a class="linktocart" href="${addtoCart}">
-                                Thêm vào giỏ hàng
-                            </a>
-                        </button>
+                    <div class="popup-content">
+                        <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+
+                        <div class="popup-body">
+                            <img src="${food.image}" alt="${food.foodName}"/>
+                            <div class="containePopup">
+
+                                <div class="nameAndSold">
+                                    <div class="nameFoodPopup">${food.foodName}</div>
+                                    <div class="ratingAndSold">
+                                        <c:set var="soldValuePopup" value="${food.sold}"/>
+                                        <div class="soldFoodPopup">
+                                            <span class="sales-textPopup">Đã bán</span>
+                                            <span class="sales-valuePopup">
+                                <c:choose>
+                                    <c:when test="${soldValue >= 1000}">
+                                        <fmt:formatNumber value="${soldValue / 1000}" maxFractionDigits="1"/>k
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${soldValue}
+                                    </c:otherwise>
+                                </c:choose>
+                                </span>
+                                        </div>
+                                        <div class="ratingFoodPopup">
+                                            <i class="fas fa-star"></i>
+                                            <span class="rating-valuePopup">${food.rating}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="priceFoodPopup"><span style="color: black;font-size: 15px">Giá: </span>
+                                    <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>đ
+                                </div>
+                                <div class="descriptionFoodPopup">${food.description}</div>
+
+                                <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
+                                <div class="rating-filter">
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                </div>
+                                <div class="user-reviews">
+                                    <div id="review-list${food.foodId}">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                        <div class="popup-footer">
+                            <button class="button-cart">
+                                <a class="linktocart" href="${addtoCart}">
+                                    Thêm vào giỏ hàng
+                                </a>
+                            </button>
+                        </div>
                     </div>
-                    <span class="close" onclick="closePopup('${food.foodId}')">&times;</span>
+
+
                 </div>
             </c:forEach>
         </div>
@@ -241,5 +292,7 @@
 <script src="${pageContext.request.contextPath}/js/test_module_load_ajax.js"></script>
 <script src="${pageContext.request.contextPath}/js/menu.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
+<script src="${pageContext.request.contextPath}/js/jsButtonActiveCategory.js"></script>
 </body>
 </html>
