@@ -5,17 +5,18 @@ import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodServiceListFilter;
 import hcmuaf.nlu.edu.vn.testproject.services.ReviewService;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "FoodControllerAjax", value = "/menuajax")
-public class FoodControllerAjax extends HttpServlet {
+@WebServlet(name = "AjaxCategoryController", value = "/AjaxCategoryController")
+public class AjaxCategoryController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -21,6 +21,14 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     />
     <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
+    <style>
+        .status-button.active {
+            background-color: #b5292f;
+            color: white;
+            border-radius: 5px;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 
 <body>
@@ -30,27 +38,30 @@
 <div id="container">
     <div class="intro">
         <h2>Khám Phá Thực Đơn Của Chúng Tôi</h2>
+
         <div class="category-container">
-            <a href="allmenu?option=tatca">
-                <div class="category-item">Tất cả</div>
-            </a>
-            <a href="allmenu?option=danhgiacao">
-                <div class="category-item">Món được đánh giá cao</div>
-            </a>
-            <a href="allmenu?option=dexuat">
-                <div class="category-item">Món được đề xuất</div>
-            </a>
-            <a href="allmenu?option=quantam">
-                <div class="category-item">Món được quan tâm nhiều</div>
-            </a>
-            <a href="allmenu?option=banchay">
-                <div class="category-item">Món bán chạy</div>
-            </a>
+            <div onclick="findCategory('tatca','1')">
+                <div class="category-item status-button active">Tất cả</div>
+            </div>
+            <div onclick="findCategory('danhgiacao','1')">
+                <div class="category-item status-button">Món được đánh giá cao</div>
+            </div>
+            <div onclick="findCategory('dexuat','1')">
+                <div class="category-item status-button">Món được đề xuất</div>
+            </div>
+            <div onclick="findCategory('quantam','1')">
+                <div class="category-item status-button">Món được quan tâm nhiều</div>
+            </div>
+            <div onclick="findCategory('banchay','1')">
+                <div class="category-item status-button">Món bán chạy</div>
+            </div>
 
             <c:forEach var="category" items="${listC}">
-                <a href="allmenu?option=${category.categoryId}">
-                    <div class="category-item">${category.categoryName}</div>
-                </a>
+                <div onclick="findCategory('${category.categoryId}','1')">
+                    <div class="category-item status-button">
+                            ${category.categoryName}
+                    </div>
+                </div>
             </c:forEach>
         </div>
     </div>
@@ -120,5 +131,18 @@
 <script src="${pageContext.request.contextPath}/js/menu.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_search_ajax.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".status-button");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                buttons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+    });
+
+</script>
 </body>
 </html>

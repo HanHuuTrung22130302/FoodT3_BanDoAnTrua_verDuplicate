@@ -392,7 +392,13 @@ html {
   text-decoration: none;
   padding: 8px 15px;
   display: inline-block;
-  border: none;
+  border: solid 1px #dddddd;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination button:hover {
+transform: translateY(-5px);
+
 }
 
 .pagination .active {
