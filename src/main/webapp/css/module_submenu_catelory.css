@@ -30,3 +30,11 @@
 .category-container a{
     text-decoration: none;
 }
+
+.category-item.active {
+    background-color: #b5292f;
+    color: white;
+    border-radius: 5px;
+    transform: scale(1.05);
+    font-weight: bold;
+}

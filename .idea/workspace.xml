@@ -9,12 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia">
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 fix bug scroll body vs bodyPopup">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/js/jsButtonActiveCategory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/allmenu_n.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/allmenu_n.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/css/module_home_n.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/module_home_n.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/module_submenu_catelory.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/module_submenu_catelory.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/js/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/menu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/js/module_popup_home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/module_popup_home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/newhome.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -371,7 +373,7 @@
       <workItem from="1743647994058" duration="27000" />
       <workItem from="1743648262605" duration="4514000" />
       <workItem from="1743670552986" duration="22681000" />
-      <workItem from="1743824344647" duration="6697000" />
+      <workItem from="1743824344647" duration="13387000" />
     </task>
     <task id="LOCAL-00001" summary="update newhome, food">
       <option name="closed" value="true" />
@@ -693,7 +695,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743797770456</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="#64 fix bug scroll body vs bodyPopup">
+      <option name="closed" value="true" />
+      <created>1743856262771</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1743856262771</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -711,7 +721,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix review roi" />
     <MESSAGE value="fix nhe card food" />
     <MESSAGE value="fix phan trang" />
     <MESSAGE value="sua checkout" />
@@ -736,7 +745,8 @@
     <MESSAGE value="#64 cap nhat animation" />
     <MESSAGE value="#64 savepoint update giao dien" />
     <MESSAGE value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
-    <option name="LAST_COMMIT_MESSAGE" value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
+    <MESSAGE value="#64 fix bug scroll body vs bodyPopup" />
+    <option name="LAST_COMMIT_MESSAGE" value="#64 fix bug scroll body vs bodyPopup" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
