@@ -6,6 +6,7 @@ import hcmuaf.nlu.edu.vn.testproject.models.Ingredients;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,5 +138,60 @@ public class IngredientDAO {
         return list;
     }
 
+    public List<Ingredients> getNearlyExpiredIngredients() throws SQLException {
+        List<Ingredients> list = new ArrayList<>();
+        String query = "SELECT * FROM Ingredients WHERE DATEDIFF(expiration_date, CURDATE()) <= 5";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()){
+            while  (rs.next()) {
+                Ingredients i = new Ingredients(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("amount"),
+                        rs.getDouble("price"),
+                        rs.getInt("supplier_id"),
+                        rs.getString("supplier_name"),
+                        rs.getDate("import_date"),
+                        rs.getDate("expiration_date")
+                );
+                list.add(i);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    public List<Ingredients> getMostUsedIngredients() throws SQLException {
+        List<Ingredients> list = new ArrayList<>();
+        Connection connection = null;
+        String sql = "SELECT i.*, SUM(u.used_amount) AS total_used " +
+                "FROM Ingredients i JOIN UsedIngredients u ON i.id = u.ingredient_id " +
+                "GROUP BY i.id ORDER BY total_used DESC LIMIT 5";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Ingredients ing = new Ingredients(
+                    rs.getInt("ingredient_id"),
+                    rs.getString("ingredient_name"),
+                    rs.getDouble("amount"),
+                    rs.getDouble("price"),
+                    rs.getInt("supplier_id"),
+                    rs.getString("supplier_name"),
+                    rs.getDate("import_date"),
+                    rs.getDate("expiration_date")
+            );
+            list.add(ing);
+        }
+        return list;
+    }
+
+
+    public static void main(String[] args) throws SQLException {
+        IngredientDAO dao = new IngredientDAO();
+        List<Ingredients> list = dao.getNearlyExpiredIngredients();
+        System.out.println(list);
+    }
 }
 

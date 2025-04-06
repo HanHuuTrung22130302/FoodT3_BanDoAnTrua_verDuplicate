@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quản lý thực phẩm</title>
   <link href='${pageContext.request.contextPath}/Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers.css"/>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers_food.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
 </head>
 
@@ -21,6 +21,10 @@
     <div class="header">
       <form action="" method="get" id="searchForm">
         <input value="${search}" name="text" type="text" placeholder="Tìm kiếm theo tên, số điện thoại hoặc email..."/>
+        <select name="filter" onchange="this.form.submit()">
+          <option value="all" ${param.filter == 'all' || param.filter == null ? 'selected' : ''}>Tất cả</option>
+          <option value="nearlyExpired" ${param.filter == 'nearlyExpired' ? 'selected' : ''}>Sắp hết hạn</option>
+        </select>
         <button type="submit">
           <i class="fa-solid fa-search"></i>
         </button>
@@ -47,7 +51,6 @@
         <th>GIÁ NHẬP</th>
         <th>NGÀY NHẬP HÀNG</th>
         <th>NGÀY HẾT HÀNG</th>
-        <th></th>
       </tr>
       </thead>
       <tbody>
