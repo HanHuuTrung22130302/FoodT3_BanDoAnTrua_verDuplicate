@@ -9,6 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 fix bug scroll body vs bodyPopup">
       <change afterPath="$PROJECT_DIR$/src/main/webapp/js/jsButtonActiveCategory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -17,6 +18,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/webapp/css/module_submenu_catelory.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/module_submenu_catelory.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/js/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/js/menu.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,10 +35,10 @@
         <option value="servlet" />
         <option value="Interface" />
         <option value="CSS File" />
-        <option value="Jsp File" />
-        <option value="Servlet" />
-        <option value="Class" />
         <option value="JavaScript File" />
+        <option value="Jsp File" />
+        <option value="Class" />
+        <option value="Servlet" />
       </list>
     </option>
   </component>
@@ -144,7 +146,9 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "#112 on DoAn",
+
+    "git-widget-placeholder": "nhacungcap",
+
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",

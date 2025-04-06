@@ -21,14 +21,28 @@ public class LogManagement extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        
         String filterRoleId = request.getParameter("filterRoleId");
         String filterDate = request.getParameter("filterDate");
         String filterAction = request.getParameter("filterAction");
 
         List<LogEntry> logs = fetchLogs(filterRoleId, filterDate, filterAction);
+        
+        // Debug log
+        System.out.println("Số lượng log trả về: " + logs.size());
+        for (LogEntry log : logs) {
+            System.out.println("Log entry: " + log.getTimestamp() + " - " + 
+                             log.getAccountId() + " - " + 
+                             log.getRoleName() + " - " + 
+                             log.getAction() + " - " + 
+                             log.getResult() + " - " + 
+                             log.getDetails());
+        }
 
         request.setAttribute("logs", logs);
-        request.getRequestDispatcher("views/log_management.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/log_management.jsp").forward(request, response);
     }
 
     private List<LogEntry> fetchLogs(String filterRoleId, String filterDate, String filterAction) {
@@ -43,6 +57,7 @@ public class LogManagement extends HttpServlet {
         if (filterAction != null && !filterAction.isEmpty()) {
             query += " AND al.action LIKE ?";
         }
+        query += " ORDER BY al.timestamp DESC";
 
         try (Connection con = new DbContext().getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
@@ -62,7 +77,8 @@ public class LogManagement extends HttpServlet {
                 logs.add(new LogEntry(
                         rs.getTimestamp("timestamp"),
                         rs.getInt("account_id"),
-                        rs.getInt("role_id"), // Lưu role_id
+                        rs.getInt("role_id"),
+                        rs.getString("role_name"),
                         rs.getString("action"),
                         rs.getString("result"),
                         rs.getString("details")
@@ -70,6 +86,7 @@ public class LogManagement extends HttpServlet {
             }
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi khi lấy log: " + e.getMessage());
+            e.printStackTrace();
         }
         return logs;
     }

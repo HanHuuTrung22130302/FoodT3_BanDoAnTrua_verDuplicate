@@ -66,6 +66,7 @@ function sendMessage() {
                     foodItem.innerHTML = `
                         <img src="${food.image}" alt="${food.foodName}" class="food-image">
                         <h3>${food.foodName}</h3>
+                        <button onclick="addToCart()">Thêm vào giỏ hàng</button>
                         <p>${food.price}đ</p>
                       
                     `;

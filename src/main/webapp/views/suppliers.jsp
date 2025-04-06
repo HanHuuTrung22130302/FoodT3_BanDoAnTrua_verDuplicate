@@ -25,6 +25,34 @@
           <i class="fa-solid fa-search"></i>
         </button>
       </form>
+      <button class="import-btn">
+        Nhập hàng
+      </button>
+    </div>
+
+    <div id="importPopup" class="popup hidden">
+      <div class="popup_content">
+        <span class="close_btn" onclick="closePopup('importPopup')"><i class="fa-solid fa-xmark"></i></span>
+        <h2>NHẬP HÀNG TỪ NHÀ CUNG CẤP</h2>
+        <form action="importIngredient" method="post">
+          <input type="hidden" name="supplierName" id="popupSupplier"/>
+          <input type="hidden" name="ingredientName" id="popupIngredient"/>
+
+          <label>Số lượng nhập (kg):</label>
+          <input type="number" name="amount" required min="1"/>
+
+          <label>Giá nhập (triệu):</label>
+          <input type="number" step="0.01" name="price" required/>
+
+          <label>Ngày nhập hàng:</label>
+          <input type="date" name="importDate" required/>
+
+          <label>Ngày hết hạn:</label>
+          <input type="date" name="expirationDate" required/>
+
+          <button type="submit">Xác nhận nhập hàng</button>
+        </form>
+      </div>
     </div>
 
     <div id="popup" class="popup hidden">
@@ -70,4 +98,28 @@
   </div>
 </div>
 </body>
+<script>
+  document.querySelectorAll('.import-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const supplier = this.dataset.supplier;
+      const ingredient = this.dataset.ingredient;
+
+      document.getElementById('popupSupplier').value = supplier;
+      document.getElementById('popupIngredient').value = ingredient;
+
+      document.getElementById('importPopup').classList.remove('hidden');
+    });
+  });
+
+  function closePopup(id) {
+    document.getElementById(id).classList.add('hidden');
+  }
+
+  // Đóng popup khi nhấn dấu X
+  document.querySelectorAll('.close_btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.popup').classList.add('hidden');
+    });
+  });
+</script>
 </html>
