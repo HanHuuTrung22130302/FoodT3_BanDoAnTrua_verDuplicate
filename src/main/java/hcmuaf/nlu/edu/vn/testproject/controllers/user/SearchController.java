@@ -22,7 +22,7 @@ public class SearchController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String textSearch = request.getParameter("text");
         request.getRequestDispatcher("allmenu?option="+textSearch).forward(request, response);
-        request.setAttribute("txtS", textSearch);
+
     }
 
     @Override

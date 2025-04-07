@@ -9,15 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#64 fix bug scroll body vs bodyPopup">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/css/suppliers_food.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_3_30_2025_12_32_PM__Changes_.xml" beforeDir="false" />
+    <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="#124 fix ajax product menu, them ajax category, dang bug searchAllMenu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/IngredientsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/IngredientsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/IngredientDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/IngredientDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Ingredients.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/Ingredients.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/suppliers.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/suppliers.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/allmenu_n.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/allmenu_n.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/allMenu.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/allMenuSearch.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/allMenuSearch.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,12 +76,12 @@
       </RecentBranches>
     </option>
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git",
-    "accountId": "711777fb-6a46-4549-961e-a2bf0967db8a"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/NguyenAnhTuan22130312/LTWEB_FINAL_TERM.git&quot;,
+    &quot;accountId&quot;: &quot;711777fb-6a46-4549-961e-a2bf0967db8a&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -146,7 +142,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "nhacungcap",
+    "git-widget-placeholder": "#112 on DoAn",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
@@ -719,7 +715,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743856262771</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="#124 fix ajax product menu, them ajax category, dang bug searchAllMenu">
+      <option name="closed" value="true" />
+      <created>1743978160627</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1743978160627</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -737,7 +741,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix nhe card food" />
     <MESSAGE value="fix phan trang" />
     <MESSAGE value="sua checkout" />
     <MESSAGE value="fix duoc phan trang" />
@@ -762,7 +765,8 @@
     <MESSAGE value="#64 savepoint update giao dien" />
     <MESSAGE value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
     <MESSAGE value="#64 fix bug scroll body vs bodyPopup" />
-    <option name="LAST_COMMIT_MESSAGE" value="#64 fix bug scroll body vs bodyPopup" />
+    <MESSAGE value="#124 fix ajax product menu, them ajax category, dang bug searchAllMenu" />
+    <option name="LAST_COMMIT_MESSAGE" value="#124 fix ajax product menu, them ajax category, dang bug searchAllMenu" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

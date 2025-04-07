@@ -132,30 +132,57 @@
 <div id="container">
     <div class="intro">
         <h2>Khám Phá Thực Đơn Của Chúng Tôi</h2>
+<%--        <div class="category-container">--%>
+<%--            <a href="allmenu?option=tatca">--%>
+<%--                <div class="category-item status-button active">Tất cả</div>--%>
+<%--            </a>--%>
+<%--            <a href="allmenu?option=danhgiacao">--%>
+<%--                <div class="category-item status-button">Món được đánh giá cao</div>--%>
+<%--            </a>--%>
+<%--            <a href="allmenu?option=dexuat">--%>
+<%--                <div class="category-item status-button">Món được đề xuất</div>--%>
+<%--            </a>--%>
+<%--            <a href="allmenu?option=quantam">--%>
+<%--                <div class="category-item status-button">Món được quan tâm nhiều</div>--%>
+<%--            </a>--%>
+<%--            <a href="allmenu?option=banchay">--%>
+<%--                <div class="category-item status-button">Món bán chạy</div>--%>
+<%--            </a>--%>
+
+<%--            <c:forEach var="category" items="${listC}">--%>
+<%--                <a href="allmenu?option=${category.categoryId}">--%>
+<%--                    <div class="category-item status-button">${category.categoryName}</div>--%>
+<%--                </a>--%>
+<%--            </c:forEach>--%>
+<%--        </div>--%>
+
+        <c:set var="currentOption" value="${param.option}" />
+
         <div class="category-container">
-            <a href="allmenu?option=tatca">
-                <div class="category-item status-button active">Tất cả</div>
-            </a>
-            <a href="allmenu?option=danhgiacao">
-                <div class="category-item status-button">Món được đánh giá cao</div>
-            </a>
-            <a href="allmenu?option=dexuat">
-                <div class="category-item status-button">Món được đề xuất</div>
-            </a>
-            <a href="allmenu?option=quantam">
-                <div class="category-item status-button">Món được quan tâm nhiều</div>
-            </a>
-            <a href="allmenu?option=banchay">
-                <div class="category-item status-button">Món bán chạy</div>
-            </a>
+            <div onclick="findCategory('tatca','1')">
+                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">Tất cả</div>
+            </div>
+            <div onclick="findCategory('danhgiacao','1')">
+                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh giá cao</div>
+            </div>
+            <div onclick="findCategory('dexuat','1')">
+                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất</div>
+            </div>
+            <div onclick="findCategory('quantam','1')">
+                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm nhiều</div>
+            </div>
+            <div onclick="findCategory('banchay','1')">
+                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy</div>
+            </div>
 
             <c:forEach var="category" items="${listC}">
-                <a href="allmenu?option=${category.categoryId}">
-                    <div class="category-item status-button">${category.categoryName}</div>
-                </a>
+                <div onclick="findCategory('${category.categoryId}','1')">
+                    <div class="category-item status-button ${currentOption == category.categoryId.toString() ? 'active' : ''}">
+                            ${category.categoryName}
+                    </div>
+                </div>
             </c:forEach>
         </div>
-
     </div>
 
 
@@ -268,12 +295,10 @@
             </c:forEach>
         </div>
         <div class="pagination" style="width:1200px;margin:0px auto; padding-left:35px; text-align:center;">
-
             <c:forEach begin="1" end="${totalPages}" var="i">
                 <button onclick="loadSP('${param.option}', ${i})"
                         class="${currentPage == i ? 'active' : ''}">${i}</button>
             </c:forEach>
-
         </div>
     </div>
 
@@ -294,5 +319,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
 <script src="${pageContext.request.contextPath}/js/jsButtonActiveCategory.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_category_ajax.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodServiceListFilter;
+import hcmuaf.nlu.edu.vn.testproject.services.ReviewService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -36,6 +37,8 @@ public class AjaxSearchController extends HttpServlet {
         List<Food> foodList = foodServiceListFilter.getOption(option); // Lấy danh sách dựa trên option
         totalFoods = foodList.size(); // Tổng số món theo option
 
+        ReviewService reviewService = new ReviewService();
+
         // Áp dụng phân trang
         foodList = foodList.subList(
                 Math.min(offset, totalFoods),
@@ -61,35 +64,101 @@ public class AjaxSearchController extends HttpServlet {
         } else {
             out.println("<div class=\"content_section\">");
             for (Food food : foodList) {
+                food.setRating(reviewService.getRating(food.getFoodId()));
                 String addToCartUrl = request.getContextPath() + "/addtoCart?foodID=" + food.getFoodId();
-                out.println("<div class=\"card\" onclick=\"showPopup('" + food.getFoodId() + "')\">\n" +
-                        "                <img src=\"" + food.getImage() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
-                        "                <div class=\"card_content\">\n" +
-                        "                    <h3>" + food.getFoodName() + "</h3>\n" +
-                        "                    <p>" + food.getPrice() + "đ</p>\n" +
-                        "                    <a class=\"btn\" href=\"" + addToCartUrl + "\" onclick=\"event.stopPropagation()\">\n" +
-                        "                        Thêm vào giỏ hàng\n" +
-                        "                    </a>\n" +
-                        "                </div>\n" +
-                        "            </div>\n" +
-                        "\n" +
-                        "            <!-- Popup chi tiết món ăn -->\n" +
-                        "            <div id=\"" + food.getFoodId() + "\" class=\"popup\">\n" +
-                        "                <div class=\"popup-content\">\n" +
+                int soldValue = food.getSold();
+
+                String displaySold;
+                if (soldValue >= 1000) {
+                    double soldInThousands = soldValue / 1000.0;
+                    displaySold = String.format("%.1fk", soldInThousands);
+                } else
+                    displaySold = String.valueOf(soldValue);
+
+                String formattedPrice = String.format("%,d", food.getPrice()) + "đ";
+
+                out.println("<div class=\"card\"\n" +
+                        "                     onclick=\"showPopup('" + food.getFoodId() + "');scrollToTop(" + food.getFoodId() + ");getU('" + food.getFoodId() + "');ajaxGetReviewFID(" + food.getFoodId() + ",0)\">\n" +
                         "                    <img src=\"" + food.getImage() + "\" alt=\"" + food.getFoodName() + "\"/>\n" +
-                        "                    <h3>" + food.getFoodName() + "</h3>\n" +
-                        "                    <p>Giá: " + food.getPrice() + "đ</p>\n" +
-                        "                    <span>\n" +
-                        "                           " + food.getDescription() + "\n" +
-                        "                    </span>\n" +
-                        "                    <button class=\"button-cart\">\n" +
-                        "                        <a class=\"linktocart\" href=\"" + addToCartUrl + "\">\n" +
-                        "                            Thêm vào giỏ hàng\n" +
-                        "                        </a>\n" +
-                        "                    </button>\n" +
+                        "                    <div class=\"card_content\">\n" +
+                        "                        <div class=\"nameFood\">" + food.getFoodName() + "</div>\n" +
+                        "                        <div class=\"priceFood\">\n" + formattedPrice +
+                        "                        </div>\n" +
+                        "                        <div class=\"card_footer\">\n" +
+                        "                            <a class=\"btn\" onclick=\"event.stopPropagation()\" href=\"" + addToCartUrl + "\">\n" +
+                        "                                Thêm vào giỏ\n" +
+                        "                            </a>\n" +
+                        "                            <div class=\"reviewFood\">\n" +
+                        "                                <div class=\"ratingFood\">\n" +
+                        "                                    <i class=\"fas fa-star\"></i>\n" +
+                        "                                    <span class=\"rating-value\">" + food.getRating() + "</span>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"soldFood\">\n" +
+                        "                                    <span class=\"sales-text\">Đã bán</span>\n" +
+                        "                                    <span class=\"sales-value\">\n" + displaySold +
+                        "                                </span>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                    </div>\n" +
                         "                </div>\n" +
-                        "                <span class=\"close\" onclick=\"closePopup('" + food.getFoodId() + "')\">&times;</span>\n" +
-                        "            </div>");
+                        "\n" +
+                        "                <!-- Popup chi tiết món ăn -->\n" +
+                        "                <div id=\"" + food.getFoodId() + "\" class=\"popup\">\n" +
+                        "\n" +
+                        "                    <div class=\"popup-content\">\n" +
+                        "                        <div class=\"close\" onclick=\"scrollToTop(" + food.getFoodId() + ");closePopup('" + food.getFoodId() + "');\">&times;</div>\n" +
+                        "\n" +
+                        "                        <div class=\"popup-body\">\n" +
+                        "                            <img src=\"" + food.getImage() + "\" alt=\"" + food.getImage() + "\"/>\n" +
+                        "                            <div class=\"containePopup\">\n" +
+                        "\n" +
+                        "                                <div class=\"nameAndSold\">\n" +
+                        "                                    <div class=\"nameFoodPopup\">" + food.getFoodName() + "</div>\n" +
+                        "                                    <div class=\"ratingAndSold\">\n" +
+                        "                                        <div class=\"soldFoodPopup\">\n" +
+                        "                                            <span class=\"sales-textPopup\">Đã bán</span>\n" +
+                        "                                            <span class=\"sales-valuePopup\">\n" + displaySold +
+                        "                                </span>\n" +
+                        "                                        </div>\n" +
+                        "                                        <div class=\"ratingFoodPopup\">\n" +
+                        "                                            <i class=\"fas fa-star\"></i>\n" +
+                        "                                            <span class=\"rating-valuePopup\">" + food.getRating() + "</span>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"priceFoodPopup\"><span style=\"color: black;font-size: 15px\">Giá: </span>\n" + formattedPrice +
+                        "                                </div>\n" +
+                        "                                <div class=\"descriptionFoodPopup\">" + food.getDescription() + "</div>\n" +
+                        "\n" +
+                        "                                <div id=\"scrollbody" + food.getFoodId() + "\" class=\"danhgiasanpham\">Đánh giá sản phẩm</div>\n" +
+                        "                                <div class=\"rating-filter\">\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",0)\">Tất cả</button>\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",5)\">5⭐</button>\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",4)\">4⭐</button>\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",3)\">3⭐</button>\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",2)\">2⭐</button>\n" +
+                        "                                    <button onclick=\"scrollToReviewList(" + food.getFoodId() + ");ajaxGetReviewFID(" + food.getFoodId() + ",1)\">1⭐</button>\n" +
+                        "                                </div>\n" +
+                        "                                <div class=\"user-reviews\">\n" +
+                        "                                    <div id=\"review-list" + food.getFoodId() + "\">\n" +
+                        "\n" +
+                        "                                    </div>\n" +
+                        "                                </div>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                        <button class=\"scrollToTop\" onclick=\"scrollToTop(" + food.getFoodId() + ")\">^</button>\n" +
+                        "                        <div class=\"popup-footer\">\n" +
+                        "                            <button class=\"button-cart\">\n" +
+                        "                                <a class=\"linktocart\" href=\"" + addToCartUrl + "\">\n" +
+                        "                                    Thêm vào giỏ hàng\n" +
+                        "                                </a>\n" +
+                        "                            </button>\n" +
+                        "                        </div>\n" +
+                        "                    </div>\n" +
+                        "\n" +
+                        "\n" +
+                        "                </div>");
             }
             out.println("</div>");
 
