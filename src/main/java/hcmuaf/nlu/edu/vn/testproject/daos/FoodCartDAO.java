@@ -51,21 +51,29 @@ public class FoodCartDAO implements FoodService {
 
     // Thêm món ăn vào giỏ hàng
     public void addToCart(int accountId, int foodId, int quantity) {
-        String query = "INSERT INTO cart (account_id, food_id, quantity) VALUES (?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity), updated_at = NOW()";
-        Connection con = null;
-        PreparedStatement ps = null;
-        try {
-            con = new DbContext().getConnection();
-            ps = con.prepareStatement(query);
-            ps.setInt(1, accountId);
-            ps.setInt(2, foodId);
-            ps.setInt(3, quantity);
-            ps.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeResources(null, ps, con);
+        List<Item> cartItems = getCartItems(accountId);
+        Item existingItem = cartItems.stream()
+                .filter(item -> item.getFood().getFoodId() == foodId)
+                .findFirst()
+                .orElse(null);
+        if (existingItem != null) {
+            updateCartItem(accountId, foodId, existingItem.getQuantity() + quantity);
+        } else {
+            String query = "INSERT INTO cart (account_id, food_id, quantity) VALUES (?, ?, ?)";
+            Connection con = null;
+            PreparedStatement ps = null;
+            try {
+                con = new DbContext().getConnection();
+                ps = con.prepareStatement(query);
+                ps.setInt(1, accountId);
+                ps.setInt(2, foodId);
+                ps.setInt(3, quantity);
+                ps.executeUpdate();
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } finally {
+                closeResources(null, ps, con);
+            }
         }
     }
 
