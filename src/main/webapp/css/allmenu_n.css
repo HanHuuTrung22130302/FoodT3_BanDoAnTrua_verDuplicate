@@ -110,7 +110,7 @@ html {
   height: 150px;
   width: auto;
   border: 1px solid rgba(0, 0, 0, 0.2);
-
+z-index: 999;
   border-top: none;
   top: 29px;
   left: 20px;

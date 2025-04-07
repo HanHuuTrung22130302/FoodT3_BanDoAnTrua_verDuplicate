@@ -160,24 +160,24 @@
 
         <div class="category-container">
             <div onclick="findCategory('tatca','1')">
-                <div class="category-item ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">Tất cả</div>
+                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">Tất cả</div>
             </div>
             <div onclick="findCategory('danhgiacao','1')">
-                <div class="category-item ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh giá cao</div>
+                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh giá cao</div>
             </div>
             <div onclick="findCategory('dexuat','1')">
-                <div class="category-item ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất</div>
+                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất</div>
             </div>
             <div onclick="findCategory('quantam','1')">
-                <div class="category-item ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm nhiều</div>
+                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm nhiều</div>
             </div>
             <div onclick="findCategory('banchay','1')">
-                <div class="category-item ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy</div>
+                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy</div>
             </div>
 
             <c:forEach var="category" items="${listC}">
                 <div onclick="findCategory('${category.categoryId}','1')">
-                    <div class="category-item ${currentOption == category.categoryId.toString() ? 'active' : ''}">
+                    <div class="category-item status-button ${currentOption == category.categoryId.toString() ? 'active' : ''}">
                             ${category.categoryName}
                     </div>
                 </div>

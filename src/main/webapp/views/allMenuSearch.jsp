@@ -131,18 +131,6 @@
 <script src="${pageContext.request.contextPath}/js/menu.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_search_ajax.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const buttons = document.querySelectorAll(".status-button");
-
-        buttons.forEach(button => {
-            button.addEventListener("click", function () {
-                buttons.forEach(btn => btn.classList.remove("active"));
-                this.classList.add("active");
-            });
-        });
-    });
-
-</script>
+<script src="${pageContext.request.contextPath}/js/jsButtonActiveCategory.js"></script>
 </body>
 </html>
