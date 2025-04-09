@@ -26,12 +26,18 @@ public class InvoiceOrderServices {
                 ois = invoiceOrderDao.getAll();
                 break;
             case "1":
-                ois = invoiceOrderDao.getInvoiceShipping();
+                ois = invoiceOrderDao.getInvoiceRequest();
                 break;
             case "2":
-                ois = invoiceOrderDao.getInvoiceDelivered();
+                ois = invoiceOrderDao.getInvoiceCoooking();
                 break;
             case "3":
+                ois = invoiceOrderDao.getInvoiceShipping();
+                break;
+            case "4":
+                ois = invoiceOrderDao.getInvoiceSuccess();
+                break;
+            case "5":
                 ois = invoiceOrderDao.getInvoiceCancelled();
                 break;
             default:
@@ -50,7 +56,7 @@ public class InvoiceOrderServices {
 
     public void cancelInvoice(String orderId) {
         int id = Integer.parseInt(orderId);
-        invoiceOrderDao.canclInvoice(id);
+        invoiceOrderDao.cancelInvoice(id);
     }
 
     public int getTotalDonHang() {

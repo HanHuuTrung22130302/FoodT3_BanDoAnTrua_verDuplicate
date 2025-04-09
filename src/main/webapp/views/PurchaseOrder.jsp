@@ -98,23 +98,24 @@
                     <div class="order-footer">
 
                         <c:if test="${iorder.orderStatus == 4 }">
-                            <a class="info-order-button" href=""
-                               style="text-decoration: none">Đánh giá</a>
+                            <div class="info-order-button" href=""
+                               style="text-decoration: none">Đánh giá</div>
                         </c:if>
 
                         <c:if test="${iorder.orderStatus == 1 || iorder.orderStatus == 2 || iorder.orderStatus == 3 }">
                             <!-- Hiển thị cả thẻ <a> và <button> khi order.orderStatus là 1 -->
-                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
-                               style="text-decoration: none">Chi tiết</a>
-                            <a class="cancel-order-button" href="javascript:void(0);"
+                            <div class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
+                               style="text-decoration: none">Chi tiết</div>
+                            <div class="cancel-order-button" href="javascript:void(0);"
                                onclick="confirmCancel(${iorder.invoiceId})" style="text-decoration: none">Hủy đơn
-                                hàng</a>
+                                hàng</div>
                         </c:if>
 
                         <c:if test="${iorder.orderStatus == 4 || iorder.orderStatus == 5}">
-                            <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
-                               style="text-decoration: none">Chi tiết</a>
+                            <div class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
+                               style="text-decoration: none">Chi tiết</div>
                         </c:if>
+
 
                     </div>
                 </div>
