@@ -71,9 +71,9 @@ public class InvoiceOrderDao {
         }
     }
 
-    public void canclInvoice(int id) {
+    public void cancelInvoice(int id) {
 
-        String query = "UPDATE order_status SET order_status = 3 WHERE invoice_id = ?;";
+        String query = "UPDATE order_status SET order_status = 5 WHERE invoice_id = ?;";
         Connection con = null;
         PreparedStatement ps = null;
         try {
@@ -104,7 +104,7 @@ public class InvoiceOrderDao {
         return data;
     }
 
-    public List<OrderInvoice> getInvoiceShipping() {
+    public List<OrderInvoice> getInvoiceRequest() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
             if (oi.getOrderStatus() == 1) {
@@ -114,7 +114,7 @@ public class InvoiceOrderDao {
         return ois;
     }
 
-    public List<OrderInvoice> getInvoiceDelivered() {
+    public List<OrderInvoice> getInvoiceCoooking() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
             if (oi.getOrderStatus() == 2) {
@@ -124,10 +124,30 @@ public class InvoiceOrderDao {
         return ois;
     }
 
-    public List<OrderInvoice> getInvoiceCancelled() {
+    public List<OrderInvoice> getInvoiceShipping() {
         List<OrderInvoice> ois = new ArrayList<>();
         for (OrderInvoice oi : data) {
             if (oi.getOrderStatus() == 3) {
+                ois.add(oi);
+            }
+        }
+        return ois;
+    }
+
+    public List<OrderInvoice> getInvoiceSuccess() {
+        List<OrderInvoice> ois = new ArrayList<>();
+        for (OrderInvoice oi : data) {
+            if (oi.getOrderStatus() == 4) {
+                ois.add(oi);
+            }
+        }
+        return ois;
+    }
+
+    public List<OrderInvoice> getInvoiceCancelled() {
+        List<OrderInvoice> ois = new ArrayList<>();
+        for (OrderInvoice oi : data) {
+            if (oi.getOrderStatus() == 5) {
                 ois.add(oi);
             }
         }
@@ -159,7 +179,11 @@ public class InvoiceOrderDao {
 
     public int getTotalShippingInvoices() {
         return (int) data.stream()
-                .filter(order -> order.getOrderStatus() == 1)
+                .filter(order -> {
+                    int status = order.getOrderStatus();
+                    return status == 1 || status == 2 || status == 3 || status == 4;
+                })
                 .count();
     }
+
 }
