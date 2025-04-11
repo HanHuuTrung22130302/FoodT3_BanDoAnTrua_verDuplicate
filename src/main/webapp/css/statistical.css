@@ -1,39 +1,229 @@
-
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
 }
 
 .container {
   display: flex;
+  min-height: 100vh;
 }
 
 .content {
-    margin: 0;
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+
+.header form {
+  display: flex;
+  gap: 10px;
+}
+
+.header select,
+.header input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.header select:focus,
+.header input:focus {
+  border-color: #4caf50;
+}
+
+.header button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.header button:hover {
+  background-color: #45a049;
+}
+
+.dashboard {
+  display: grid;
+  gap: 20px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card i {
+  font-size: 24px;
+  color: #4caf50;
+}
+
+.card .text {
+  flex: 1;
+}
+
+.card p {
+  margin: 0;
+  color: #666;
+}
+
+.card .number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.chart-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  height: 250px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.analysis {
+  display: grid;
+  gap: 20px;
+}
+
+.performance-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.performance-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #333;
+}
+
+.product_name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product_name img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .header form {
     width: 100%;
-    padding: 20px;
-}
-.content .header {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.content .header select,
-.content .header input,
-.content .header button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-.content .header button {
-    background-color: #b5292f;
-    color: #fff;
-    border: none;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .product_name img {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .sidebar {
@@ -49,7 +239,7 @@ body {
 }
 
 .sidebar img {
-    margin-left: 20px;
+  margin-left: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,7 +273,6 @@ body {
   align-items: center;
   padding: 10px;
   border-radius: 8px;
-  
 }
 
 .sidebar ul li a:hover {
@@ -95,96 +284,30 @@ body {
   margin-right: 10px;
 }
 
-.header select, .header input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
+.header select,
+.header input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
 }
 .header input[type="text"] {
-    flex: 1;
+  flex: 1;
 }
 .header .icons i {
-    margin-right: 10px;
-    cursor: pointer;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
-
-.summary {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-.summary .card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 1;
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.summary .card:last-child {
-    margin-right: 0;
-}
-.summary .card i {
-    font-size: 2em;
-    color: #b5292f;
-}
-.summary .card .text {
-    text-align: right;
-}
-.summary .card .text p {
-    margin: 0;
-}
-.summary .card .text .number {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-table th, table td {
-    padding: 15px;
-    text-align: left;
-    
-}
-table th {
-    background-color: #f1f1f1;
-}
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-table img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
 .details-button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  background-color: #f1f1f1;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .details-button i {
-    margin-right: 5px;
+  margin-right: 5px;
 }
-
-.product_name {
-    display: flex;
-    align-items: center;
-  }
-  
-  

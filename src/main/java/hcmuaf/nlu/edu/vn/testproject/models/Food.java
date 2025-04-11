@@ -18,6 +18,8 @@ public class Food {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private double rating;
+    private int status;
+    private Category category;
 
     public Food() {
     }
@@ -179,5 +181,21 @@ public class Food {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
