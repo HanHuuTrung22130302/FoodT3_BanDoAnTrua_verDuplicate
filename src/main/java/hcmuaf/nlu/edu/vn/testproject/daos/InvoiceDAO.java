@@ -395,4 +395,60 @@ public class InvoiceDAO {
         }
         return details;
     }
+
+    public int getRevenueBySpecificMonth(int year, int month) {
+        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 1 " +
+                      "AND YEAR(order_date) = ? AND MONTH(order_date) = ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, year);
+            ps.setInt(2, month);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getOrderCountBySpecificMonth(int year, int month) {
+        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 1 " +
+                      "AND YEAR(order_date) = ? AND MONTH(order_date) = ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, year);
+            ps.setInt(2, month);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getPreviousMonthRevenue(int year, int month) {
+        // Xử lý trường hợp tháng 1
+        if (month == 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+        return getRevenueBySpecificMonth(year, month);
+    }
+
+    public int getPreviousMonthOrderCount(int year, int month) {
+        // Xử lý trường hợp tháng 1
+        if (month == 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+        return getOrderCountBySpecificMonth(year, month);
+    }
 }

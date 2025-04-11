@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.time.YearMonth;
+import java.util.LinkedHashMap;
 
 @WebServlet(name = "StatisticalController", value = "/statistical")
 public class StatisticalController extends HttpServlet {
@@ -38,65 +40,71 @@ public class StatisticalController extends HttpServlet {
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         FoodDAO foodDAO = new FoodDAO();
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
-        int totalProducts = 0;
-        int totalQuantity = 0;
-        int totalPrice = 0;
-
+        
         // Lấy tham số thời gian
         String timeFilter = request.getParameter("timeFilter");
         if (timeFilter == null || timeFilter.isEmpty()) {
-            timeFilter = "day"; // Mặc định là theo ngày
+            timeFilter = "month"; // Mặc định là theo tháng
         }
-        
-        // Thống kê doanh thu theo thời gian
-        Map<String, Integer> revenueStats = new HashMap<>();
-        int dayRevenue = invoiceDAO.getRevenueByDay();
-        int weekRevenue = invoiceDAO.getRevenueByWeek();
-        int monthRevenue = invoiceDAO.getRevenueByMonth();
-        
-        revenueStats.put("day", dayRevenue);
-        revenueStats.put("week", weekRevenue);
-        revenueStats.put("month", monthRevenue);
 
-        // Thống kê số đơn hàng theo thời gian
-        Map<String, Integer> orderStats = new HashMap<>();
-        int dayOrders = invoiceDAO.getOrderCountByDay();
-        int weekOrders = invoiceDAO.getOrderCountByWeek();
-        int monthOrders = invoiceDAO.getOrderCountByMonth();
-        
-        orderStats.put("day", dayOrders);
-        orderStats.put("week", weekOrders);
-        orderStats.put("month", monthOrders);
+        // Xử lý dữ liệu cho card tổng quan theo thời gian được chọn
+        int totalProducts = 0;
+        int totalQuantity = 0;
+        int totalRevenue = 0;
+        int totalOrders = 0;
 
-        // Lấy dữ liệu chi tiết hóa đơn theo thời gian đã chọn
+        switch (timeFilter) {
+            case "day":
+                totalRevenue = invoiceDAO.getRevenueByDay();
+                totalOrders = invoiceDAO.getOrderCountByDay();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByDay();
+                break;
+            case "week":
+                totalRevenue = invoiceDAO.getRevenueByWeek();
+                totalOrders = invoiceDAO.getOrderCountByWeek();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByWeek();
+                break;
+            case "month":
+                totalRevenue = invoiceDAO.getRevenueByMonth();
+                totalOrders = invoiceDAO.getOrderCountByMonth();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByMonth();
+                break;
+        }
+
+        // Tính toán tổng số sản phẩm và số lượng bán ra
+        totalProducts = invoiceDetails.size();
+        for (InvoiceDetail detail : invoiceDetails) {
+            totalQuantity += detail.getQuantity();
+        }
+
+        // Xử lý dữ liệu cho xu hướng 12 tháng gần nhất
+        YearMonth currentMonth = YearMonth.now();
+        List<YearMonth> last12Months = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            last12Months.add(currentMonth.minusMonths(i));
+        }
+
+        Map<YearMonth, Integer> revenueStats = new LinkedHashMap<>();
+        Map<YearMonth, Integer> orderStats = new LinkedHashMap<>();
+
+        for (YearMonth month : last12Months) {
+            int revenue = invoiceDAO.getRevenueBySpecificMonth(month.getYear(), month.getMonthValue());
+            int orders = invoiceDAO.getOrderCountBySpecificMonth(month.getYear(), month.getMonthValue());
+            revenueStats.put(month, revenue);
+            orderStats.put(month, orders);
+        }
+
+        // Xử lý tìm kiếm nếu có
         String txtSearch = request.getParameter("text");
         if (txtSearch != null && !txtSearch.isEmpty()) {
-            invoiceDetails = invoiceDAO.searchByName(txtSearch);
-        } else {
-            switch (timeFilter) {
-                case "day":
-                    invoiceDetails = invoiceDAO.getInvoiceDetailsByDay();
-                    break;
-                case "week":
-                    invoiceDetails = invoiceDAO.getInvoiceDetailsByWeek();
-                    break;
-                case "month":
-                    invoiceDetails = invoiceDAO.getInvoiceDetailsByMonth();
-                    break;
-                default:
-                    invoiceDetails = invoiceDAO.getInvoiceDetails();
-            }
-        }
-        
-        // Tính toán tổng số lượng và doanh thu từ danh sách chi tiết hóa đơn
-        totalProducts = invoiceDetails.size();
-        totalQuantity = 0;
-        totalPrice = 0;
-
-        for (InvoiceDetail invoiceDetail : invoiceDetails) {
-            if (invoiceDetail.getQuantity() > 0) { // Chỉ tính các sản phẩm có số lượng > 0
-                totalQuantity += invoiceDetail.getQuantity();
-                totalPrice += invoiceDetail.getTotalAmount();
+            invoiceDetails = invoiceDAO.searchByNameAndTime(txtSearch, timeFilter);
+            // Cập nhật lại các số liệu tổng quan khi tìm kiếm
+            totalProducts = invoiceDetails.size();
+            totalQuantity = 0;
+            totalRevenue = 0;
+            for (InvoiceDetail detail : invoiceDetails) {
+                totalQuantity += detail.getQuantity();
+                totalRevenue += detail.getTotalAmount();
             }
         }
 
@@ -107,7 +115,8 @@ public class StatisticalController extends HttpServlet {
 
         // Tính tỷ lệ bán cho mỗi sản phẩm
         for (InvoiceDetail product : invoiceDetails) {
-            double percentage = (double) product.getQuantity() / totalQuantityAll * 100;
+            double percentage = totalQuantityAll > 0 ? 
+                (double) product.getQuantity() / totalQuantityAll * 100 : 0;
             product.setSalesPercentage(Math.round(percentage * 100.0) / 100.0);
         }
 
@@ -168,12 +177,14 @@ public class StatisticalController extends HttpServlet {
                 })
                 .collect(Collectors.toList());
 
-        request.setAttribute("invoiceDetails", invoiceDetails);
+        // Set attributes
         request.setAttribute("totalProducts", totalProducts);
         request.setAttribute("totalQuantity", totalQuantity);
-        request.setAttribute("totalRevenue", totalPrice);
-        request.setAttribute("search", txtSearch);
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("timeFilter", timeFilter);
+        request.setAttribute("search", txtSearch);
+        request.setAttribute("last12Months", last12Months);
         request.setAttribute("revenueStats", revenueStats);
         request.setAttribute("orderStats", orderStats);
         request.setAttribute("bestSellingProducts", bestSellingProducts);

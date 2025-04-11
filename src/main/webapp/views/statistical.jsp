@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Thống kê và phân tích</title>
     <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/statistical.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/statisticals.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container">
@@ -18,7 +17,6 @@
 
     <div class="content">
         <div class="header">
-            <h2>Thống kê và phân tích hiệu suất bán hàng</h2>
             <form action="statistical" method="get">
                 <label>
                     <select name="timeFilter" onchange="this.form.submit()">
@@ -35,17 +33,6 @@
                 </button>
             </form>
         </div>
-
-        <!-- Input ẩn để truyền dữ liệu cho JavaScript -->
-        <input type="hidden" id="dayRevenue" value="${revenueStats['day']}">
-        <input type="hidden" id="weekRevenue" value="${revenueStats['week']}">
-        <input type="hidden" id="monthRevenue" value="${revenueStats['month']}">
-        <input type="hidden" id="dayOrders" value="${orderStats['day']}">
-        <input type="hidden" id="weekOrders" value="${orderStats['week']}">
-        <input type="hidden" id="monthOrders" value="${orderStats['month']}">
-        <input type="hidden" id="bestSellingData" value='${bestSellingProductsJson}'>
-        <input type="hidden" id="slowSellingData" value='${slowSellingProductsJson}'>
-        <input type="hidden" id="unsoldData" value='${unsoldProductsJson}'>
 
         <div class="dashboard">
             <!-- Phần tổng quan -->
@@ -69,7 +56,7 @@
                     <div class="text">
                         <p>Doanh thu</p>
                         <p class="number">
-                            <fmt:formatNumber value="${revenueStats[timeFilter]}" type="number" pattern="#,###"/> đ
+                            <fmt:formatNumber value="${totalRevenue}" type="number" pattern="#,###"/> đ
                         </p>
                     </div>
                 </div>
@@ -77,20 +64,81 @@
                     <i class="fas fa-shopping-cart"></i>
                     <div class="text">
                         <p>Số đơn hàng</p>
-                        <p class="number">${orderStats[timeFilter]}</p>
+                        <p class="number">${totalOrders}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Phần biểu đồ -->
-            <div class="charts">
-                <div class="chart-section">
-                    <h3>Biểu đồ doanh thu theo thời gian</h3>
-                    <canvas id="revenueChart"></canvas>
+            <!-- Phần xu hướng -->
+            <div class="trends">
+                <div class="trend-section revenue-trends">
+                    <div class="section-header">
+                        <h3><i class="fas fa-chart-line"></i>Xu hướng doanh thu</h3>
+                        <div class="time-period">12 tháng gần nhất</div>
+                    </div>
+                    <div class="trend-cards">
+                        <c:forEach var="month" items="${last12Months}" varStatus="status">
+                            <div class="trend-card">
+                                <div class="trend-header">
+                                    <div class="period">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <span>Tháng ${month.monthValue}/${month.year}</span>
+                                    </div>
+                                    <c:set var="monthChange" value="${revenueStats[month] - revenueStats[month.minusMonths(1)]}"/>
+                                    <span class="trend-indicator ${monthChange >= 0 ? 'up' : 'down'}">
+                                        <i class="fas fa-${monthChange >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                                        <fmt:formatNumber value="${Math.abs(monthChange)}" type="number" pattern="#,###"/> đ
+                                    </span>
+                                </div>
+                                <div class="trend-value">
+                                    <fmt:formatNumber value="${revenueStats[month]}" type="number" pattern="#,###"/> đ
+                                </div>
+                                <div class="trend-percentage">
+                                    <c:if test="${revenueStats[month.minusMonths(1)] != 0}">
+                                        <span class="${monthChange >= 0 ? 'up' : 'down'}">
+                                            <fmt:formatNumber value="${(Math.abs(monthChange) / revenueStats[month.minusMonths(1)]) * 100}" maxFractionDigits="1"/>%
+                                            so với tháng trước
+                                        </span>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
                 </div>
-                <div class="chart-section">
-                    <h3>Biểu đồ số đơn hàng theo thời gian</h3>
-                    <canvas id="ordersChart"></canvas>
+
+                <div class="trend-section order-trends">
+                    <div class="section-header">
+                        <h3><i class="fas fa-shopping-cart"></i>Xu hướng đơn hàng</h3>
+                        <div class="time-period">12 tháng gần nhất</div>
+                    </div>
+                    <div class="trend-cards">
+                        <c:forEach var="month" items="${last12Months}" varStatus="status">
+                            <div class="trend-card">
+                                <div class="trend-header">
+                                    <div class="period">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <span>Tháng ${month.monthValue}/${month.year}</span>
+                                    </div>
+                                    <c:set var="monthOrderChange" value="${orderStats[month] - orderStats[month.minusMonths(1)]}"/>
+                                    <span class="trend-indicator ${monthOrderChange >= 0 ? 'up' : 'down'}">
+                                        <i class="fas fa-${monthOrderChange >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                                        ${Math.abs(monthOrderChange)} đơn
+                                    </span>
+                                </div>
+                                <div class="trend-value">
+                                    ${orderStats[month]} đơn
+                                </div>
+                                <div class="trend-percentage">
+                                    <c:if test="${orderStats[month.minusMonths(1)] != 0}">
+                                        <span class="${monthOrderChange >= 0 ? 'up' : 'down'}">
+                                            <fmt:formatNumber value="${(Math.abs(monthOrderChange) / orderStats[month.minusMonths(1)]) * 100}" maxFractionDigits="1"/>%
+                                            so với tháng trước
+                                        </span>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
 
@@ -98,9 +146,6 @@
             <div class="analysis">
                 <div class="performance-section">
                     <h3>Sản phẩm bán chạy</h3>
-                    <div class="chart-container">
-                        <canvas id="bestSellingChart"></canvas>
-                    </div>
                     <table>
                         <thead>
                         <tr>
@@ -136,9 +181,6 @@
 
                 <div class="performance-section">
                     <h3>Sản phẩm bán chậm</h3>
-                    <div class="chart-container">
-                        <canvas id="slowSellingChart"></canvas>
-                    </div>
                     <table>
                         <thead>
                         <tr>
@@ -174,9 +216,6 @@
 
                 <div class="performance-section">
                     <h3>Sản phẩm không bán được</h3>
-                    <div class="chart-container">
-                        <canvas id="unsoldChart"></canvas>
-                    </div>
                     <table>
                         <thead>
                         <tr>
