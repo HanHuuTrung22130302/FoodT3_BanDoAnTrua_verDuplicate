@@ -10,55 +10,6 @@
     <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/statisticals.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <style>
-        .performance-section {
-            margin-bottom: 30px;
-        }
-
-        .table-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-container thead {
-            position: sticky;
-            top: 0;
-            background-color: #f8f9fa;
-            z-index: 1;
-        }
-
-        .table-container th {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .table-container td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .table-container tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .product_name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .product_name img {
-            border-radius: 5px;
-        }
-    </style>
 </head>
 <body>
 <div class="container">

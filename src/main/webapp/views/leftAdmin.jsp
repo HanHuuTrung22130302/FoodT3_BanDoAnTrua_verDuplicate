@@ -59,13 +59,6 @@ prefix="c" %>
     </li>
 
     <li>
-      <a href="product-performance">
-        <i class="fas fa-chart-line"></i>
-        <span>Phân loại sản phẩm</span>
-      </a>
-    </li>
-
-    <li>
       <a href="discount">
         <i class="fa-solid fa-percent"></i>
         Quản lý mã giảm giá

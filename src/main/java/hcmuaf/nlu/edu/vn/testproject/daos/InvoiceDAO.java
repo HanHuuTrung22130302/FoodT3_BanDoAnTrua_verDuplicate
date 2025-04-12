@@ -366,7 +366,7 @@ public class InvoiceDAO {
     }
 
     public List<Food> getUnsoldProductsByTime() {
-        String query = "SELECT f.* FROM food f " +
+        String query = "SELECT f.food_id, f.food_name, f.image, f.price, f.is_deleted FROM food f " +
                       "WHERE f.food_id NOT IN (SELECT DISTINCT food_id FROM invoice_detail) " +
                       "AND f.is_deleted = 0";
         
@@ -380,6 +380,8 @@ public class InvoiceDAO {
                     food.setFoodId(rs.getInt("food_id"));
                     food.setFoodName(rs.getString("food_name"));
                     food.setImage(rs.getString("image"));
+                    food.setPrice(rs.getInt("price"));
+                    food.setCreatedAt(rs.getTimestamp("created_at"));
                     food.setIsDeleted(rs.getInt("is_deleted"));
                     
                     unsoldProducts.add(food);
