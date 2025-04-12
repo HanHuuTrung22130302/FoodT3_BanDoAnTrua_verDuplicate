@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.time.YearMonth;
 import java.util.LinkedHashMap;
@@ -26,9 +25,6 @@ public class StatisticalController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
@@ -38,13 +34,12 @@ public class StatisticalController extends HttpServlet {
         }
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
-        FoodDAO foodDAO = new FoodDAO();
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
         
         // Lấy tham số thời gian
         String timeFilter = request.getParameter("timeFilter");
         if (timeFilter == null || timeFilter.isEmpty()) {
-            timeFilter = "month"; // Mặc định là theo tháng
+            timeFilter = "day"; // Mặc định là theo ngày
         }
 
         // Xử lý dữ liệu cho card tổng quan theo thời gian được chọn
@@ -94,7 +89,7 @@ public class StatisticalController extends HttpServlet {
             orderStats.put(month, orders);
         }
 
-        // Xử lý tìm kiếm nếu có
+        // Xử lý tìm kiếm
         String txtSearch = request.getParameter("text");
         if (txtSearch != null && !txtSearch.isEmpty()) {
             invoiceDetails = invoiceDAO.searchByNameAndTime(txtSearch, timeFilter);
@@ -102,22 +97,11 @@ public class StatisticalController extends HttpServlet {
             totalProducts = invoiceDetails.size();
             totalQuantity = 0;
             totalRevenue = 0;
+            totalOrders = invoiceDAO.getOrderCountBySearch(txtSearch, timeFilter);
             for (InvoiceDetail detail : invoiceDetails) {
                 totalQuantity += detail.getQuantity();
                 totalRevenue += detail.getTotalAmount();
             }
-        }
-
-        // Tính tổng số lượng bán của tất cả sản phẩm
-        int totalQuantityAll = invoiceDetails.stream()
-                .mapToInt(InvoiceDetail::getQuantity)
-                .sum();
-
-        // Tính tỷ lệ bán cho mỗi sản phẩm
-        for (InvoiceDetail product : invoiceDetails) {
-            double percentage = totalQuantityAll > 0 ? 
-                (double) product.getQuantity() / totalQuantityAll * 100 : 0;
-            product.setSalesPercentage(Math.round(percentage * 100.0) / 100.0);
         }
 
         // Sắp xếp sản phẩm theo số lượng bán giảm dần
@@ -129,53 +113,10 @@ public class StatisticalController extends HttpServlet {
             bestSellingProducts.add(invoiceDetails.get(i));
         }
 
-        // Lấy 5 sản phẩm bán chậm nhất (có số lượng bán > 0)
-        List<InvoiceDetail> slowSellingProducts = new ArrayList<>();
-        for (int i = Math.max(0, invoiceDetails.size() - 5); i < invoiceDetails.size(); i++) {
-            if (invoiceDetails.get(i).getQuantity() > 0) {
-                slowSellingProducts.add(invoiceDetails.get(i));
-            }
-        }
-
-        // Lấy danh sách sản phẩm không bán được (số lượng bán = 0)
-        Set<Integer> soldFoodIds = invoiceDetails.stream()
-                .map(detail -> detail.getFood().getFoodId())
-                .collect(Collectors.toSet());
-        
-        List<Food> allFoods = foodDAO.getAllFoods();
-        List<Food> unsoldProducts = allFoods.stream()
-                .filter(food -> !soldFoodIds.contains(food.getFoodId()))
-                .collect(Collectors.toList());
-
-        // Tạo dữ liệu JSON cho biểu đồ
-        Gson gson = new Gson();
-        
-        List<Map<String, Object>> bestSellingData = bestSellingProducts.stream()
-                .map(product -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("name", product.getFood().getFoodName());
-                    data.put("quantity", product.getQuantity());
-                    return data;
-                })
-                .collect(Collectors.toList());
-        
-        List<Map<String, Object>> slowSellingData = slowSellingProducts.stream()
-                .map(product -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("name", product.getFood().getFoodName());
-                    data.put("quantity", product.getQuantity());
-                    return data;
-                })
-                .collect(Collectors.toList());
-        
-        List<Map<String, Object>> unsoldData = unsoldProducts.stream()
-                .map(product -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("name", product.getFoodName());
-                    data.put("category", product.getCategory().getCategoryName());
-                    return data;
-                })
-                .collect(Collectors.toList());
+        // Lấy sản phẩm bán chậm và chưa bán được theo thời gian
+        List<InvoiceDetail> slowSellingProducts = invoiceDAO.getSlowSellingProductsByTime(timeFilter);
+        List<Food> unsoldProducts = invoiceDAO.getUnsoldProductsByTime();
+        request.setAttribute("unsoldProducts", unsoldProducts);
 
         // Set attributes
         request.setAttribute("totalProducts", totalProducts);
@@ -190,9 +131,6 @@ public class StatisticalController extends HttpServlet {
         request.setAttribute("bestSellingProducts", bestSellingProducts);
         request.setAttribute("slowSellingProducts", slowSellingProducts);
         request.setAttribute("unsoldProducts", unsoldProducts);
-        request.setAttribute("bestSellingProductsJson", gson.toJson(bestSellingData));
-        request.setAttribute("slowSellingProductsJson", gson.toJson(slowSellingData));
-        request.setAttribute("unsoldProductsJson", gson.toJson(unsoldData));
         request.getRequestDispatcher("/views/statistical.jsp").forward(request, response);
     }
 

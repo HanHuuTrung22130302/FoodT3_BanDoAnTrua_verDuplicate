@@ -18,8 +18,7 @@ public class Food {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private double rating;
-    private int status;
-    private Category category;
+    private int isDeleted;
 
     public Food() {
     }
@@ -183,19 +182,11 @@ public class Food {
         this.updatedAt = updatedAt;
     }
 
-    public int getStatus() {
-        return status;
+    public int getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

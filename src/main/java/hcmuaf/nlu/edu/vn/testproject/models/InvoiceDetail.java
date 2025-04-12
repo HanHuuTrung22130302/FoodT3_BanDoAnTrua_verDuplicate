@@ -7,7 +7,6 @@ public class InvoiceDetail {
     private int quantity;
     private int totalAmount;
     private Food food;
-    private double salesPercentage;
 
     public InvoiceDetail() {
     }
@@ -66,13 +65,5 @@ public class InvoiceDetail {
 
     public void setFood(Food food) {
         this.food = food;
-    }
-
-    public double getSalesPercentage() {
-        return salesPercentage;
-    }
-
-    public void setSalesPercentage(double salesPercentage) {
-        this.salesPercentage = salesPercentage;
     }
 }

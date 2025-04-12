@@ -357,32 +357,4 @@ public class FoodDAO {
             closeResources(null, ps, conn);
         }
     }
-
-    public List<Food> getAllFoods() {
-        List<Food> foods = new ArrayList<>();
-        String query = "SELECT f.*, c.category_name FROM food f JOIN category c ON f.category_id = c.category_id";
-        try (Connection con = new DbContext().getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Food food = new Food();
-                food.setFoodId(rs.getInt("food_id"));
-                food.setFoodName(rs.getString("food_name"));
-                food.setPrice(rs.getInt("price"));
-                food.setImage(rs.getString("image"));
-                food.setStatus(rs.getInt("status"));
-                
-                Category category = new Category();
-                category.setCategoryId(rs.getInt("category_id"));
-                category.setCategoryName(rs.getString("category_name"));
-                food.setCategory(category);
-                
-                foods.add(food);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return foods;
-    }
 }

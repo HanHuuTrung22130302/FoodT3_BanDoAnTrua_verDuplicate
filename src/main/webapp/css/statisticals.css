@@ -503,3 +503,55 @@ tr:hover {
 .order-trends .trend-card {
   border: none;
 }
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.search-form {
+  flex: 1;
+}
+
+.export-form {
+  margin-top: 10px;
+}
+
+.export-button {
+  background-color: #1f7244;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.export-button:hover {
+  background-color: #155a34;
+}
+
+.export-button i {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+  }
+
+  .export-form {
+    width: 100%;
+  }
+
+  .export-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
