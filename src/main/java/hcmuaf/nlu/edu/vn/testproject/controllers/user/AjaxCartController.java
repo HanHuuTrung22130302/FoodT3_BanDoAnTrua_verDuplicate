@@ -32,7 +32,7 @@ public class AjaxCartController extends HttpServlet {
         if ("removeAll".equals(action)) {
             dao.clearCart(accountId);
             session.setAttribute("totalItems", 0);
-            response.getWriter().write("{\"success\": true, \"message\": \"All items removed\"}");
+            response.getWriter().write("{\"success\": true, \"message\": \"All items removed\", \"totalItems\": 0}");
             return;
         }
 
@@ -85,8 +85,9 @@ public class AjaxCartController extends HttpServlet {
         int total = subtotal - discountAmount;
 
         response.getWriter().write(String.format(
-                "{\"success\": true, \"newQuantity\": %d, \"subtotal\": %d, \"total\": %d, \"unitPrice\": %d}",
-                newQuantity, subtotal, total, unitPrice
+                "{\"success\": true, \"newQuantity\": %d, \"subtotal\": %d, \"total\": %d, \"unitPrice\": %d, \"totalItems\": %d}",
+                newQuantity, subtotal, total, unitPrice, totalItems
         ));
+
     }
 }
