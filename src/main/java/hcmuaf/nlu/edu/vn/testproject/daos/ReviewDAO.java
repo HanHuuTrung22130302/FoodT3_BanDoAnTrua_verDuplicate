@@ -97,14 +97,27 @@ public class ReviewDAO {
         return lsIdFood;
     }
 
-    public List<ReviewFood> getReviewByFood(int foodId, int offset) {
+    public List<ReviewFood> getReviewByFood(int foodId, int offset, int option) {
         List<ReviewFood> reviewList = new ArrayList<>();
-        String query = "SELECT name, rv.account_id, review_id, food_id, rating, comment, rv.created_at " +
-                "FROM review rv " +
-                "JOIN account ac ON rv.account_id = ac.account_id " +
-                "WHERE rv.food_id = ? " +
-                "ORDER BY rv.created_at DESC " +
-                "LIMIT 10 OFFSET ?";
+        String query;
+
+        if (option == 0) {
+            // Lấy tất cả review
+            query = "SELECT name, rv.account_id, review_id, food_id, rating, comment, rv.created_at " +
+                    "FROM review rv " +
+                    "JOIN account ac ON rv.account_id = ac.account_id " +
+                    "WHERE rv.food_id = ? " +
+                    "ORDER BY rv.created_at DESC " +
+                    "LIMIT 10 OFFSET ?";
+        } else {
+            // Lọc theo rating
+            query = "SELECT name, rv.account_id, review_id, food_id, rating, comment, rv.created_at " +
+                    "FROM review rv " +
+                    "JOIN account ac ON rv.account_id = ac.account_id " +
+                    "WHERE rv.food_id = ? AND rv.rating = ? " +
+                    "ORDER BY rv.created_at DESC " +
+                    "LIMIT 10 OFFSET ?";
+        }
 
         Connection con = null;
         PreparedStatement ps = null;
@@ -120,7 +133,13 @@ public class ReviewDAO {
 
             ps = con.prepareStatement(query);
             ps.setInt(1, foodId);
-            ps.setInt(2, offset);
+            if (option == 0) {
+                ps.setInt(2, offset);
+            } else {
+                ps.setInt(2, option); // rating
+                ps.setInt(3, offset);
+            }
+
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -146,6 +165,7 @@ public class ReviewDAO {
 
         return reviewList;
     }
+
     public int getTotalReviewCountByFoodId(int foodId) {
         String query = "SELECT COUNT(*) AS total FROM review WHERE food_id = ?";
         Connection con = null;

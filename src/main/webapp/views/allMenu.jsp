@@ -295,13 +295,15 @@
                                     </button>
                                 </div>
                                 <div class="user-reviews">
-                                    <div id="review-list${food.foodId}">
-                                        <button class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})"></button>
+                                    <div id="review-list${food.foodId}" data-option="0">
+
                                     </div>
                                 </div>
+                                <button class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">load more</button>
                             </div>
                         </div>
                         <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+
                         <div class="popup-footer">
                             <button class="button-cart">
                                 <a class="linktocart" href="${addtoCart}">

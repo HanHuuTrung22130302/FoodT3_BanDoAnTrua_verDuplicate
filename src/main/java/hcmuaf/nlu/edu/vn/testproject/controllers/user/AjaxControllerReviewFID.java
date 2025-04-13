@@ -26,49 +26,56 @@ public class AjaxControllerReviewFID extends HttpServlet {
         int option = Integer.parseInt(request.getParameter("text2"));
         int amount = Integer.parseInt(request.getParameter("exits"));
         ReviewService reviewService = new ReviewService();
-        List<ReviewFood> lrvf = reviewService.get10IncrementReviewFood(foodID,amount);
-        List<ReviewFood> filterRvf = new ArrayList<>();
-        switch (option) {
-            case 0:
-                filterRvf.addAll(lrvf);
-                break;
-            case 1:
-                for (ReviewFood rf : lrvf) {
-                    if (rf.getRating() == 1) filterRvf.add(rf);
-                }
-                break;
-            case 2:
-                for (ReviewFood rf : lrvf) {
-                    if (rf.getRating() == 2) filterRvf.add(rf);
-                }
-                break;
-            case 3:
-                for (ReviewFood rf : lrvf) {
-                    if (rf.getRating() == 3) filterRvf.add(rf);
-                }
-                break;
-            case 4:
-                for (ReviewFood rf : lrvf) {
-                    if (rf.getRating() == 4) filterRvf.add(rf);
-                }
-                break;
-            case 5:
-                for (ReviewFood rf : lrvf) {
-                    if (rf.getRating() == 5) filterRvf.add(rf);
-                }
-                break;
 
-        }
+        List<ReviewFood> filterRvf = reviewService.get10IncrementReviewFood(foodID,amount,option);
 
-
+//        switch (option) {
+//            case 0:
+//                filterRvf = reviewService.get10IncrementReviewFood(foodID,amount,option);
+//                break;
+//            case 1:
+//                for (ReviewFood rf : lrvf) {
+//                    if (rf.getRating() == 1) filterRvf.add(rf);
+//                }
+//                break;
+//            case 2:
+//                for (ReviewFood rf : lrvf) {
+//                    if (rf.getRating() == 2) filterRvf.add(rf);
+//                }
+//                break;
+//            case 3:
+//                for (ReviewFood rf : lrvf) {
+//                    if (rf.getRating() == 3) filterRvf.add(rf);
+//                }
+//                break;
+//            case 4:
+//                for (ReviewFood rf : lrvf) {
+//                    if (rf.getRating() == 4) filterRvf.add(rf);
+//                }
+//                break;
+//            case 5:
+//                for (ReviewFood rf : lrvf) {
+//                    if (rf.getRating() == 5) filterRvf.add(rf);
+//                }
+//                break;
+//
+//        }
         PrintWriter out = response.getWriter();
         if (filterRvf.isEmpty()) {
-            out.println("<h2 style=\"max-width: 1200px; text-align: center;\">Chưa có đánh giá</h2>");
+//            if (amount == 0) {
+                out.println("<div class=\"fragmentReview countFragmentReview" + foodID + "\">");
+                out.println("<h2 style=\"max-width: 1200px; text-align: center;\">Chưa có đánh giá</h2>");
+                out.println("</div>");
+            out.println("<script>");
+            out.println("document.getElementById('loadMoreBtn" + foodID + "').disabled = true;");
+            out.println("</script>");
+//            }
+
         } else {
-            out.println("<div id=\"review-list"+foodID+"\">");
+//            out.println("<div id=\"review-list"+foodID+"\">");
             for (ReviewFood rf : filterRvf) {
 
-                out.println("<div class=\"fragmentReview countFragmentReview"+foodID+"\">");
+                out.println("<div class=\"fragmentReview countFragmentReview" + foodID + "\">");
                 out.println("    <div class=\"nameAndDateRatingUser\">");
                 out.println("        <div class=\"nameUser\">" + rf.getName() + "</div>");
                 out.println("        <div class=\"dateRatingUser\">" + rf.getDate() + "</div>");
@@ -85,8 +92,10 @@ public class AjaxControllerReviewFID extends HttpServlet {
                 out.println("</div>");
 
             }
-            out.println("</div>");
+//            out.println("</div>");
+//            out.println(" <button class=\"next10cmt\" onclick=\"ajaxGetReviewFID("+foodID+")\">load more</button>");
         }
+
     }
 
     @Override
