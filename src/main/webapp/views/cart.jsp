@@ -67,10 +67,8 @@
                 <c:forEach items="${cartItems}" var="item">
                     <tr>
                         <td>
-                            <button class="delete-btn">
-                                <a href="${pageContext.request.contextPath}/addtoCart?removeFoodID=${item.food.foodId}" class="delete-btn">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </a>
+                            <button class="delete-btn" data-food-id="${item.food.foodId}">
+                                <i class="fa-regular fa-trash-can"></i>
                             </button>
                         </td>
                         <td>${item.food.foodName}</td>
@@ -79,17 +77,20 @@
                         </td>
                         <td>
                             <div class="congtrubutton">
-                                <a href="${pageContext.request.contextPath}/addtoCart?decrement=${item.food.foodId}">
-                                    <button>-</button>
-                                </a>
-                                <span>${item.quantity}</span>
-                                <a href="${pageContext.request.contextPath}/addtoCart?increment=${item.food.foodId}">
-                                    <button>+</button>
-                                </a>
+                                <button class="decrease-btn" data-food-id="${item.food.foodId}">-</button>
+                                <div id="quantity-${item.food.foodId}">
+                                    <span>${item.quantity}</span>
+                                </div>
+                                <button class="increase-btn" data-food-id="${item.food.foodId}">+</button>
                             </div>
                         </td>
+
                         <td>${item.food.price}₫</td>
-                        <td>${item.quantity * item.food.price}₫</td>
+                        <td>
+                            <span id="finalTotal">
+                                ${item.quantity * item.food.price}₫
+                            </span>
+                        </td>
                         <td></td>
                     </tr>
                 </c:forEach>
@@ -203,5 +204,7 @@
         }, 5000);
     });
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/CartAjax.js"></script>
 </body>
 </html>
