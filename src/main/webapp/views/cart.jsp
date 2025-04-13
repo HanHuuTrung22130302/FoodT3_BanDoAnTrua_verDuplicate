@@ -57,9 +57,9 @@
                     <th>Giá</th>
                     <th>Thành tiền</th>
                     <th>
-                        <a href="${pageContext.request.contextPath}/addtoCart?removeAll=true">
+                        <button id="deleteAll-btn" class="delete-btn">
                             <i class="fa-regular fa-trash-can"></i>
-                        </a>
+                        </button>
                     </th>
                 </tr>
                 </thead>
@@ -87,7 +87,7 @@
 
                         <td>${item.food.price}₫</td>
                         <td>
-                            <span id="finalTotal">
+                            <span class="item-total" id="item-total-${item.food.foodId}">
                                 ${item.quantity * item.food.price}₫
                             </span>
                         </td>
