@@ -132,47 +132,55 @@
 <div id="container">
     <div class="intro">
         <h2>Khám Phá Thực Đơn Của Chúng Tôi</h2>
-<%--        <div class="category-container">--%>
-<%--            <a href="allmenu?option=tatca">--%>
-<%--                <div class="category-item status-button active">Tất cả</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=danhgiacao">--%>
-<%--                <div class="category-item status-button">Món được đánh giá cao</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=dexuat">--%>
-<%--                <div class="category-item status-button">Món được đề xuất</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=quantam">--%>
-<%--                <div class="category-item status-button">Món được quan tâm nhiều</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=banchay">--%>
-<%--                <div class="category-item status-button">Món bán chạy</div>--%>
-<%--            </a>--%>
+        <%--        <div class="category-container">--%>
+        <%--            <a href="allmenu?option=tatca">--%>
+        <%--                <div class="category-item status-button active">Tất cả</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=danhgiacao">--%>
+        <%--                <div class="category-item status-button">Món được đánh giá cao</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=dexuat">--%>
+        <%--                <div class="category-item status-button">Món được đề xuất</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=quantam">--%>
+        <%--                <div class="category-item status-button">Món được quan tâm nhiều</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=banchay">--%>
+        <%--                <div class="category-item status-button">Món bán chạy</div>--%>
+        <%--            </a>--%>
 
-<%--            <c:forEach var="category" items="${listC}">--%>
-<%--                <a href="allmenu?option=${category.categoryId}">--%>
-<%--                    <div class="category-item status-button">${category.categoryName}</div>--%>
-<%--                </a>--%>
-<%--            </c:forEach>--%>
-<%--        </div>--%>
+        <%--            <c:forEach var="category" items="${listC}">--%>
+        <%--                <a href="allmenu?option=${category.categoryId}">--%>
+        <%--                    <div class="category-item status-button">${category.categoryName}</div>--%>
+        <%--                </a>--%>
+        <%--            </c:forEach>--%>
+        <%--        </div>--%>
 
-        <c:set var="currentOption" value="${param.option}" />
+        <c:set var="currentOption" value="${param.option}"/>
 
         <div class="category-container">
             <div onclick="findCategory('tatca','1')">
-                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">Tất cả</div>
+                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">
+                    Tất cả
+                </div>
             </div>
             <div onclick="findCategory('danhgiacao','1')">
-                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh giá cao</div>
+                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh
+                    giá cao
+                </div>
             </div>
             <div onclick="findCategory('dexuat','1')">
-                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất</div>
+                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất
+                </div>
             </div>
             <div onclick="findCategory('quantam','1')">
-                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm nhiều</div>
+                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm
+                    nhiều
+                </div>
             </div>
             <div onclick="findCategory('banchay','1')">
-                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy</div>
+                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy
+                </div>
             </div>
 
             <c:forEach var="category" items="${listC}">
@@ -230,7 +238,8 @@
                 <div id="${food.foodId}" class="popup">
 
                     <div class="popup-content">
-                        <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                        <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                        </div>
 
                         <div class="popup-body">
                             <img src="${food.image}" alt="${food.foodName}"/>
@@ -266,16 +275,28 @@
 
                                 <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                                 <div class="rating-filter">
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                        Tất cả
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                        5⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                        4⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                        3⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                        2⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                        1⭐
+                                    </button>
                                 </div>
                                 <div class="user-reviews">
                                     <div id="review-list${food.foodId}">
-
+                                        <button class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})"></button>
                                     </div>
                                 </div>
                             </div>

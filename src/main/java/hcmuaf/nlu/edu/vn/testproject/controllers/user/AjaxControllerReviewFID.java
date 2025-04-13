@@ -24,8 +24,9 @@ public class AjaxControllerReviewFID extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int foodID = Integer.parseInt(request.getParameter("text1"));
         int option = Integer.parseInt(request.getParameter("text2"));
+        int amount = Integer.parseInt(request.getParameter("exits"));
         ReviewService reviewService = new ReviewService();
-        List<ReviewFood> lrvf = reviewService.getReviewFood(foodID);
+        List<ReviewFood> lrvf = reviewService.get10IncrementReviewFood(foodID,amount);
         List<ReviewFood> filterRvf = new ArrayList<>();
         switch (option) {
             case 0:
@@ -67,7 +68,7 @@ public class AjaxControllerReviewFID extends HttpServlet {
             out.println("<div id=\"review-list"+foodID+"\">");
             for (ReviewFood rf : filterRvf) {
 
-                out.println("<div class=\"fragmentReview\">");
+                out.println("<div class=\"fragmentReview countFragmentReview"+foodID+"\">");
                 out.println("    <div class=\"nameAndDateRatingUser\">");
                 out.println("        <div class=\"nameUser\">" + rf.getName() + "</div>");
                 out.println("        <div class=\"dateRatingUser\">" + rf.getDate() + "</div>");
