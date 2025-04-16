@@ -366,32 +366,31 @@ public class InvoiceDAO {
     }
 
     public List<Food> getUnsoldProductsByTime() {
-        String query = "SELECT f.food_id, f.food_name, f.image, f.price, f.is_deleted FROM food f " +
-                      "WHERE f.food_id NOT IN (SELECT DISTINCT food_id FROM invoice_detail) " +
-                      "AND f.is_deleted = 0";
+        String query = "SELECT f.food_id, f.food_name, f.image, f.price, f.is_deleted " +
+                "FROM food f " +
+                "WHERE f.sold = 0 " +
+                "ORDER BY f.food_name";
         
-        List<Food> unsoldProducts = new ArrayList<>();
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
             try (ResultSet rs = ps.executeQuery()) {
+                List<Food> unsoldProducts = new ArrayList<>();
                 while (rs.next()) {
                     Food food = new Food();
                     food.setFoodId(rs.getInt("food_id"));
                     food.setFoodName(rs.getString("food_name"));
                     food.setImage(rs.getString("image"));
                     food.setPrice(rs.getInt("price"));
-                    food.setCreatedAt(rs.getTimestamp("created_at"));
                     food.setIsDeleted(rs.getInt("is_deleted"));
-                    
                     unsoldProducts.add(food);
                 }
+                return unsoldProducts;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Lỗi khi lấy sản phẩm chưa bán: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return unsoldProducts;
     }
 
     public List<InvoiceDetail> getSlowSellingProductsByTime(String timeFilter) {

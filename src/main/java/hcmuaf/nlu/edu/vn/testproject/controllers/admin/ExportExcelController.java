@@ -176,7 +176,7 @@ public class ExportExcelController extends HttpServlet {
         unsoldSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
 
         Row unsoldHeaderRow2 = unsoldSheet.createRow(1);
-        String[] columns3 = {"STT", "Mã món", "Tên món", "Đơn giá", "Trạng thái", "Ngày thêm"};
+        String[] columns3 = {"STT", "Mã món", "Tên món", "Đơn giá", "Trạng thái"};
         for (int i = 0; i < columns3.length; i++) {
             Cell cell = unsoldHeaderRow2.createCell(i);
             cell.setCellValue(columns3[i]);
