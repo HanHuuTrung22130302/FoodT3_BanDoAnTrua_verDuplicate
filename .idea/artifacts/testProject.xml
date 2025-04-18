@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="testProject:war">
-    <output-path>$PROJECT_DIR$/out/artifacts/testProject_war</output-path>
+  <artifact type="exploded-war" name="testProject">
+    <output-path>$PROJECT_DIR$/out/artifacts/testProject</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -45,8 +45,8 @@
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:5.2.1" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="testProject/web/Web2" />
       <element id="javaee-facet-resources" facet="testProject/web/Web" />
-      <element id="module-output" name="testProject" />
     </root>
   </artifact>
 </component>
