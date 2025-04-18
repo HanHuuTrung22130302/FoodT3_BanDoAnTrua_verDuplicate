@@ -41,14 +41,9 @@ public class ReviewService {
         return rvf;
     }
 
-    public ReviewService(int offSetReviewFood, int idFood) {
-        this.offSetReviewFood = offSetReviewFood;
-        this.idFood = idFood;
-        reviewDAO = new ReviewDAO();
-    }
 
-    public List<ReviewFood> get10IncrementReviewFood(int idFood, int offset) {
-        List<ReviewFood> all = reviewDAO.getReviewByFood(idFood,offset);
+    public List<ReviewFood> get10IncrementReviewFood(int idFood, int offset,int option) {
+        List<ReviewFood> all = reviewDAO.getReviewByFood(idFood,offset,option);
         List<ReviewFood> rvf = new ArrayList<>();
         for (ReviewFood rf : all) {
             if (rf.getFoodId() == idFood)

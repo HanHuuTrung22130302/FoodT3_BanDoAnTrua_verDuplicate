@@ -104,12 +104,16 @@ public class InvoiceDAO {
 
     // Phương thức helper
     private String getTimeFilterCondition(String timeFilter) {
-        return switch (timeFilter) {
-            case "day" -> "AND DATE(i.order_date) = CURDATE() ";
-            case "week" -> "AND YEARWEEK(i.order_date, 1) = YEARWEEK(CURDATE(), 1) ";
-            case "month" -> "AND MONTH(i.order_date) = MONTH(CURDATE()) AND YEAR(i.order_date) = YEAR(CURDATE()) ";
-            default -> "";
-        };
+        switch (timeFilter) {
+            case "day":
+                return "AND DATE(i.order_date) = CURDATE()";
+            case "week":
+                return "AND YEARWEEK(i.order_date, 1) = YEARWEEK(CURDATE(), 1)";
+            case "month":
+                return "AND MONTH(i.order_date) = MONTH(CURDATE()) AND YEAR(i.order_date) = YEAR(CURDATE())";
+            default:
+                return "";
+        }
     }
 
     private List<InvoiceDetail> executeInvoiceDetailQuery(PreparedStatement ps) {
