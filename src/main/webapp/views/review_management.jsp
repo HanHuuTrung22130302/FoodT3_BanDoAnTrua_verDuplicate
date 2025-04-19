@@ -18,10 +18,23 @@
         <div class="header">
             <form action="${pageContext.request.contextPath}/review-management" method="get">
                 <input type="date" name="filterDate" id="filterDate" value="${selectedDate}" />
-                <input type="text" name="filterProduct" id="filterProduct" value="${selectedProduct}" placeholder="Tìm kiếm sản phẩm" />
+                <input type="text" name="filterSearch" id="filterSearch" value="${selectedSearch}" placeholder="Tìm kiếm sản phẩm hoặc khách hàng" />
+                <select name="filterRating" id="filterRating">
+                    <option value="" ${selectedRating == '' ? 'selected' : ''}>Tất cả số sao</option>
+                    <option value="1" ${selectedRating == '1' ? 'selected' : ''}>1 sao</option>
+                    <option value="2" ${selectedRating == '2' ? 'selected' : ''}>2 sao</option>
+                    <option value="3" ${selectedRating == '3' ? 'selected' : ''}>3 sao</option>
+                    <option value="4" ${selectedRating == '4' ? 'selected' : ''}>4 sao</option>
+                    <option value="5" ${selectedRating == '5' ? 'selected' : ''}>5 sao</option>
+                </select>
                 <button type="submit"><i class="fa-solid fa-search"></i></button>
             </form>
         </div>
+        <c:if test="${not empty errorMessage}">
+            <div style="color: red; text-align: center; margin: 10px 0;">
+                    ${errorMessage}
+            </div>
+        </c:if>
         <div id="reviewTable">
             <table>
                 <thead>
@@ -63,7 +76,7 @@
         <c:if test="${totalPages > 1}">
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/review-management?page=${currentPage - 1}&filterDate=${selectedDate}&filterProduct=${selectedProduct}">« Trước</a>
+                    <a href="${pageContext.request.contextPath}/review-management?page=${currentPage - 1}&filterDate=${selectedDate}&filterSearch=${selectedSearch}&filterRating=${selectedRating}">« Trước</a>
                 </c:if>
                 <c:forEach begin="1" end="${totalPages}" var="i">
                     <c:choose>
@@ -71,12 +84,12 @@
                             <span class="current">${i}</span>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/review-management?page=${i}&filterDate=${selectedDate}&filterProduct=${selectedProduct}">${i}</a>
+                            <a href="${pageContext.request.contextPath}/review-management?page=${i}&filterDate=${selectedDate}&filterSearch=${selectedSearch}&filterRating=${selectedRating}">${i}</a>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
                 <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/review-management?page=${currentPage + 1}&filterDate=${selectedDate}&filterProduct=${selectedProduct}">Tiếp »</a>
+                    <a href="${pageContext.request.contextPath}/review-management?page=${currentPage + 1}&filterDate=${selectedDate}&filterSearch=${selectedSearch}&filterRating=${selectedRating}">Tiếp »</a>
                 </c:if>
             </div>
         </c:if>

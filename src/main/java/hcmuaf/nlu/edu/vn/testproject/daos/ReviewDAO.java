@@ -77,7 +77,7 @@ public class ReviewDAO {
     }
 
     // Lấy danh sách đánh giá với bộ lọc và phân trang
-    public List<ReviewFood> getReviews(String filterDate, String filterProduct, int page, int pageSize) {
+    public List<ReviewFood> getReviews(String filterDate, String filterSearch, String filterRating, int page, int pageSize) {
         List<ReviewFood> reviewList = new ArrayList<>();
         StringBuilder query = new StringBuilder(
                 "SELECT ac.name AS customer_name, rv.account_id, rv.review_id, rv.food_id, rv.rating, rv.comment, rv.created_at, f.food_name " +
@@ -90,8 +90,11 @@ public class ReviewDAO {
         if (!filterDate.isEmpty()) {
             query.append(" AND DATE(rv.created_at) = ?");
         }
-        if (!filterProduct.isEmpty()) {
-            query.append(" AND f.food_name LIKE ?");
+        if (!filterSearch.isEmpty()) {
+            query.append(" AND (f.food_name LIKE ? OR ac.name LIKE ?)");
+        }
+        if (!filterRating.isEmpty()) {
+            query.append(" AND rv.rating = ?");
         }
         query.append(" ORDER BY rv.created_at DESC LIMIT ? OFFSET ?");
 
@@ -110,8 +113,12 @@ public class ReviewDAO {
             if (!filterDate.isEmpty()) {
                 ps.setString(paramIndex++, filterDate);
             }
-            if (!filterProduct.isEmpty()) {
-                ps.setString(paramIndex++, "%" + filterProduct + "%");
+            if (!filterSearch.isEmpty()) {
+                ps.setString(paramIndex++, "%" + filterSearch + "%");
+                ps.setString(paramIndex++, "%" + filterSearch + "%");
+            }
+            if (!filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
             }
             ps.setInt(paramIndex++, pageSize);
             ps.setInt(paramIndex, (page - 1) * pageSize);
@@ -144,10 +151,11 @@ public class ReviewDAO {
     }
 
     // Đếm tổng số đánh giá với bộ lọc
-    public int getTotalReviews(String filterDate, String filterProduct) {
+    public int getTotalReviews(String filterDate, String filterSearch, String filterRating) {
         StringBuilder query = new StringBuilder(
                 "SELECT COUNT(*) AS total " +
                         "FROM review rv " +
+                        "JOIN account ac ON rv.account_id = ac.account_id " +
                         "JOIN food f ON rv.food_id = f.food_id " +
                         "WHERE 1=1"
         );
@@ -155,8 +163,11 @@ public class ReviewDAO {
         if (!filterDate.isEmpty()) {
             query.append(" AND DATE(rv.created_at) = ?");
         }
-        if (!filterProduct.isEmpty()) {
-            query.append(" AND f.food_name LIKE ?");
+        if (!filterSearch.isEmpty()) {
+            query.append(" AND (f.food_name LIKE ? OR ac.name LIKE ?)");
+        }
+        if (!filterRating.isEmpty()) {
+            query.append(" AND rv.rating = ?");
         }
 
         Connection con = null;
@@ -175,8 +186,12 @@ public class ReviewDAO {
             if (!filterDate.isEmpty()) {
                 ps.setString(paramIndex++, filterDate);
             }
-            if (!filterProduct.isEmpty()) {
-                ps.setString(paramIndex++, "%" + filterProduct + "%");
+            if (!filterSearch.isEmpty()) {
+                ps.setString(paramIndex++, "%" + filterSearch + "%");
+                ps.setString(paramIndex++, "%" + filterSearch + "%");
+            }
+            if (!filterRating.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(filterRating));
             }
 
             rs = ps.executeQuery();
@@ -345,5 +360,77 @@ public class ReviewDAO {
 
     public static void main(String[] args) {
         ReviewDAO reviewDAO = new ReviewDAO();
+
+        // Test 1: Kiểm tra getTotalReviews không có bộ lọc
+        System.out.println("=== Test 1: Tổng số đánh giá (không có bộ lọc) ===");
+        int totalReviews = reviewDAO.getTotalReviews("", "", "");
+        System.out.println("Tổng số đánh giá: " + totalReviews);
+
+        // Test 2: Kiểm tra getReviews không có bộ lọc
+        System.out.println("\n=== Test 2: Lấy danh sách đánh giá (không có bộ lọc, trang 1, 10 items) ===");
+        List<ReviewFood> reviews = reviewDAO.getReviews("", "", "", 1, 10);
+        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
+        for (ReviewFood review : reviews) {
+            System.out.println("Review ID: " + review.getReviewId() +
+                    ", Khách hàng: " + review.getName() +
+                    ", Sản phẩm: " + review.getFoodName() +
+                    ", Đánh giá: " + review.getRating() +
+                    ", Bình luận: " + review.getComment() +
+                    ", Thời gian: " + review.getDate());
+        }
+
+        // Test 3: Kiểm tra getReviews với bộ lọc theo ngày
+        System.out.println("\n=== Test 3: Lấy danh sách đánh giá (lọc theo ngày 2025-04-19) ===");
+        reviews = reviewDAO.getReviews("2025-04-19", "", "", 1, 10);
+        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
+        for (ReviewFood review : reviews) {
+            System.out.println("Review ID: " + review.getReviewId() +
+                    ", Khách hàng: " + review.getName() +
+                    ", Sản phẩm: " + review.getFoodName() +
+                    ", Đánh giá: " + review.getRating() +
+                    ", Bình luận: " + review.getComment() +
+                    ", Thời gian: " + review.getDate());
+        }
+
+        // Test 4: Kiểm tra getReviews với bộ lọc theo tên sản phẩm hoặc khách hàng
+        System.out.println("\n=== Test 4: Lấy danh sách đánh giá (lọc theo từ khóa 'Cơm') ===");
+        reviews = reviewDAO.getReviews("", "Cơm", "", 1, 10);
+        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
+        for (ReviewFood review : reviews) {
+            System.out.println("Review ID: " + review.getReviewId() +
+                    ", Khách hàng: " + review.getName() +
+                    ", Sản phẩm: " + review.getFoodName() +
+                    ", Đánh giá: " + review.getRating() +
+                    ", Bình luận: " + review.getComment() +
+                    ", Thời gian: " + review.getDate());
+        }
+
+        // Test 5: Kiểm tra getReviews với bộ lọc theo số sao
+        System.out.println("\n=== Test 5: Lấy danh sách đánh giá (lọc theo 5 sao) ===");
+        reviews = reviewDAO.getReviews("", "", "5", 1, 10);
+        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
+        for (ReviewFood review : reviews) {
+            System.out.println("Review ID: " + review.getReviewId() +
+                    ", Khách hàng: " + review.getName() +
+                    ", Sản phẩm: " + review.getFoodName() +
+                    ", Đánh giá: " + review.getRating() +
+                    ", Bình luận: " + review.getComment() +
+                    ", Thời gian: " + review.getDate());
+        }
+
+        // Test 6: Kiểm tra deleteReview
+        System.out.println("\n=== Test 6: Xóa đánh giá với review_id = 1 ===");
+        reviewDAO.deleteReview(1);
+        System.out.println("Kiểm tra lại danh sách sau khi xóa:");
+        reviews = reviewDAO.getReviews("", "", "", 1, 10);
+        System.out.println("Số lượng đánh giá còn lại: " + reviews.size());
+        for (ReviewFood review : reviews) {
+            System.out.println("Review ID: " + review.getReviewId() +
+                    ", Khách hàng: " + review.getName() +
+                    ", Sản phẩm: " + review.getFoodName() +
+                    ", Đánh giá: " + review.getRating() +
+                    ", Bình luận: " + review.getComment() +
+                    ", Thời gian: " + review.getDate());
+        }
     }
 }
