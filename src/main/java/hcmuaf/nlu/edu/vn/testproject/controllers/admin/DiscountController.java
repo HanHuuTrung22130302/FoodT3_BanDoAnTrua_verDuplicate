@@ -28,9 +28,9 @@ public class DiscountController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         
         Account currentUser = (Account) request.getSession().getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRoleId() != 1) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             logService.logActivity(0, 1, "Truy cập trang quản lý mã giảm giá", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect("home");
             return;
         }
 

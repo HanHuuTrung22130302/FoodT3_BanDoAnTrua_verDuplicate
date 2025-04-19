@@ -9,14 +9,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-
     <list default="true" id="1b577079-df54-4f83-82a8-59695a8c1873" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/IngredientsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/daos/LogDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/css/log_management.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/js/log_management.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/leftAdmin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/supplier_food.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/suppliers.jsp" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/DiscountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/DiscountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/LogManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/controllers/admin/LogManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/LogEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/models/LogEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/DiscountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/DiscountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/LogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hcmuaf/nlu/edu/vn/testproject/services/LogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/log.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/views/log_management.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/views/log_management.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,11 +37,11 @@
         <option value="filter" />
         <option value="servlet" />
         <option value="Interface" />
+        <option value="Jsp File" />
+        <option value="Servlet" />
+        <option value="Class" />
         <option value="CSS File" />
         <option value="JavaScript File" />
-        <option value="Jsp File" />
-        <option value="Class" />
-        <option value="Servlet" />
       </list>
     </option>
   </component>
@@ -144,9 +149,7 @@
     "Tomcat Server.Tomcat 10.1.31.executor": "Run",
     "Tomcat Server.da.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-
-    "git-widget-placeholder": "nhacungcap",
-
+    "git-widget-placeholder": "feature/admin-management",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/tuan/Desktop/LTWEB_FINAL_TERM",
@@ -715,7 +718,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix review roi" />
     <MESSAGE value="fix nhe card food" />
     <MESSAGE value="fix phan trang" />
     <MESSAGE value="sua checkout" />
@@ -740,7 +742,8 @@
     <MESSAGE value="#64 cap nhat animation" />
     <MESSAGE value="#64 savepoint update giao dien" />
     <MESSAGE value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
-    <option name="LAST_COMMIT_MESSAGE" value="#64 thêm đánh giá, fix giao diện, fix scrolltoTop, fix ajax scrolltodanhgia" />
+    <MESSAGE value="[#117]Feat:Tich hop AJAX va update log cho category.jsp" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
