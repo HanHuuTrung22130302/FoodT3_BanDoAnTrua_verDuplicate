@@ -204,9 +204,12 @@ public class FoodDAO {
 
     public List<Food> getTop4View() {
         List<Food> foodList = new ArrayList<>(data.values());
+        if (foodList.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no data
+        }
         foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
 
-        // Check the size of foodList and adjust the sublist range
+
         int toIndex = Math.min(4, foodList.size());
         List<Food> top4View = foodList.subList(0, toIndex);
         return top4View;
