@@ -200,24 +200,30 @@ public class FoodDAO {
         return data.size();
     }
 
+    public List<Food> getTop4View() {
+        List<Food> foodList = new ArrayList<>(data.values());
+        if (foodList.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no data
+        }
+        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
+        int toIndex = Math.min(4, foodList.size());
+        List<Food> top4View = foodList.subList(0, toIndex);
+        return top4View;
+    }
+
     public List<Food> getTop4Sold() {
         List<Food> foodList = new ArrayList<>(data.values());
         foodList.sort((f1, f2) -> Integer.compare(f2.getSold(), f1.getSold()));
-        List<Food> top4Sold = foodList.subList(0, 4);
+        int toIndex = Math.min(4, foodList.size());
+        List<Food> top4Sold = foodList.subList(0, toIndex);
         return top4Sold;
-    }
-
-    public List<Food> getTop4View() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
-        List<Food> top4View = foodList.subList(0, 4);
-        return top4View;
     }
 
     public List<Food> getTop4Propose() {
         List<Food> foodList = new ArrayList<>(data.values());
         foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
-        List<Food> top4Propose = foodList.subList(0, 4);
+        int toIndex = Math.min(4, foodList.size());
+        List<Food> top4Propose = foodList.subList(0, toIndex);
         return top4Propose;
     }
 
