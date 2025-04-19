@@ -13,7 +13,7 @@ public class DiscountService {
         return discounts;
     }
 
-    public boolean addDiscount(Discount discount) {
+    public int addDiscount(Discount discount) {
         return dao.addDiscount(discount);
     }
 

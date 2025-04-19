@@ -59,9 +59,6 @@ public class CategoryController extends HttpServlet {
             return;
         }
 
-        System.out.println("Current User ID: " + currentUser.getAccountId());
-        System.out.println("Current User Role: " + currentUser.getRoleId());
-
         String action = request.getParameter("action");
         if ("add".equals(action)) {
             String categoryName = request.getParameter("categoryName");

@@ -16,19 +16,19 @@ public class LogService {
              PreparedStatement ps = con.prepareStatement(query)) {
             ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
             ps.setInt(2, accountId);
-            ps.setInt(3, roleId); // Sử dụng role_id (int) thay vì role (String)
+            ps.setInt(3, roleId);
             ps.setString(4, action);
             ps.setString(5, result);
             ps.setString(6, details);
             
-            System.out.println("Logging activity: " + new String(action.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(result.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(details.getBytes("UTF-8"), "UTF-8"));
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
-        } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+            // Chỉ hiển thị log cho những hành động quan trọng
+            if (action.contains("Thêm") || action.contains("Xóa") || action.contains("Cập nhật") || 
+                action.contains("Đăng nhập") || action.contains("Đăng xuất")) {
+            }
+            
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi khi ghi log: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

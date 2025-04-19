@@ -29,17 +29,6 @@ public class LogManagement extends HttpServlet {
         String filterAction = request.getParameter("filterAction");
 
         List<LogEntry> logs = fetchLogs(filterRoleId, filterDate, filterAction);
-        
-        // Debug log
-        System.out.println("Số lượng log trả về: " + logs.size());
-        for (LogEntry log : logs) {
-            System.out.println("Log entry: " + log.getTimestamp() + " - " + 
-                             log.getAccountId() + " - " + 
-                             log.getRoleName() + " - " + 
-                             log.getAction() + " - " + 
-                             log.getResult() + " - " + 
-                             log.getDetails());
-        }
 
         request.setAttribute("logs", logs);
         request.getRequestDispatcher("/views/log_management.jsp").forward(request, response);
