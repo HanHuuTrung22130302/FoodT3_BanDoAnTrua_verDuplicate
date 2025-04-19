@@ -52,7 +52,7 @@ prefix="c" %>
     </li>
 
     <li>
-      <a href="views/review_management.jsp">
+      <a href="review-management">
         <i class="fas fa-clock-rotate-left"> </i>
         Quản lý đánh giá khách hàng
       </a>

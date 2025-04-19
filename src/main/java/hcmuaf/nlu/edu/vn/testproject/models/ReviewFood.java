@@ -10,6 +10,26 @@ public class ReviewFood {
     private int accountId;
     private Date date;
     private String comment;
+    private String FoodName;
+
+    public ReviewFood(String name, int reviewId, int foodId, int rating, int accountId, Date date, String comment, String foodName) {
+        this.name = name;
+        this.reviewId = reviewId;
+        this.foodId = foodId;
+        this.rating = rating;
+        this.accountId = accountId;
+        this.date = date;
+        this.comment = comment;
+        FoodName = foodName;
+    }
+
+    public String getFoodName() {
+        return FoodName;
+    }
+
+    public void setFoodName(String FoodName) {
+        this.FoodName = FoodName;
+    }
 
     public ReviewFood(String name, int reviewId, int foodId, int rating, int accountId, Date date) {
         this.name = name;
