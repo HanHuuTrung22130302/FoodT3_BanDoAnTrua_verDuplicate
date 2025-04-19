@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +30,6 @@ public class DiscountDAO {
         try {
             // Tạo kết nối cơ sở dữ liệu
             conn = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (conn != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
-
             // Chuẩn bị câu lệnh SQL
             ps = conn.prepareStatement(query);
             // Thực thi câu lệnh
@@ -145,14 +138,16 @@ public class DiscountDAO {
     }
 
     // Phương thúc thêm mã giảm giá
-    public boolean addDiscount(Discount discount) {
+    public int addDiscount(Discount discount) {
         String query = "INSERT INTO discount_code (code_name, discount_rate, title, description, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
+        int generatedId = 0;
 
         try {
             conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
+            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, discount.getCodeName());
             ps.setDouble(2, discount.getDiscountRate());
             ps.setString(3, discount.getTitle());
@@ -161,13 +156,18 @@ public class DiscountDAO {
             ps.setDate(6, new java.sql.Date(discount.getEndDate().getTime()));
 
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+            }
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi khi thêm mã giảm giá: " + e.getMessage());
-            return false;
         } finally {
-            closeResources(null, ps, conn);
+            closeResources(rs, ps, conn);
         }
+        return generatedId;
     }
 
     public boolean deleteDiscount(int idCode) {

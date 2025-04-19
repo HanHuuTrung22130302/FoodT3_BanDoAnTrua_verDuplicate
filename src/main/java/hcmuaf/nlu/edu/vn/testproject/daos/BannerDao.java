@@ -36,13 +36,6 @@ public class BannerDao {
         try {
             // Tạo kết nối cơ sở dữ liệu
             con = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = con.prepareStatement(query);
@@ -77,13 +70,6 @@ public class BannerDao {
         try {
             // Tạo kết nối cơ sở dữ liệu
             conn = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (conn != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = conn.prepareStatement(query);
@@ -106,13 +92,6 @@ public class BannerDao {
         try {
             // Tạo kết nối cơ sở dữ liệu
             conn = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (conn != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = conn.prepareStatement(query);

@@ -53,20 +53,15 @@ public class ManageCustomerController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        System.out.println("Action received: " + action);
-        
+
         if ("delete".equals(action)) {
             HttpSession session = request.getSession();
             Account currentUser = (Account) session.getAttribute("currentUser");
-            System.out.println("Current User: " + (currentUser != null ? currentUser.getRoleId() : "null")); // Kiểm tra currentUser
 
             String accountIdStr = request.getParameter("id");
-            System.out.println("Account ID string: " + accountIdStr); // Kiểm tra accountId string
-            
             int accountId = 0;
             try {
                 accountId = Integer.parseInt(accountIdStr);
-                System.out.println("Account ID parsed: " + accountId); // Kiểm tra accountId parsed
             } catch (NumberFormatException e) {
                 System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
                 e.printStackTrace();
@@ -77,20 +72,15 @@ public class ManageCustomerController extends HttpServlet {
 
             AccountDAO accountDAO = new AccountDAO();
             Account targetAccount = accountDAO.getUserById(accountId);
-            System.out.println("Target Account: " + (targetAccount != null ? targetAccount.getRoleId() : "null")); // Kiểm tra targetAccount
 
             if (targetAccount != null) {
                 if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
                     // Kiểm tra trạng thái hiện tại
                     boolean currentStatus = accountDAO.checkAccountDeletedStatus(accountId);
-                    System.out.println("Trạng thái hiện tại của tài khoản ID " + accountId + ": " + (currentStatus ? "Đã vô hiệu hóa" : "Chưa vô hiệu hóa"));
-                    
                     boolean success = accountDAO.softDeleteAccount(accountId);
                     if (success) {
                         // Kiểm tra lại sau khi cập nhật
                         boolean newStatus = accountDAO.checkAccountDeletedStatus(accountId);
-                        System.out.println("Trạng thái sau khi cập nhật của tài khoản ID " + accountId + ": " + (newStatus ? "Đã vô hiệu hóa" : "Chưa vô hiệu hóa"));
-                        
                         if (newStatus) {
                             request.setAttribute("success", "Vô hiệu hóa tài khoản thành công");
                         } else {
@@ -103,21 +93,15 @@ public class ManageCustomerController extends HttpServlet {
                     request.setAttribute("error", "Bạn không có quyền vô hiệu hóa tài khoản này");
                 }
             } else {
-                System.out.println("Target account not found for ID: " + accountId);
                 request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
             }
         } else if ("lock".equals(action)) {
             HttpSession session = request.getSession();
             Account currentUser = (Account) session.getAttribute("currentUser");
-            System.out.println("Current User: " + (currentUser != null ? currentUser.getRoleId() : "null")); // Kiểm tra currentUser
-
             String accountIdStr = request.getParameter("id");
-            System.out.println("Account ID string: " + accountIdStr); // Kiểm tra accountId string
-            
             int accountId = 0;
             try {
                 accountId = Integer.parseInt(accountIdStr);
-                System.out.println("Account ID parsed: " + accountId); // Kiểm tra accountId parsed
             } catch (NumberFormatException e) {
                 System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
                 e.printStackTrace();
@@ -127,12 +111,9 @@ public class ManageCustomerController extends HttpServlet {
             }
 
             String hoursStr = request.getParameter("hours");
-            System.out.println("Hours string: " + hoursStr); // Kiểm tra hours string
-            
             int hours = 24; // Mặc định là 24 giờ
             try {
                 hours = Integer.parseInt(hoursStr);
-                System.out.println("Hours parsed: " + hours); // Kiểm tra hours parsed
             } catch (NumberFormatException e) {
                 System.err.println("Lỗi chuyển đổi hours: " + e.getMessage());
                 e.printStackTrace();
@@ -141,8 +122,6 @@ public class ManageCustomerController extends HttpServlet {
 
             AccountDAO accountDAO = new AccountDAO();
             Account targetAccount = accountDAO.getUserById(accountId);
-            System.out.println("Target Account: " + (targetAccount != null ? targetAccount.getRoleId() : "null")); // Kiểm tra targetAccount
-
             if (targetAccount != null) {
                 if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
                     boolean success = accountDAO.lockAccount(accountId, hours);
@@ -155,21 +134,15 @@ public class ManageCustomerController extends HttpServlet {
                     request.setAttribute("error", "Bạn không có quyền chặn tài khoản này");
                 }
             } else {
-                System.out.println("Target account not found for ID: " + accountId);
                 request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
             }
         } else if ("unlock".equals(action)) {
             HttpSession session = request.getSession();
             Account currentUser = (Account) session.getAttribute("currentUser");
-            System.out.println("Current User: " + (currentUser != null ? currentUser.getRoleId() : "null"));
-
             String accountIdStr = request.getParameter("id");
-            System.out.println("Account ID string: " + accountIdStr);
-            
             int accountId = 0;
             try {
                 accountId = Integer.parseInt(accountIdStr);
-                System.out.println("Account ID parsed: " + accountId);
             } catch (NumberFormatException e) {
                 System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
                 e.printStackTrace();
@@ -180,8 +153,6 @@ public class ManageCustomerController extends HttpServlet {
 
             AccountDAO accountDAO = new AccountDAO();
             Account targetAccount = accountDAO.getUserById(accountId);
-            System.out.println("Target Account: " + (targetAccount != null ? targetAccount.getRoleId() : "null"));
-
             if (targetAccount != null) {
                 if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
                     boolean success = accountDAO.unlockAccount(accountId);
@@ -194,7 +165,6 @@ public class ManageCustomerController extends HttpServlet {
                     request.setAttribute("error", "Bạn không có quyền hủy chặn tài khoản này");
                 }
             } else {
-                System.out.println("Target account not found for ID: " + accountId);
                 request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
             }
         }

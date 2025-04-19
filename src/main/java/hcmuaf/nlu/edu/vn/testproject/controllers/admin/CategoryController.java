@@ -27,9 +27,9 @@ public class CategoryController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         
         Account currentUser = (Account) request.getSession().getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRoleId() != 1) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             logService.logActivity(0, 1, "Truy cập trang quản lý danh mục", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect("home");
             return;
         }
 
@@ -58,9 +58,6 @@ public class CategoryController extends HttpServlet {
             sendJsonResponse(response, jsonResponse);
             return;
         }
-
-        System.out.println("Current User ID: " + currentUser.getAccountId());
-        System.out.println("Current User Role: " + currentUser.getRoleId());
 
         String action = request.getParameter("action");
         if ("add".equals(action)) {

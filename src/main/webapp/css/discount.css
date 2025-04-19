@@ -3,13 +3,13 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-  }
-  
-.container{
+}
+
+.container {
     display: flex;
 }
-  
-  .sidebar {
+
+.sidebar {
     width: 250px;
     min-height: 100vh;
     background-color: rgb(67, 67, 67);
@@ -19,9 +19,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .sidebar img {
+}
+
+.sidebar img {
     margin-left: 20px;
     display: flex;
     justify-content: center;
@@ -30,25 +30,25 @@ body {
     height: 150px;
     border-radius: 50%;
     margin-bottom: 15px;
-  }
-  
-  .sidebar h2 {
+}
+
+.sidebar h2 {
     text-align: center;
     color: #b5292f;
     margin-bottom: 30px;
-  }
-  
-  .sidebar ul {
+}
+
+.sidebar ul {
     list-style: none;
     width: 100%;
     padding: 0;
-  }
-  
-  .sidebar ul li {
+}
+
+.sidebar ul li {
     margin-bottom: 30px;
-  }
-  
-  .sidebar ul li a {
+}
+
+.sidebar ul li a {
     color: #ddd;
     font-size: 16px;
     text-decoration: none;
@@ -56,24 +56,24 @@ body {
     align-items: center;
     padding: 10px;
     border-radius: 8px;
-    
-  }
-  
-  .sidebar ul li a:hover {
+
+}
+
+.sidebar ul li a:hover {
     background-color: #b5292f;
     color: #fff;
-  }
-  
-  .sidebar ul li a i {
+}
+
+.sidebar ul li a i {
     margin-right: 10px;
-  }
-  
-  .content {
+}
+
+.content {
     flex-grow: 1;
     padding: 30px;
-  }
+}
 
-  .header {
+.header {
     background-color: #b5292f;
     color: #fff;
     padding: 20px;
@@ -82,78 +82,78 @@ body {
     font-weight: 600;
     border-radius: 10px;
     margin-bottom: 30px;
-  }
-  
-  .banner-management {
+}
+
+.banner-management {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .banner-management h2 {
+}
+
+.banner-management h2 {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
     color: #333;
-  }
-  
-  table {
+}
+
+table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-  }
-  
-  table th, table td {
+}
+
+table th, table td {
     padding: 15px;
     text-align: center;
     border: 1px solid #ddd;
-  }
-  
-  table th {
+}
+
+table th {
     background-color: #f8f9fa;
     color: #333;
-  }
-  
-  table img {
+}
+
+table img {
     width: 100px;
     height: 50px;
     object-fit: cover;
     border-radius: 5px;
-  }
-  
-  button {
+}
+
+button {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  button.edit {
+}
+
+button.edit {
     background-color: #b5292f;
     color: #fff;
-  }
-  
-  
-  button.delete {
+}
+
+
+button.delete {
     background-color: #b5292f;
     color: #fff;
-  }
-  
-  button.delete:hover, button.edit:hover {
+}
+
+button.delete:hover, button.edit:hover {
     background-color: #a71d2a;
-  }
-  
-  button.add-banner {
+}
+
+button.add-banner {
     background-color: #b5292f;
     color: #fff;
     padding: 10px 20px;
     font-size: 16px;
-  }
- 
-  /* Xử lý popup */
-  .popup{
+}
+
+/* Xử lý popup */
+.popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -163,52 +163,51 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;  
-  }
-  
-  .popup.hidden{
+    z-index: 1;
+}
+
+.popup.hidden {
     display: none;
-  }
-  
-  
-  
-  .popup_content{
+}
+
+
+.popup_content {
     background: white;
     padding: 20px;
     border-radius: 10px;
     width: 400px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     position: relative;
-  
-  }
-  
-  .popup h2{
+
+}
+
+.popup h2 {
     margin-top: 0;
     color: #b5292f;
     text-align: center;
-  }
+}
 
-  .close_btn{
+.close_btn {
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 20px;
     cursor: pointer;
-  }
-  
-  .popup form{
+}
+
+.popup form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
-  
-  #new_item_form label{
-    color :#b5292f ;
+}
+
+#new_item_form label {
+    color: #b5292f;
     font-weight: 500;
     font-size: 20px;
-  }
+}
 
-  #new_item_form button{
+#new_item_form button {
     padding: 10px;
     outline: none;
     border: none;
@@ -218,13 +217,79 @@ body {
     border-radius: 5px;
     color: white;
     margin-top: 10px;
-  }
+}
 
-  #new_item_form input{
+#new_item_form input {
     padding: 12px;
-  width: auto;
-  height: auto;
-  outline: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  }
+    width: auto;
+    height: auto;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+/* Animation cho popup */
+.popup_content {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+/* Animation cho notification */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}

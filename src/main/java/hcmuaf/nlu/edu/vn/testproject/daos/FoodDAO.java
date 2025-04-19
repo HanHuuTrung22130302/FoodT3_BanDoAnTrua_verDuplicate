@@ -28,13 +28,6 @@ public class FoodDAO {
         try {
             // Tạo kết nối cơ sở dữ liệu
             con = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = con.prepareStatement(query);
@@ -83,12 +76,6 @@ public class FoodDAO {
 
         try {
             con = new DbContext().getConnection();
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                return foodList;
-            }
 
             ps = con.prepareStatement(query);
             for (int i = 0; i < ingredients.size(); i++) {
@@ -136,13 +123,6 @@ public class FoodDAO {
         try {
             // Tạo kết nối cơ sở dữ liệu
             con = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = con.prepareStatement(query);
