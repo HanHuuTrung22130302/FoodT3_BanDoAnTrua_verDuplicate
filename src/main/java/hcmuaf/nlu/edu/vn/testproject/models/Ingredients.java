@@ -89,5 +89,19 @@ public class Ingredients {
     public void setExpirationDate(java.sql.Date expirationDate) {
         this.expirationDate = expirationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredients{" +
+                "ingredientId=" + ingredientId +
+                ", ingredientName='" + ingredientName + '\'' +
+                ", amount=" + amount +
+                ", price=" + price +
+                ", supplierId=" + supplierId +
+                ", supplierName='" + supplierName + '\'' +
+                ", importDate=" + importDate +
+                ", expirationDate=" + expirationDate +
+                '}';
+    }
 }
 

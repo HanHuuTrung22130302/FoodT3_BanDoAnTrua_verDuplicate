@@ -15,6 +15,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <junit.version>5.11.0-M2</junit.version>
+        <poi.version>5.3.0</poi.version>
     </properties>
 
     <dependencies>
@@ -22,10 +23,8 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.9.3</version>  <!-- Kiểm tra phiên bản mới nhất trên Maven -->
+            <version>5.0.0-alpha.14</version>  <!-- Kiểm tra phiên bản mới nhất trên Maven -->
         </dependency>
-
-
 
         <dependency>
             <groupId>org.json</groupId>
@@ -38,7 +37,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version> <!-- Hoặc phiên bản mới nhất -->
         </dependency>
-
 
         <!-- JSTL API -->
         <dependency>
@@ -129,6 +127,40 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.5.0-M1</version>
+        </dependency>
+
+        <!-- Apache POI -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.3.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.3.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>4.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>5.2.1</version>
         </dependency>
 
     </dependencies>

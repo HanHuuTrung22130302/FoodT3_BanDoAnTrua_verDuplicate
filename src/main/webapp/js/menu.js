@@ -5,13 +5,11 @@ function preventBodyScroll(e) {
 function showPopup(popupId) {
   console.log("Opening popup:", popupId); // Xác nhận hàm được gọi
 
-  // Ẩn tất cả pop-up
   var popups = document.querySelectorAll(".popup");
   popups.forEach(function (popup) {
     popup.style.display = "none";
   });
 
-  // Hiển thị pop-up của sản phẩm được chọn
   const popupElement = document.getElementById(popupId);
   if (!popupElement) {
     console.error("Không tìm thấy popup có ID:", popupId);
@@ -19,7 +17,7 @@ function showPopup(popupId) {
   }
   popupElement.style.display = "flex";
 
-  document.body.classList.add('no-scroll'); // <- nên thấy class này
+  document.body.classList.add('no-scroll');
 }
 
 

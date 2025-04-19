@@ -110,7 +110,7 @@ html {
   height: 150px;
   width: auto;
   border: 1px solid rgba(0, 0, 0, 0.2);
-
+z-index: 999;
   border-top: none;
   top: 29px;
   left: 20px;
@@ -257,59 +257,125 @@ html {
   gap: 20px;
   justify-items: center;
   padding: 20px;
-  margin-left: auto;
-  margin-right: auto;
-
 }
 
-.card {
-  background-color: white;
+
+ .card {
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 230px;
+  width: 240px;
+  height: 310px;
   text-align: center;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #dddddd;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+ .card:hover {
+  transform: translateY(-10px)
+}
+
+
+ .card_content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 50%;
 }
 
 .card img {
-  width: auto;
-  height: 180px;
+  width: 240px;
+  height: 50%;
+  object-fit: cover;
 }
 
-.card_content {
-  padding: 12px;
-}
-
-.card_content h3 {
-  margin: 10px 0;
-  font-size: 15px;
+.card_content .nameFood {
+  font-size: 16px;
   color: #333;
+  font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 20px;
+  max-height: 40px;
+  white-space: normal;
+
 }
 
-.card_content p {
+.card_content .priceFood {
   margin: 5px 0;
-  font-size: 20px;
-  font-weight: 500;
-  color: darkred;
+  font-size: 15px;
+  font-weight: bold;
+  color: #B5292F;
 }
 
-.card_content .btn {
-  display: block;
-  margin: 10px 0;
-  padding: 4px;
+
+.card_footer {
+  margin-top: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+}
+
+ .card_content .btn {
+  width: max-content;
+  padding: 7px 17px;
   border: none;
   outline: none;
   text-decoration: none;
   background-color: #b12704;
   color: white;
   border-radius: 15px;
-  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  align-items: center;
+  display: block;
 }
 
-.card_content .btn:hover {
-  background-color: #c0392b;
+.reviewFood {
+  font-size: 14px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  width: 100%;
 }
+
+.ratingFood {
+  display: flex;
+  align-items: center;
+  color: #f9a825;
+}
+
+.ratingFood i {
+  margin-right: 5px;
+  color: #ffbe1a;
+}
+
+.rating-value {
+  font-weight: bold;
+}
+
+.soldFood {
+  display: flex;
+  align-items: center;
+  color: #555;
+}
+
+.sales-text {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.sales-value {
+  font-weight: bold;
+  color: #b5292f;
+}
+
 
 /* Xử lý pagination */
 .pagination {
@@ -326,7 +392,13 @@ html {
   text-decoration: none;
   padding: 8px 15px;
   display: inline-block;
-  border: none;
+  border: solid 1px #dddddd;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination button:hover {
+transform: translateY(-5px);
+
 }
 
 .pagination .active {
@@ -347,99 +419,3 @@ html {
   margin-right: auto;
   height: auto;
 }
-
-/* Xử lý Pop up */
-.popup {
-  display: none; /* Ẩn pop-up lúc đầu */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content {
-  background-color: white;
-  max-height: calc(100vh - 60px);
-  box-shadow: 0px 4px 30px rgb(0 0 0 / 25%);
-  border-radius: 5px;
-  width: 600px;
-  padding: 10px;
-  text-align: left;
-}
-
-.close {
-  background-color: rgb(0 0 0 / 40%);
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  font-size: 28px;
-  color: white;
-  border: 0;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 20px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content img {
-  width: 100%;
-  object-fit: cover;
-  max-height: 375px;
-}
-
-.popup-content h2 {
-  margin-left: 20px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.popup-content p {
-  color: #b5292f;
-  font-weight: 600;
-  font-size: 17px;
-}
-
-.popup-content span {
-  font-size: 17px;
-  margin-bottom: 10px;
-}
-
-.popup-content .button-cart {
-  background-color: #b12704;
-  color: white;
-  padding: 10px 40px;
-  border: none;
-  outline: none;
-  border-radius: 25px;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 15px;
-  margin-top: 30px;
-  text-decoration: none;
-  width: 100%;
-  height: max-content;
-}
-
-.popup-content .button-cart .linktocart {
-  text-decoration: none;
-  color: white;
-}
-
-.popup-content .button-cart .btn {
-  text-decoration: none ;
-  color: white;
-}
-
-.popup-content .button-cart:hover {
-  background-color: #c0392b;
-  color: white;
-}
-

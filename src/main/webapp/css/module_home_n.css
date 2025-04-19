@@ -16,7 +16,7 @@
 }
 body.no-scroll {
   overflow: hidden !important;
-  touch-action: none; /* Ngăn scroll trên thiết bị di động */
+  touch-action: none;
 }
 
 
