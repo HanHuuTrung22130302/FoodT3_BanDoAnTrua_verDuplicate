@@ -52,6 +52,13 @@ prefix="c" %>
     </li>
 
     <li>
+      <a href="views/review_management.jsp">
+        <i class="fas fa-clock-rotate-left"> </i>
+        Quản lý đánh giá khách hàng
+      </a>
+    </li>
+
+    <li>
       <a href="statistical">
         <i class="fas fa-chart-bar"></i>
         <span>Thống kê</span>
