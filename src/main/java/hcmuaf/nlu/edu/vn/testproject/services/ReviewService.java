@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ReviewService {
     private ReviewDAO reviewDAO;
-    private int idFood, offSetReviewFood;
 
     public ReviewService() {
         reviewDAO = new ReviewDAO();
@@ -42,15 +41,12 @@ public class ReviewService {
     }
 
 
-    public List<ReviewFood> get10IncrementReviewFood(int idFood, int offset,int option) {
-        List<ReviewFood> all = reviewDAO.getReviewByFood(idFood,offset,option);
-        List<ReviewFood> rvf = new ArrayList<>();
-        for (ReviewFood rf : all) {
-            if (rf.getFoodId() == idFood)
-                rvf.add(rf);
-        }
-        return rvf;
+    public List<ReviewFood> get10IncrementReviewFood(int foodId, int option, int offset) {
+        return reviewDAO.getReviewByFood(foodId, option, offset);
     }
 
 
+    public int getCountReview(int idFood, int option) {
+        return reviewDAO.getTotalReviewCountByFoodId(idFood,option);
+    }
 }
