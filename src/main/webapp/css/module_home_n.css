@@ -265,3 +265,20 @@ font-size: 12px;
 .button-cart:hover {
   background-color: #c0392b;
 }
+.next10cmt{
+  padding: 8px 40px ;
+  border: 1px solid #B5292F;
+  border-radius: 5px;
+  color: white;
+  background-color: #bc494c;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+.next10cmt:hover{
+  background-color: #B5292F;
+  color: white;
+  transform: translateY(-5px);
+}
+.user-reviews{
+  min-height: 600px;
+}
