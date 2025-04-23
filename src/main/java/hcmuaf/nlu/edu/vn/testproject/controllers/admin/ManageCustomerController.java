@@ -2,14 +2,17 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccdetailDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
+import hcmuaf.nlu.edu.vn.testproject.daos.LogDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.services.AccdetailService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,127 +50,146 @@ public class ManageCustomerController extends HttpServlet {
         request.setAttribute("selectedRole", role); // Để giữ lại giá trị đã chọn
         request.setAttribute("search", txtSearch);
         request.setAttribute("listAcc", listAcc);
-        request.getRequestDispatcher("views/customer_sevice.jsp").forward(request, response);
+        request.setAttribute("currentUser", currentUser);
+
+        // Kiểm tra nếu là AJAX request
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            request.getRequestDispatcher("views/customer_sevice.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("views/customer_sevice.jsp").forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        JSONObject jsonResponse = new JSONObject();
+        
         String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if ("delete".equals(action)) {
-            HttpSession session = request.getSession();
-            Account currentUser = (Account) session.getAttribute("currentUser");
-
-            String accountIdStr = request.getParameter("id");
-            int accountId = 0;
-            try {
-                accountId = Integer.parseInt(accountIdStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
-                e.printStackTrace();
-                request.setAttribute("error", "ID tài khoản không hợp lệ");
-                doGet(request, response);
-                return;
-            }
-
-            AccountDAO accountDAO = new AccountDAO();
-            Account targetAccount = accountDAO.getUserById(accountId);
-
-            if (targetAccount != null) {
-                if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
-                    // Kiểm tra trạng thái hiện tại
-                    boolean currentStatus = accountDAO.checkAccountDeletedStatus(accountId);
-                    boolean success = accountDAO.softDeleteAccount(accountId);
-                    if (success) {
-                        // Kiểm tra lại sau khi cập nhật
-                        boolean newStatus = accountDAO.checkAccountDeletedStatus(accountId);
-                        if (newStatus) {
-                            request.setAttribute("success", "Vô hiệu hóa tài khoản thành công");
-                        } else {
-                            request.setAttribute("error", "Tài khoản không được vô hiệu hóa. Vui lòng thử lại sau.");
-                        }
-                    } else {
-                        request.setAttribute("error", "Không thể vô hiệu hóa tài khoản. Vui lòng thử lại sau.");
-                    }
-                } else {
-                    request.setAttribute("error", "Bạn không có quyền vô hiệu hóa tài khoản này");
-                }
-            } else {
-                request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
-            }
-        } else if ("lock".equals(action)) {
-            HttpSession session = request.getSession();
-            Account currentUser = (Account) session.getAttribute("currentUser");
-            String accountIdStr = request.getParameter("id");
-            int accountId = 0;
-            try {
-                accountId = Integer.parseInt(accountIdStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
-                e.printStackTrace();
-                request.setAttribute("error", "ID tài khoản không hợp lệ");
-                doGet(request, response);
-                return;
-            }
-
-            String hoursStr = request.getParameter("hours");
-            int hours = 24; // Mặc định là 24 giờ
-            try {
-                hours = Integer.parseInt(hoursStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Lỗi chuyển đổi hours: " + e.getMessage());
-                e.printStackTrace();
-                // Sử dụng giá trị mặc định
-            }
-
-            AccountDAO accountDAO = new AccountDAO();
-            Account targetAccount = accountDAO.getUserById(accountId);
-            if (targetAccount != null) {
-                if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
-                    boolean success = accountDAO.lockAccount(accountId, hours);
-                    if (success) {
-                        request.setAttribute("success", "Đã chặn tài khoản thành công trong " + hours + " giờ");
-                    } else {
-                        request.setAttribute("error", "Không thể chặn tài khoản. Vui lòng thử lại sau.");
-                    }
-                } else {
-                    request.setAttribute("error", "Bạn không có quyền chặn tài khoản này");
-                }
-            } else {
-                request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
-            }
-        } else if ("unlock".equals(action)) {
-            HttpSession session = request.getSession();
-            Account currentUser = (Account) session.getAttribute("currentUser");
-            String accountIdStr = request.getParameter("id");
-            int accountId = 0;
-            try {
-                accountId = Integer.parseInt(accountIdStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Lỗi chuyển đổi accountId: " + e.getMessage());
-                e.printStackTrace();
-                request.setAttribute("error", "ID tài khoản không hợp lệ");
-                doGet(request, response);
-                return;
-            }
-
-            AccountDAO accountDAO = new AccountDAO();
-            Account targetAccount = accountDAO.getUserById(accountId);
-            if (targetAccount != null) {
-                if (currentUser.getRoleId() == 3 || (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2)) {
-                    boolean success = accountDAO.unlockAccount(accountId);
-                    if (success) {
-                        request.setAttribute("success", "Đã hủy chặn tài khoản thành công");
-                    } else {
-                        request.setAttribute("error", "Không thể hủy chặn tài khoản. Vui lòng thử lại sau.");
-                    }
-                } else {
-                    request.setAttribute("error", "Bạn không có quyền hủy chặn tài khoản này");
-                }
-            } else {
-                request.setAttribute("error", "Không tìm thấy tài khoản với ID: " + accountId);
-            }
+        if (currentUser == null || currentUser.getRoleId() == 2) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", "Bạn không có quyền thực hiện thao tác này");
+            out.print(jsonResponse.toString());
+            return;
         }
-        doGet(request, response);
+
+        String accountIdStr = request.getParameter("id");
+        int accountId = 0;
+        try {
+            accountId = Integer.parseInt(accountIdStr);
+        } catch (NumberFormatException e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", "ID tài khoản không hợp lệ");
+            out.print(jsonResponse.toString());
+            return;
+        }
+
+        AccountDAO accountDAO = new AccountDAO();
+        Account targetAccount = accountDAO.getUserById(accountId);
+
+        if (targetAccount == null) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", "Không tìm thấy tài khoản");
+            out.print(jsonResponse.toString());
+            return;
+        }
+
+        // Kiểm tra quyền thực hiện thao tác
+        boolean hasPermission = false;
+        
+        // Owner (roleId = 3) có quyền thực hiện với tất cả tài khoản
+        if (currentUser.getRoleId() == 3) {
+            hasPermission = true;
+        }
+        // Admin (roleId = 1) chỉ có quyền thực hiện với user (roleId = 2)
+        else if (currentUser.getRoleId() == 1 && targetAccount.getRoleId() == 2) {
+            hasPermission = true;
+        }
+
+        if (!hasPermission) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", "Bạn không có quyền thực hiện thao tác này");
+            out.print(jsonResponse.toString());
+            return;
+        }
+
+        LogDAO logDAO = new LogDAO();
+        String logAction = "";
+        String logResult = "";
+        String logDetails = "";
+
+        try {
+            if ("delete".equals(action)) {
+                boolean success = accountDAO.softDeleteAccount(accountId);
+                if (success) {
+                    logAction = "Vô hiệu hóa tài khoản";
+                    logResult = "Thành công";
+                    logDetails = "Vô hiệu hóa tài khoản ID: " + accountId;
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Đã vô hiệu hóa tài khoản thành công");
+                } else {
+                    logAction = "Vô hiệu hóa tài khoản";
+                    logResult = "Thất bại";
+                    logDetails = "Không thể vô hiệu hóa tài khoản ID: " + accountId;
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("error", "Không thể vô hiệu hóa tài khoản");
+                }
+            } else if ("lock".equals(action)) {
+                String hoursStr = request.getParameter("hours");
+                int hours = 24;
+                try {
+                    hours = Integer.parseInt(hoursStr);
+                } catch (NumberFormatException e) {
+                    // Sử dụng giá trị mặc định
+                }
+
+                boolean success = accountDAO.lockAccount(accountId, hours);
+                if (success) {
+                    logAction = "Chặn tài khoản";
+                    logResult = "Thành công";
+                    logDetails = "Chặn tài khoản ID: " + accountId + " trong " + hours + " giờ";
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Đã chặn tài khoản thành công trong " + hours + " giờ");
+                } else {
+                    logAction = "Chặn tài khoản";
+                    logResult = "Thất bại";
+                    logDetails = "Không thể chặn tài khoản ID: " + accountId;
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("error", "Không thể chặn tài khoản");
+                }
+            } else if ("unlock".equals(action)) {
+                boolean success = accountDAO.unlockAccount(accountId);
+                if (success) {
+                    logAction = "Hủy chặn tài khoản";
+                    logResult = "Thành công";
+                    logDetails = "Hủy chặn tài khoản ID: " + accountId;
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Đã hủy chặn tài khoản thành công");
+                } else {
+                    logAction = "Hủy chặn tài khoản";
+                    logResult = "Thất bại";
+                    logDetails = "Không thể hủy chặn tài khoản ID: " + accountId;
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("error", "Không thể hủy chặn tài khoản");
+                }
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("error", "Hành động không hợp lệ");
+            }
+
+            // Ghi log nếu có hành động
+            if (!logAction.isEmpty()) {
+                logDAO.insertLog(currentUser.getAccountId(), currentUser.getRoleId(), logAction, logResult, logDetails);
+            }
+        } catch (Exception e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", "Có lỗi xảy ra: " + e.getMessage());
+        }
+
+        out.print(jsonResponse.toString());
     }
 }
