@@ -299,10 +299,10 @@
 
                                     </div>
                                 </div>
-                                <button class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">load more</button>
+                                <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
                             </div>
                         </div>
-                        <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                        <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
 
                         <div class="popup-footer">
                             <button class="button-cart">
