@@ -22,7 +22,7 @@
                     <div class="search-filters">
                         <div class="filter-group">
                             <label for="timeFilter">Thời gian:</label>
-                            <select id="timeFilter" name="timeFilter" onchange="this.form.submit()">
+                            <select id="timeFilter" name="timeFilter">
                                 <option value="day" ${timeFilter == 'day' ? 'selected' : ''}>Hôm nay</option>
                                 <option value="week" ${timeFilter == 'week' ? 'selected' : ''}>Tuần này</option>
                                 <option value="month" ${timeFilter == 'month' ? 'selected' : ''}>Tháng này</option>
@@ -178,7 +178,7 @@
             <div class="analysis">
                 <div class="performance-section">
                     <h3>Sản phẩm bán chạy</h3>
-                    <table>
+                    <table id="bestSellingProducts">
                         <thead>
                         <tr>
                             <th>STT</th>
@@ -212,7 +212,7 @@
 
                 <div class="performance-section">
                     <h3>Sản phẩm bán chậm</h3>
-                    <table>
+                    <table id="slowSellingProducts">
                         <thead>
                         <tr>
                             <th>STT</th>
@@ -247,7 +247,7 @@
                 <div class="performance-section">
                     <h3>Sản phẩm chưa bán được</h3>
                     <div class="table-container">
-                        <table>
+                        <table id="unsoldProducts">
                             <thead>
                             <tr>
                                 <th>STT</th>
@@ -284,13 +284,8 @@
 </div>
 
 <script>
-    function clearSearch() {
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = searchForm.querySelector('input[name="text"]');
-        searchInput.value = '';
-        searchForm.submit();
-    }
+    const contextPath = '${pageContext.request.contextPath}';
 </script>
-
+<script src="${pageContext.request.contextPath}/js/statistical.js"></script>
 </body>
 </html>
