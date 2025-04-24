@@ -11,6 +11,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,11 +26,99 @@ public class StatisticalController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Kiểm tra nếu là yêu cầu AJAX
+        String requestedWith = request.getHeader("X-Requested-With");
+
+        if ("XMLHttpRequest".equals(requestedWith)) {
+            handleAjaxRequest(request, response);
+            return;
+        }
+
+        // Xử lý yêu cầu thông thường
+        handleNormalRequest(request, response);
+    }
+
+    private void handleAjaxRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+        String timeFilter = request.getParameter("timeFilter");
+        String searchText = request.getParameter("text");
+
+        if (timeFilter == null || timeFilter.isEmpty()) {
+            timeFilter = "day";
+        }
+
+        // Lấy dữ liệu thống kê
+        Map<String, Object> data = new HashMap<>();
+        
+        // Lấy tổng quan
+        int totalRevenue = 0;
+        int totalOrders = 0;
+        List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+
+        switch (timeFilter) {
+            case "day":
+                totalRevenue = invoiceDAO.getRevenueByDay();
+                totalOrders = invoiceDAO.getOrderCountByDay();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByDay();
+                break;
+            case "week":
+                totalRevenue = invoiceDAO.getRevenueByWeek();
+                totalOrders = invoiceDAO.getOrderCountByWeek();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByWeek();
+                break;
+            case "month":
+                totalRevenue = invoiceDAO.getRevenueByMonth();
+                totalOrders = invoiceDAO.getOrderCountByMonth();
+                invoiceDetails = invoiceDAO.getInvoiceDetailsByMonth();
+                break;
+        }
+
+        // Xử lý tìm kiếm
+        if (searchText != null && !searchText.isEmpty()) {
+            invoiceDetails = invoiceDAO.searchByNameAndTime(searchText, timeFilter);
+            totalOrders = invoiceDAO.getOrderCountBySearch(searchText, timeFilter);
+            totalRevenue = invoiceDetails.stream().mapToInt(InvoiceDetail::getTotalAmount).sum();
+        }
+
+        // Tính toán tổng số sản phẩm và số lượng bán ra
+        int totalProducts = invoiceDetails.size();
+        int totalQuantity = invoiceDetails.stream().mapToInt(InvoiceDetail::getQuantity).sum();
+
+        // Lấy sản phẩm bán chạy
+        List<InvoiceDetail> bestSellingProducts = invoiceDetails.stream()
+                .sorted(Comparator.comparingInt(InvoiceDetail::getQuantity).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        // Lấy sản phẩm bán chậm
+        List<InvoiceDetail> slowSellingProducts = invoiceDAO.getSlowSellingProductsByTime(timeFilter);
+
+        // Lấy sản phẩm chưa bán được
+        List<Food> unsoldProducts = invoiceDAO.getUnsoldProductsByTime();
+
+        // Đóng gói dữ liệu
+        data.put("totalProducts", totalProducts);
+        data.put("totalQuantity", totalQuantity);
+        data.put("totalRevenue", totalRevenue);
+        data.put("totalOrders", totalOrders);
+        data.put("bestSellingProducts", bestSellingProducts);
+        data.put("slowSellingProducts", slowSellingProducts);
+        data.put("unsoldProducts", unsoldProducts);
+
+        // Trả về JSON
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(new Gson().toJson(data));
+        out.flush();
+    }
+
+    private void handleNormalRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() != 1) {
-            response.sendRedirect(request.getContextPath() + "/login");
+        if (currentUser == null || currentUser.getRoleId() == 2) {
+            response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
