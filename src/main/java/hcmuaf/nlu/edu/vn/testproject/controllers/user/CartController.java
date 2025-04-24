@@ -3,8 +3,10 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 import hcmuaf.nlu.edu.vn.testproject.daos.DiscountDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.Discount;
 import hcmuaf.nlu.edu.vn.testproject.models.Item;
+import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -52,6 +54,10 @@ public class CartController extends HttpServlet {
             discountAmount = 0;
             discountCode = null;
         }
+
+        CategoryService cs = new CategoryService();
+        List<Category> categoryList = cs.getCategories();
+        request.setAttribute("listC", categoryList);
 
         request.setAttribute("cartItems", cartItems);
         request.setAttribute("subtotal", subtotal);

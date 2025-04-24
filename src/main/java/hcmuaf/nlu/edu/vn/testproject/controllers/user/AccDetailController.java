@@ -3,11 +3,14 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 import hcmuaf.nlu.edu.vn.testproject.daos.AccdetailDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.Category;
+import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "AccDetailController", value = "/AccDetail")
 public class AccDetailController extends HttpServlet {
@@ -17,7 +20,9 @@ public class AccDetailController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
-
+        CategoryService cs = new CategoryService();
+        List<Category> categoryList = cs.getCategories();
+        request.setAttribute("listC", categoryList);
         if (currentUser != null) {
             int userId = currentUser.getAccountId();  // Lấy ID từ session
             AccdetailDAO accountDAO = new AccdetailDAO();
