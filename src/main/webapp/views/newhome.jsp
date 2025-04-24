@@ -190,7 +190,8 @@
             <div id="${food.foodId}" class="popup">
 
                 <div class="popup-content">
-                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                    </div>
 
                     <div class="popup-body">
                         <img src="${food.image}" alt="${food.foodName}"/>
@@ -226,21 +227,35 @@
 
                             <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                    Tất cả
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                    5⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                    4⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                    3⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                    2⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                    1⭐
+                                </button>
                             </div>
                             <div class="user-reviews">
-                                <div id="review-list${food.foodId}">
+                                <div id="review-list${food.foodId}" data-option="0">
 
                                 </div>
                             </div>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+
                     <div class="popup-footer">
                         <button class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
@@ -306,7 +321,8 @@
             <div id="${food.foodId}" class="popup">
 
                 <div class="popup-content">
-                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                    </div>
 
                     <div class="popup-body">
                         <img src="${food.image}" alt="${food.foodName}"/>
@@ -342,21 +358,35 @@
 
                             <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                    Tất cả
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                    5⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                    4⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                    3⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                    2⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                    1⭐
+                                </button>
                             </div>
                             <div class="user-reviews">
-                                <div id="review-list${food.foodId}">
+                                <div id="review-list${food.foodId}" data-option="0">
 
                                 </div>
                             </div>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+
                     <div class="popup-footer">
                         <button class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
@@ -422,7 +452,8 @@
             <div id="${food.foodId}" class="popup">
 
                 <div class="popup-content">
-                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                    </div>
 
                     <div class="popup-body">
                         <img src="${food.image}" alt="${food.foodName}"/>
@@ -458,21 +489,35 @@
 
                             <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                    Tất cả
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                    5⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                    4⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                    3⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                    2⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                    1⭐
+                                </button>
                             </div>
                             <div class="user-reviews">
-                                <div id="review-list${food.foodId}">
+                                <div id="review-list${food.foodId}" data-option="0">
 
                                 </div>
                             </div>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+
                     <div class="popup-footer">
                         <button class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
@@ -538,7 +583,8 @@
             <div id="${food.foodId}" class="popup">
 
                 <div class="popup-content">
-                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                    <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                    </div>
 
                     <div class="popup-body">
                         <img src="${food.image}" alt="${food.foodName}"/>
@@ -574,21 +620,35 @@
 
                             <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                             <div class="rating-filter">
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                    Tất cả
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                    5⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                    4⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                    3⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                    2⭐
+                                </button>
+                                <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                    1⭐
+                                </button>
                             </div>
                             <div class="user-reviews">
-                                <div id="review-list${food.foodId}">
+                                <div id="review-list${food.foodId}" data-option="0">
 
                                 </div>
                             </div>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+
                     <div class="popup-footer">
                         <button class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
