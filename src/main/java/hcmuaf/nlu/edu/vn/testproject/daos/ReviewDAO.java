@@ -68,12 +68,15 @@ public class ReviewDAO {
 
     // Lấy món ăn có nhiều đánh giá nhất
     public Food getTopReviewedFood() {
-        String query = "SELECT f.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients, " +
+        String query = "SELECT f.food_id, f.food_name, f.price, f.discount_price, f.quantity, f.description, " +
+                "f.image, f.category_id, f.ingredients, f.sold, f.views, f.created_at, f.updated_at, " +
                 "COUNT(rv.review_id) as review_count " +
                 "FROM review rv " +
                 "JOIN food f ON rv.food_id = f.food_id " +
-                "GROUP BY f.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients " +
+                "GROUP BY f.food_id, f.food_name, f.price, f.discount_price, f.quantity, f.description, " +
+                "f.image, f.category_id, f.ingredients, f.sold, f.views, f.created_at, f.updated_at " +
                 "ORDER BY review_count DESC LIMIT 1";
+
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -115,6 +118,35 @@ public class ReviewDAO {
     }
 
 
+    // Lấy tổng số lượt đánh giá của một món ăn
+    public int getTotalReviewCountByFoodId(int foodId) {
+        String query = "SELECT COUNT(*) AS total FROM review WHERE food_id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int total = 0;
+
+        try {
+            con = new DbContext().getConnection();
+            if (con == null) {
+                System.err.println("Kết nối cơ sở dữ liệu thất bại trong getTotalReviewCountByFoodId!");
+                return 0;
+            }
+            ps = con.prepareStatement(query);
+            ps.setInt(1, foodId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn tổng số review: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeResources(rs, ps, con);
+        }
+        return total;
+    }
 
     // Phương thức đóng các tài nguyên
     private void closeResources(ResultSet rs, PreparedStatement ps, Connection con) {
@@ -420,82 +452,17 @@ public class ReviewDAO {
 
     public static void main(String[] args) {
         ReviewDAO reviewDAO = new ReviewDAO();
-        System.out.println(reviewDAO.getTotalReviewCountByFoodId(7, 4));
-    }
+        Food topFood = reviewDAO.getTopReviewedFood();
 
-//    public static void main(String[] args) {
-//        ReviewDAO reviewDAO = new ReviewDAO();
-//
-//        // Test 1: Kiểm tra getTotalReviews không có bộ lọc
-//        System.out.println("=== Test 1: Tổng số đánh giá (không có bộ lọc) ===");
-//        int totalReviews = reviewDAO.getTotalReviews("", "", "");
-//        System.out.println("Tổng số đánh giá: " + totalReviews);
-//
-//        // Test 2: Kiểm tra getReviews không có bộ lọc
-//        System.out.println("\n=== Test 2: Lấy danh sách đánh giá (không có bộ lọc, trang 1, 10 items) ===");
-//        List<ReviewFood> reviews = reviewDAO.getReviews("", "", "", 1, 10);
-//        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
-//        for (ReviewFood review : reviews) {
-//            System.out.println("Review ID: " + review.getReviewId() +
-//                    ", Khách hàng: " + review.getName() +
-//                    ", Sản phẩm: " + review.getFoodName() +
-//                    ", Đánh giá: " + review.getRating() +
-//                    ", Bình luận: " + review.getComment() +
-//                    ", Thời gian: " + review.getDate());
-//        }
-//
-//        // Test 3: Kiểm tra getReviews với bộ lọc theo ngày
-//        System.out.println("\n=== Test 3: Lấy danh sách đánh giá (lọc theo ngày 2025-04-19) ===");
-//        reviews = reviewDAO.getReviews("2025-04-19", "", "", 1, 10);
-//        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
-//        for (ReviewFood review : reviews) {
-//            System.out.println("Review ID: " + review.getReviewId() +
-//                    ", Khách hàng: " + review.getName() +
-//                    ", Sản phẩm: " + review.getFoodName() +
-//                    ", Đánh giá: " + review.getRating() +
-//                    ", Bình luận: " + review.getComment() +
-//                    ", Thời gian: " + review.getDate());
-//        }
-//
-//        // Test 4: Kiểm tra getReviews với bộ lọc theo tên sản phẩm hoặc khách hàng
-//        System.out.println("\n=== Test 4: Lấy danh sách đánh giá (lọc theo từ khóa 'Cơm') ===");
-//        reviews = reviewDAO.getReviews("", "Cơm", "", 1, 10);
-//        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
-//        for (ReviewFood review : reviews) {
-//            System.out.println("Review ID: " + review.getReviewId() +
-//                    ", Khách hàng: " + review.getName() +
-//                    ", Sản phẩm: " + review.getFoodName() +
-//                    ", Đánh giá: " + review.getRating() +
-//                    ", Bình luận: " + review.getComment() +
-//                    ", Thời gian: " + review.getDate());
-//        }
-//
-//        // Test 5: Kiểm tra getReviews với bộ lọc theo số sao
-//        System.out.println("\n=== Test 5: Lấy danh sách đánh giá (lọc theo 5 sao) ===");
-//        reviews = reviewDAO.getReviews("", "", "5", 1, 10);
-//        System.out.println("Số lượng đánh giá tìm thấy: " + reviews.size());
-//        for (ReviewFood review : reviews) {
-//            System.out.println("Review ID: " + review.getReviewId() +
-//                    ", Khách hàng: " + review.getName() +
-//                    ", Sản phẩm: " + review.getFoodName() +
-//                    ", Đánh giá: " + review.getRating() +
-//                    ", Bình luận: " + review.getComment() +
-//                    ", Thời gian: " + review.getDate());
-//        }
-//
-//        // Test 6: Kiểm tra deleteReview
-//        System.out.println("\n=== Test 6: Xóa đánh giá với review_id = 1 ===");
-//        reviewDAO.deleteReview(1);
-//        System.out.println("Kiểm tra lại danh sách sau khi xóa:");
-//        reviews = reviewDAO.getReviews("", "", "", 1, 10);
-//        System.out.println("Số lượng đánh giá còn lại: " + reviews.size());
-//        for (ReviewFood review : reviews) {
-//            System.out.println("Review ID: " + review.getReviewId() +
-//                    ", Khách hàng: " + review.getName() +
-//                    ", Sản phẩm: " + review.getFoodName() +
-//                    ", Đánh giá: " + review.getRating() +
-//                    ", Bình luận: " + review.getComment() +
-//                    ", Thời gian: " + review.getDate());
-//        }
-//    }
+        if (topFood != null) {
+            int reviewCount = reviewDAO.getTotalReviewCountByFoodId(topFood.getFoodId());
+            System.out.println("Món ăn có nhiều đánh giá nhất:");
+            System.out.println("Tên: " + topFood.getFoodName());
+            System.out.println("Giá: " + topFood.getPrice());
+            System.out.println("Thành phần: " + topFood.getIngredients());
+            System.out.println("Số lượt đánh giá: " + reviewCount);
+        } else {
+            System.out.println("Không tìm thấy món ăn nào có đánh giá.");
+        }
+    }
 }

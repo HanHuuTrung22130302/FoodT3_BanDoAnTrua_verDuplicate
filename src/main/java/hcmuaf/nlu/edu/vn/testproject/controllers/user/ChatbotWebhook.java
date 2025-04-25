@@ -94,15 +94,18 @@ public class ChatbotWebhook extends HttpServlet {
                 responseJson.addProperty("fulfillmentText", "Hiện tại không có dữ liệu về món ăn bán nhiều nhất.");
             }
         } else if (reviewQuery != null && (queryText.contains("đánh giá nhiều nhất") || queryText.contains("nhiều đánh giá nhất"))) {
+            // Lấy món ăn có nhiều lượt đánh giá nhất từ ReviewDAO
             Food topReviewedFood = reviewDAO.getTopReviewedFood();
-//            if (topReviewedFood != null) {
-//                int reviewCount = reviewDAO.getTotalReviewCountByFoodId(topReviewedFood.getFoodId());
-//                responseJson.addProperty("fulfillmentText", String.format("Món ăn có nhiều đánh giá nhất là %s với %d lượt đánh giá. Giá: %dđ, Thành phần: %s.",
-//                        topReviewedFood.getFoodName(), reviewCount, topReviewedFood.getPrice(), topReviewedFood.getIngredients()));
-//            } else {
-//                responseJson.addProperty("fulfillmentText", "Hiện tại không có dữ liệu về món ăn được đánh giá nhiều nhất.");
-//            }
-        } else if (product != null) {
+            if (topReviewedFood != null) {
+                // Lấy tổng số lượt đánh giá của món ăn
+                int reviewCount = reviewDAO.getTotalReviewCountByFoodId(topReviewedFood.getFoodId());
+                responseJson.addProperty("fulfillmentText", String.format("Món ăn có nhiều đánh giá nhất là %s với %d lượt đánh giá. Giá: %dđ, Thành phần: %s.",
+                        topReviewedFood.getFoodName(), reviewCount, topReviewedFood.getPrice(), topReviewedFood.getIngredients()));
+            } else {
+                responseJson.addProperty("fulfillmentText", "Hiện tại không có dữ liệu về món ăn được đánh giá nhiều nhất.");
+            }
+        }
+        else if (product != null) {
             String finalProduct = product.toLowerCase().trim();
             Food matchedFood = foods.stream()
                     .filter(food -> {
