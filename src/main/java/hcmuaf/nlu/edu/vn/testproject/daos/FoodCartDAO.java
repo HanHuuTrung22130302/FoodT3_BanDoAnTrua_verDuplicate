@@ -77,6 +77,84 @@ public class FoodCartDAO implements FoodService {
         }
     }
 
+    // Lấy món ăn bán nhiều nhất
+    public Food getTopSoldFood() {
+        String query = "SELECT fc.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients, " +
+                "SUM(fc.quantity) as total_quantity " +
+                "FROM food_cart fc " +
+                "JOIN food f ON fc.food_id = f.food_id " +
+                "GROUP BY fc.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients " +
+                "ORDER BY total_quantity DESC LIMIT 1";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Food topSoldFood = null;
+
+        try {
+            con = new DbContext().getConnection();
+            if (con == null) {
+                System.err.println("Kết nối cơ sở dữ liệu thất bại trong getTopSoldFood!");
+                return null;
+            }
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                topSoldFood = new Food(
+                        rs.getInt("food_id"),
+                        rs.getString("food_name"),
+                        rs.getInt("price"),
+                        rs.getInt("discount_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("ingredients"),
+                        rs.getInt("category_id"),
+                        rs.getInt("sold"),
+                        rs.getInt("views"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn món ăn bán nhiều nhất: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeResources(rs, ps, con);
+        }
+        return topSoldFood;
+    }
+
+    // Lấy tổng số lượng bán của một món ăn
+    public int getTotalQuantitySold(int foodId) {
+        String query = "SELECT SUM(quantity) as total_quantity FROM food_cart WHERE food_id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int totalQuantity = 0;
+
+        try {
+            con = new DbContext().getConnection();
+            if (con == null) {
+                System.err.println("Kết nối cơ sở dữ liệu thất bại trong getTotalQuantitySold!");
+                return 0;
+            }
+            ps = con.prepareStatement(query);
+            ps.setInt(1, foodId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalQuantity = rs.getInt("total_quantity");
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn tổng số lượng bán: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeResources(rs, ps, con);
+        }
+        return totalQuantity;
+    }
+
 
     // Cập nhật số lượng món ăn trong giỏ hàng
     public void updateCartItem(int accountId, int foodId, int quantity) {

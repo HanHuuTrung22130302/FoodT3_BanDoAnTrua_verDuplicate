@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
+import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.models.ReviewFood;
 
 import java.sql.Connection;
@@ -64,6 +65,56 @@ public class ReviewDAO {
             closeResources(rs, ps, con);
         }
     }
+
+    // Lấy món ăn có nhiều đánh giá nhất
+    public Food getTopReviewedFood() {
+        String query = "SELECT f.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients, " +
+                "COUNT(rv.review_id) as review_count " +
+                "FROM review rv " +
+                "JOIN food f ON rv.food_id = f.food_id " +
+                "GROUP BY f.food_id, f.food_name, f.price, f.quantity, f.description, f.image, f.category_id, f.ingredients " +
+                "ORDER BY review_count DESC LIMIT 1";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Food topReviewedFood = null;
+
+        try {
+            con = new DbContext().getConnection();
+            if (con == null) {
+                System.err.println("Kết nối cơ sở dữ liệu thất bại trong getTopReviewedFood!");
+                return null;
+            }
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                topReviewedFood = new Food(
+                        rs.getInt("food_id"),
+                        rs.getString("food_name"),
+                        rs.getInt("price"),
+                        rs.getInt("discount_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("ingredients"),
+                        rs.getInt("category_id"),
+                        rs.getInt("sold"),
+                        rs.getInt("views"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn món ăn có nhiều đánh giá nhất: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeResources(rs, ps, con);
+        }
+        return topReviewedFood;
+    }
+
+
 
     // Phương thức đóng các tài nguyên
     private void closeResources(ResultSet rs, PreparedStatement ps, Connection con) {
