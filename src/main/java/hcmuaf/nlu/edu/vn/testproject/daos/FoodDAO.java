@@ -1,8 +1,8 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
+import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
 import hcmuaf.nlu.edu.vn.testproject.models.Category;
-import hcmuaf.nlu.edu.vn.testproject.models.Food;
 
 import java.sql.*;
 import java.util.*;
@@ -10,6 +10,9 @@ import java.util.*;
 public class FoodDAO {
 
     private Map<Integer, Food> data;
+    private Connection conn;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
     public FoodDAO() {
         this.data = new HashMap<>();
@@ -19,7 +22,6 @@ public class FoodDAO {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllFood() {
-
         String query = "SELECT * FROM food";
         Connection con = null;
         PreparedStatement ps = null;
@@ -34,32 +36,33 @@ public class FoodDAO {
             // Thực thi câu lệnh
             rs = ps.executeQuery();
 
+            // Xóa cache cũ
+            data.clear();
+
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
-                data.put(rs.getInt("food_id"),
-                        new Food(
-                                rs.getInt("food_id"),
-                                rs.getString("food_name"),
-                                rs.getInt("price"),
-                                rs.getInt("discount_price"),
-                                rs.getInt("quantity"),
-                                rs.getString("image"),
-                                rs.getString("description"),
-                                rs.getString("ingredients"),
-                                rs.getInt("category_id"),
-                                rs.getInt("sold"),
-                                rs.getInt("views"),
-                                rs.getTimestamp("created_at"),
-                                rs.getTimestamp("updated_at")
-                        ));
+                Food food = new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                );
+                data.put(food.getFoodId(), food);
             }
-
         } catch (SQLException e) {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
-            // Đảm bảo rằng kết nối, câu lệnh và result set được đóng đúng cách
             closeResources(rs, ps, con);
         }
     }
@@ -260,7 +263,7 @@ public class FoodDAO {
     }
 
     // Phương thức xóa món ăn
-    public void deleteFood(int idFood) {
+    public boolean deleteFood(int idFood) {
         String query = "DELETE FROM food WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
@@ -269,13 +272,16 @@ public class FoodDAO {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, idFood);
-            ps.executeUpdate();
-
+            int rowsDeleted = ps.executeUpdate();
             data.remove(idFood); // Xóa món ăn khỏi danh sách trong bộ nhớ
+            return rowsDeleted > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
+            return false;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeResources(null, ps, conn);
         }
     }
 
@@ -305,7 +311,18 @@ public class FoodDAO {
             ps.setInt(12, food.getViews());
 
             int rowInserted = ps.executeUpdate();
-            return rowInserted > 0;
+            if (rowInserted > 0) {
+                // Lấy ID của món vừa thêm
+                int newFoodId = getLastInsertedFoodId();
+                // Cập nhật ID cho food
+                food.setFoodId(newFoodId);
+                // Cập nhật cache
+                data.put(newFoodId, food);
+                // Cập nhật lại toàn bộ danh sách
+                getAllFood();
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -346,5 +363,64 @@ public class FoodDAO {
         } finally {
             closeResources(null, ps, conn);
         }
+    }
+
+    public Food getFoodById(int id) {
+        // Kiểm tra trong cache trước
+        if (data.containsKey(id)) {
+            return data.get(id);
+        }
+
+        String sql = "SELECT * FROM food WHERE food_id = ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Food food = new Food(
+                        rs.getInt("food_id"),
+                        rs.getString("food_name"),
+                        rs.getInt("price"),
+                        rs.getInt("discount_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("ingredients"),
+                        rs.getInt("category_id"),
+                        rs.getInt("sold"),
+                        rs.getInt("views"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                    );
+                    // Cập nhật cache
+                    data.put(id, food);
+                    return food;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getLastInsertedFoodId() {
+        String query = "SELECT LAST_INSERT_ID() as id";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return 0;
     }
 }
