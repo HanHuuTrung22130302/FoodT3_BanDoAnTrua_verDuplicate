@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -51,6 +52,101 @@ public class ManageFoodController extends HttpServlet {
             return;
         }
 
+        // Xử lý request AJAX
+        String isAjax = request.getParameter("isAjax");
+        if ("true".equals(isAjax)) {
+            handleAjaxRequest(request, response);
+            return;
+        }
+
+        // Xử lý request thông thường
+        handleNormalRequest(request, response);
+    }
+
+    private void handleAjaxRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String txtSearch = request.getParameter("text");
+            int page = 1;
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+
+            int pageSize = 10;
+            int offset = (page - 1) * pageSize;
+            List<Food> foodList = new ArrayList<>();
+            int totalFoods = 0;
+
+            String option = request.getParameter("option");
+            String categoryId = request.getParameter("categoryId");
+            if (option == null || option.isEmpty()) {
+                option = "tatca";
+            }
+
+            // Lấy danh sách món ăn ban đầu dựa trên option
+            if (option.equals("tatca")) {
+                foodList = foodDAO.getAll();
+            } else if (option.equals("danhgiacao")) {
+                foodList = foodServiceListFilter.getTopRate();
+            } else if (option.equals("dexuat")) {
+                foodList = foodDAO.getTopPropose();
+            } else if (option.equals("quantam")) {
+                foodList = foodDAO.getTopView();
+            } else if (option.equals("banchay")) {
+                foodList = foodDAO.getTopSold();
+            } else {
+                // Nếu option là một số, đó là categoryId
+                foodList = foodDAO.getFoodsByCategory(Integer.parseInt(option));
+            }
+
+            // Áp dụng bộ lọc danh mục nếu có
+            if (categoryId != null && !categoryId.isEmpty() && !categoryId.equals("tatca")) {
+                foodList = foodList.stream()
+                    .filter(food -> food.getCategoryId() == Integer.parseInt(categoryId))
+                    .collect(Collectors.toList());
+            }
+
+            // Áp dụng tìm kiếm nếu có
+            if (txtSearch != null && !txtSearch.isEmpty()) {
+                foodList = foodList.stream()
+                    .filter(food -> food.getFoodName().toLowerCase().contains(txtSearch.toLowerCase()))
+                    .collect(Collectors.toList());
+            }
+
+            // Sắp xếp danh sách theo thời gian tạo mới nhất
+            foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
+
+            totalFoods = foodList.size();
+
+            if (offset < totalFoods) {
+                foodList = foodList.subList(Math.min(offset, totalFoods), Math.min(offset + pageSize, totalFoods));
+            } else {
+                foodList = new ArrayList<>();
+            }
+
+            int totalPages = (int) Math.ceil((double) totalFoods / pageSize);
+            List<Category> categoryList = cs.getCategories();
+
+            // Tạo response JSON
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("foods", foodList);
+            responseData.put("categories", categoryList);
+            responseData.put("currentPage", page);
+            responseData.put("totalPages", totalPages);
+            responseData.put("currentCategory", option);
+            responseData.put("currentCategoryId", categoryId);
+            responseData.put("search", txtSearch);
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(new Gson().toJson(responseData));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\":\"Có lỗi xảy ra khi xử lý yêu cầu\"}");
+        }
+    }
+
+    private void handleNormalRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Xử lý request AJAX để lấy thông tin món ăn
         String idFood = request.getParameter("idFood");
         if (idFood != null) {

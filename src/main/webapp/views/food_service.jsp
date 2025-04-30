@@ -19,7 +19,7 @@
 
     <div class="content">
         <div class="header">
-            <select id="menu_filter" onchange="location.href=this.value;">
+            <select id="menu_filter">
                 <option value="foodservice?option=tatca"
                 ${currentCategory == null || currentCategory == 'tatca' ? 'selected' : ''}>
                     Tất cả
@@ -31,7 +31,7 @@
                     </option>
                 </c:forEach>
             </select>
-            <select id="special_filter" onchange="location.href=this.value;">
+            <select id="special_filter">
                 <option value="foodservice?option=danhgiacao"
                 ${currentCategory == null || currentCategory == 'danhgiacao' ? 'selected' : ''}>
                     Món được đánh giá cao
@@ -173,9 +173,9 @@
                 </div>
             </c:forEach>
         </div>
-        <div class="pagi" style="width:1200px;margin:0px auto; padding-left:35px; text-align:center;">
+        <div class="pagi">
             <c:if test="${currentPage > 1}">
-                <a onclick="" href="foodservice?option=${param.option}&page=${currentPage - 1}"><</a>
+                <a href="foodservice?option=${param.option}&page=${currentPage - 1}">&lt;</a>
             </c:if>
 
             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -184,7 +184,7 @@
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a href="foodservice?option=${param.option}&page=${currentPage + 1}">></a>
+                <a href="foodservice?option=${param.option}&page=${currentPage + 1}">&gt;</a>
             </c:if>
         </div>
     </div>

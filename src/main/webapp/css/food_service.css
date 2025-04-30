@@ -395,3 +395,37 @@ body {
     opacity: 0;
   }
 }
+
+/* Style cho thông báo không có dữ liệu */
+.no-data-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  width: 100%;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.no-data-content {
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-data-content i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #b5292f;
+}
+
+.no-data-content h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+
+.no-data-content p {
+  font-size: 16px;
+  margin: 0;
+}
