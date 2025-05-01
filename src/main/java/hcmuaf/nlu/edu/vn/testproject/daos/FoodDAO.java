@@ -22,7 +22,7 @@ public class FoodDAO {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllFood() {
-        String query = "SELECT * FROM food";
+        String query = "SELECT * FROM food WHERE is_deleted = 0";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -70,7 +70,7 @@ public class FoodDAO {
     // Thêm phương thức lấy món ăn theo danh sách thành phần
     public List<Food> getFoodsByIngredients(List<String> ingredients) {
         List<Food> foodList = new ArrayList<>();
-        String query = "SELECT * FROM food WHERE " +
+        String query = "SELECT * FROM food WHERE is_deleted = 0 AND " +
                 String.join(" AND ", Collections.nCopies(ingredients.size(), "LOWER(ingredients) LIKE ?"));
 
         Connection con = null;
@@ -116,7 +116,7 @@ public class FoodDAO {
 
     public List<Food> getFoodsByCategory(int idCategory) {
 
-        String query = "SELECT * FROM food WHERE category_id = ?";
+        String query = "SELECT * FROM food WHERE is_deleted = 0 AND category_id = ?";
         List<Food> foodList = new ArrayList<>();
 
         Connection con = null;
@@ -264,19 +264,25 @@ public class FoodDAO {
 
     // Phương thức xóa món ăn
     public boolean deleteFood(int idFood) {
-        String query = "DELETE FROM food WHERE food_id = ?";
+        String query = "UPDATE food SET is_deleted = 1, updated_at = ? WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, idFood);
-            int rowsDeleted = ps.executeUpdate();
-            data.remove(idFood); // Xóa món ăn khỏi danh sách trong bộ nhớ
-            return rowsDeleted > 0;
+            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(2, idFood);
+            
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                // Xóa món ăn khỏi cache
+                data.remove(idFood);
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
-            System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
+            System.err.println("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
             return false;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

@@ -172,7 +172,7 @@ document
 
 // Xử lý xóa món
 function deleteFood(idFood) {
-  if (confirm("Bạn có chắc chắn muốn xóa món này?")) {
+  if (confirm("Bạn có chắc chắn muốn xóa món ăn này?")) {
     const formData = new FormData();
     formData.append("action", "delete");
     formData.append("idFood", idFood);
@@ -189,19 +189,33 @@ function deleteFood(idFood) {
       })
       .then((result) => {
         if (result.success) {
-          showNotification("Xóa món thành công!", "success");
-          // Xóa phần tử khỏi DOM
+          showNotification("Xóa món ăn thành công!", "success");
+
+          // Xóa phần tử khỏi DOM với hiệu ứng fade out
           const foodItem = document.querySelector(`[data-food-id="${idFood}"]`);
           if (foodItem) {
-            foodItem.remove();
+            foodItem.style.transition = "opacity 0.5s ease";
+            foodItem.style.opacity = "0";
+            setTimeout(() => {
+              foodItem.remove();
+
+              // Kiểm tra nếu không còn món ăn nào thì hiển thị thông báo
+              const menuContainer = document.querySelector(".menu_container");
+              if (!menuContainer.children.length) {
+                updateFoodList([]);
+              }
+            }, 500);
           }
         } else {
-          showNotification("Có lỗi xảy ra khi xóa món!", "error");
+          showNotification(
+            result.message || "Có lỗi xảy ra khi xóa món ăn!",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        showNotification("Có lỗi xảy ra khi xóa món!", "error");
+        showNotification("Có lỗi xảy ra khi xóa món ăn!", "error");
       });
   }
 }
