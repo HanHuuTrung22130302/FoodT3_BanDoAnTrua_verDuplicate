@@ -19,7 +19,7 @@
 
     <div class="content">
         <div class="header">
-            <select id="menu_filter" onchange="location.href=this.value;">
+            <select id="menu_filter">
                 <option value="foodservice?option=tatca"
                 ${currentCategory == null || currentCategory == 'tatca' ? 'selected' : ''}>
                     Tất cả
@@ -31,7 +31,7 @@
                     </option>
                 </c:forEach>
             </select>
-            <select id="special_filter" onchange="location.href=this.value;">
+            <select id="special_filter">
                 <option value="foodservice?option=danhgiacao"
                 ${currentCategory == null || currentCategory == 'danhgiacao' ? 'selected' : ''}>
                     Món được đánh giá cao
@@ -65,34 +65,34 @@
         <%-- Thêm món mới --%>
         <div id="add_popup" class="popup hidden">
             <div class="popup_content">
-          <span class="close_btn">
-            <i class="fa-solid fa-xmark"></i>
-          </span>
+                <span class="close_btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </span>
                 <h2>THÊM MÓN MỚI</h2>
-                <form id="new_item_form" action="foodservice" method="post" enctype="multipart/form-data">
+                <form id="new_item_form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="add">
+                    
                     <label for="item_name">Tên Món:</label>
                     <input type="text" id="item_name" name="foodName" placeholder="Nhập tên món ăn..." required>
 
                     <label for="item_category">Loại Món:</label>
-                    <select id="item_category" name="idCategory">
+                    <select id="item_category" name="idCategory" required>
                         <c:forEach var="category" items="${listC}">
                             <option value="${category.categoryId}">${category.categoryName}</option>
                         </c:forEach>
                     </select>
 
-                    <label for="item_price"> Giá:</label>
-                    <input type="number" id="item_price" name="price" placeholder="Nhập giá của món ăn:" required>
+                    <label for="item_price">Giá:</label>
+                    <input type="number" id="item_price" name="price" placeholder="Nhập giá của món ăn:" required min="0">
 
                     <label for="item_details">Chi tiết món ăn:</label>
-                    <textarea id="item_details" name="description" placeholder="Nhập chi tiết món ăn:"
-                              required></textarea>
+                    <textarea id="item_details" name="description" placeholder="Nhập chi tiết món ăn:" required></textarea>
 
                     <label for="item_ingredients">Nguyên liệu:</label>
                     <textarea id="item_ingredients" name="ingredients" placeholder="Nhập nguyên liệu (cách nhau bởi dấu phẩy):" required></textarea>
 
                     <label for="item_image">Hình ảnh:</label>
-                    <input type="file" id="item_image" name="img" required>
+                    <input type="file" id="item_image" name="img" accept="image/*" required>
 
                     <button type="submit">Lưu</button>
                 </form>
@@ -138,7 +138,7 @@
 
         <div class="menu_container">
             <c:forEach var="food" items="${list}">
-                <div class="menu-item">
+                <div class="menu-item" data-food-id="${food.foodId}">
                     <img alt="${food.foodName}" height="100" src="${food.image}"/>
                     <div class="details">
                         <h3>
@@ -159,32 +159,23 @@
                             ${food.price}
                     </div>
                     <div class="actions">
-                        <!-- Nút cập nhật mở popup bằng JavaScript -->
-                        <form action="foodservice" method="post" style="display: inline">
-                            <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="idFood" value="${food.foodId}">
-                            <button type="button" class="update_item_btn" onclick="openUpdatePopup(${food.foodId})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </form>
+                        <!-- Nút cập nhật -->
+                        <button type="button" class="update_item_btn" onclick="openUpdatePopup('${food.foodId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
 
-                        <!-- Nút xóa có xác nhận -->
-                        <form action="foodservice" method="post" style="display: inline">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="idFood" value="${food.foodId}">
-                            <button type="submit" class="delete_item_btn"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa món này?')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        <!-- Nút xóa -->
+                        <button type="button" class="delete_item_btn" onclick="deleteFood('${food.foodId}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
 
                 </div>
             </c:forEach>
         </div>
-        <div class="pagi" style="width:1200px;margin:0px auto; padding-left:35px; text-align:center;">
+        <div class="pagi">
             <c:if test="${currentPage > 1}">
-                <a onclick="" href="foodservice?option=${param.option}&page=${currentPage - 1}"><</a>
+                <a href="foodservice?option=${param.option}&page=${currentPage - 1}">&lt;</a>
             </c:if>
 
             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -193,7 +184,7 @@
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a href="foodservice?option=${param.option}&page=${currentPage + 1}">></a>
+                <a href="foodservice?option=${param.option}&page=${currentPage + 1}">&gt;</a>
             </c:if>
         </div>
     </div>
