@@ -36,10 +36,8 @@ public class OrderController extends HttpServlet {
             page = Integer.parseInt(request.getParameter("page"));
         }
 
-        int pageSize = 10;
+        int pageSize = 12; // DAO đã giới hạn 12 bản ghi rồi
         int offset = (page - 1) * pageSize;
-        List<OrderInvoice> ois = new ArrayList<>();
-        int totalLs = 0;
 
         String option = request.getParameter("option");
         if (option == null || option.isEmpty()) {
@@ -47,15 +45,9 @@ public class OrderController extends HttpServlet {
         }
 
         AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
-        ois = adminInvoiceService.getOption(option);
-        totalLs = ois.size();
+        List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
 
-        if (offset < totalLs) {
-            ois = ois.subList(Math.min(offset, totalLs), Math.min(offset + pageSize, totalLs));
-        } else {
-            ois = new ArrayList<>();
-        }
-
+        int totalLs = adminInvoiceService.countInvoicesByOption(option);
         int totalPages = (int) Math.ceil((double) totalLs / pageSize);
 
         request.setAttribute("ois", ois);
@@ -63,8 +55,8 @@ public class OrderController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentCategory", option);
 
-
         request.getRequestDispatcher("views/order.jsp").forward(request, response);
+
     }
 
     @Override

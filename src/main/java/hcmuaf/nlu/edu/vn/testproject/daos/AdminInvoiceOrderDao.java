@@ -8,38 +8,45 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AdminInvoiceOrderDao {
-
-    private List<OrderInvoice> data;
-    private int id;
-
     public AdminInvoiceOrderDao() {
-        this.data = new ArrayList<>();
-        this.id = id;
-        getAllInvoice();
     }
 
-
-    // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
-    public void getAllInvoice() {
-
-        String query = "SELECT * FROM invoice inv join order_status os ON inv.invoice_id = os.invoice_id ;";
+    public List<OrderInvoice> getAdminInvoiceOrder(int option, int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id "
+        );
+
+        if (option >= 1 && option <= 5) {
+            query.append("WHERE os.order_status = ? ");
+        } else if (option == 0) {
+            query.append("WHERE os.order_status BETWEEN 1 AND 5 ");
+        }
+
+        query.append("ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?");
+
         try {
             con = new DbContext().getConnection();
-            ps = con.prepareStatement(query);
-            rs = ps.executeQuery();
+            ps = con.prepareStatement(query.toString());
 
+            int paramIndex = 1;
+            if (option >= 1 && option <= 5) {
+                ps.setInt(paramIndex++, option);
+            }
+            ps.setInt(paramIndex, offset);
+
+            rs = ps.executeQuery();
             while (rs.next()) {
-                data.add(new OrderInvoice(
+                invoices.add(new OrderInvoice(
                         rs.getInt("invoice_id"),
                         rs.getInt("account_id"),
                         rs.getString("recipient_name"),
@@ -53,8 +60,410 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("is_paid"),
                         rs.getInt("order_status"),
                         InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
-
                 ));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+
+    public static void closeResources(ResultSet rs, PreparedStatement ps, Connection con) {
+        try {
+            if (rs != null) rs.close();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi đóng ResultSet: " + e.getMessage());
+        }
+        try {
+            if (ps != null) ps.close();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi đóng PreparedStatement: " + e.getMessage());
+        }
+        try {
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi đóng Connection: " + e.getMessage());
+        }
+    }
+    public List<OrderInvoice> getInvoiceByToday(int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query =
+                "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE DATE(inv.order_date) = CURDATE() AND os.order_status BETWEEN 1 AND 5 " +
+                        "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, offset);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo ngày: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+    public List<OrderInvoice> getInvoiceByThisMonth(int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query =
+                "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE MONTH(inv.order_date) = MONTH(CURDATE()) " +
+                        "AND YEAR(inv.order_date) = YEAR(CURDATE()) " +
+                        "AND os.order_status BETWEEN 1 AND 5 " +
+                        "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, offset);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo tháng: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+    public List<OrderInvoice> getInvoiceByThisYear(int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query =
+                "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE YEAR(inv.order_date) = YEAR(CURDATE()) " +
+                        "AND os.order_status BETWEEN 1 AND 5 " +
+                        "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, offset);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo năm: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+    public List<OrderInvoice> getInvoicesByIdOrPrefix(String invoiceId, int offset) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<OrderInvoice> invoices = new ArrayList<>();
+
+        String query = "";
+
+        try {
+            con = new DbContext().getConnection();
+
+            if (invoiceId.matches("^0*\\d{1,6}$")) {
+                int realId = Integer.parseInt(invoiceId.replaceFirst("^0+(?!$)", ""));
+                query = "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE inv.invoice_id = ? " +
+                        "LIMIT 12 OFFSET ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, realId);
+                ps.setInt(2, offset);
+
+            } else if (invoiceId.length() > 0 && invoiceId.length() < 6) {
+                query = "SELECT * FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE CAST(inv.invoice_id AS CHAR) LIKE ? " +
+                        "LIMIT 12 OFFSET ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, "%" + invoiceId + "%");
+                ps.setInt(2, offset);
+            } else {
+                return invoices;
+            }
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderInvoice invoice = new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                );
+                invoices.add(invoice);
+            }
+
+        } catch (SQLException | ClassNotFoundException | NumberFormatException e) {
+            System.err.println("Lỗi khi truy vấn đơn hàng theo ID hoặc chuỗi: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+
+    public int countAdminInvoiceOrder(int option) {
+        int count = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        StringBuilder query = new StringBuilder(
+                "SELECT COUNT(*) AS total FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id "
+        );
+
+        if (option >= 1 && option <= 5) {
+            query.append("WHERE os.order_status = ?");
+        } else if (option == 0) {
+            query.append("WHERE os.order_status BETWEEN 1 AND 5");
+        }
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query.toString());
+            if (option >= 1 && option <= 5) {
+                ps.setInt(1, option);
+            }
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return count;
+    }
+    public int countInvoiceToday() {
+        int count = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT COUNT(*) AS total FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE DATE(order_date) = CURDATE()";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng hôm nay: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return count;
+    }
+    public int countInvoiceThisMonth() {
+        int count = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT COUNT(*) AS total FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng trong tháng: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return count;
+    }
+    public int countInvoiceThisYear() {
+        int count = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT COUNT(*) AS total FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE YEAR(order_date) = YEAR(CURDATE())";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng trong năm: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return count;
+    }
+    public int countInvoiceByIdOrPrefix(String invoiceId) {
+        int count = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "";
+
+        try {
+            con = new DbContext().getConnection();
+
+            if (invoiceId.length() == 6) {
+                int realId = Integer.parseInt(invoiceId);
+                query = "SELECT COUNT(*) AS total FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE inv.invoice_id = ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, realId);
+            } else if (invoiceId.length() < 6) {
+                query = "SELECT COUNT(*) AS total FROM invoice inv " +
+                        "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                        "WHERE CAST(inv.invoice_id AS CHAR) LIKE ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, "%" + invoiceId + "%");
+            } else {
+                return 0;
+            }
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng theo id: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return count;
+    }
+    public static List<OrderInvoiceDetail> getInvoiceOrderDetails(int idInvoice) {
+        List<OrderInvoiceDetail> data = new ArrayList<>();
+        String query = "SELECT * FROM invoice_detail id join food f ON id.food_id = f.food_id where invoice_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, idInvoice);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                data.add(
+                        new OrderInvoiceDetail(
+                                rs.getInt("detail_id"),
+                                rs.getInt("invoice_id"),
+                                rs.getInt("food_id"),
+                                rs.getString("food_name"),
+                                rs.getInt("quantity"),
+                                rs.getInt("total_amount"),
+                                rs.getString("image")
+                        ));
             }
 
         } catch (SQLException e) {
@@ -65,110 +474,58 @@ public class AdminInvoiceOrderDao {
             // Đảm bảo rằng kết nối, câu lệnh và result set được đóng đúng cách
             closeResources(rs, ps, con);
         }
-    }
-
-
-    // Phương thức đóng các tài nguyên
-    private void closeResources(ResultSet rs, PreparedStatement ps, Connection con) {
-        try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (con != null) con.close();
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi đóng tài nguyên: " + e.getMessage());
-        }
-    }
-
-    public List<OrderInvoice> getAll() {
         return data;
     }
+    public boolean moveOrderStatusForward(int invoiceId) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean success = false;
 
+        String query = "UPDATE order_status SET order_status = order_status + 1 " +
+                "WHERE invoice_id = ? AND order_status < 5"; // Tránh vượt quá trạng thái hủy
 
-    public List<OrderInvoice> getInvoiceShipping() {
-        List<OrderInvoice> ois = new ArrayList<>();
-        for (OrderInvoice oi : data) {
-            if (oi.getOrderStatus() == 1) {
-                ois.add(oi);
-            }
-        }
-        return ois;
-    }
-
-    public List<OrderInvoice> getInvoiceDelivered() {
-        List<OrderInvoice> ois = new ArrayList<>();
-        for (OrderInvoice oi : data) {
-            if (oi.getOrderStatus() == 2) {
-                ois.add(oi);
-            }
-        }
-        return ois;
-    }
-
-    public List<OrderInvoice> getInvoiceCancelled() {
-        List<OrderInvoice> ois = new ArrayList<>();
-        for (OrderInvoice oi : data) {
-            if (oi.getOrderStatus() == 3) {
-                ois.add(oi);
-            }
-        }
-        return ois;
-    }
-
-    public List<OrderInvoice> getInvoiceOrders(String input) {
-        List<OrderInvoice> result = new ArrayList<>();
-
-        for (OrderInvoice oi : data) {
-            if (isNumeric(input)) {
-                if (oi.getInvoiceId() == Integer.parseInt(input)) {
-                    result.add(oi); // Thêm vào danh sách kết quả
-                }
-            } else {
-                if (oi.getRecipientName().equalsIgnoreCase(input)) {
-                    result.add(oi);
-                }
-            }
-        }
-
-        return result; // Trả về danh sách các OrderInvoice tìm được
-    }
-
-    private boolean isNumeric(String str) {
         try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+
+            int affectedRows = ps.executeUpdate();
+            success = affectedRows > 0;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi cập nhật trạng thái đơn hàng: " + e.getMessage());
+        } finally {
+            closeResources(null, ps, con);
         }
+
+        return success;
+    }
+    public boolean cancelOrder(int invoiceId) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean success = false;
+
+        String query = "UPDATE order_status SET order_status = 5 WHERE invoice_id = ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+
+            int affectedRows = ps.executeUpdate();
+            success = affectedRows > 0;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi hủy đơn hàng: " + e.getMessage());
+        } finally {
+            closeResources(null, ps, con);
+        }
+
+        return success;
     }
 
-    public List<OrderInvoice> getInvoicesByCurrentMonthAndYear() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-        String currentMonthYear = sdf.format(new Date());
-
-        List<OrderInvoice> result = new ArrayList<>();
-
-        for (OrderInvoice oi : data) {
-            if (oi.getOrderDate().substring(0, 7).equals(currentMonthYear)) {
-                result.add(oi);
-            }
-        }
-
-        return result;
-    }
-
-    public List<OrderInvoice> getInvoicesByCurrentYear() {
-        // Lấy năm hiện tại
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-        String currentYear = sdf.format(new Date());
-
-        List<OrderInvoice> result = new ArrayList<>();
-
-        for (OrderInvoice oi : data) {
-            // So sánh năm trong orderDate với năm hiện tại
-            if (oi.getOrderDate().substring(0, 4).equals(currentYear)) {
-                result.add(oi);
-            }
-        }
-        return result;
+    public static void main(String[] args) {
+        AdminInvoiceOrderDao dao = new AdminInvoiceOrderDao();
+        System.out.println(dao.moveOrderStatusForward(12));
     }
 }
