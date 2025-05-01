@@ -42,7 +42,7 @@
         <form id="importForm" method="post" action="ImportIngredientController">
           <label>Chọn nhà cung cấp:</label>
           <select id="supplierSelect" name="supplierId" required>
-            <option value="">-- Chọn nhà cung cấp --</option>
+            <option value="">Chọn nhà cung cấp</option>
             <c:forEach var="s" items="${supplierList}">
               <option value="${s.supplierId}">${s.supplierName}</option>
             </c:forEach>
@@ -50,7 +50,7 @@
 
           <label>Chọn nguyên liệu:</label>
           <select id="ingredientSelect" name="ingredientId" required>
-            <option value="">-- Vui lòng chọn nhà cung cấp trước --</option>
+            <option value="">Vui lòng chọn nhà cung cấp trước</option>
           </select>
 
           <label>Số lượng (kg):</label>
@@ -114,20 +114,17 @@
   // AJAX load nguyên liệu theo nhà cung cấp
   document.getElementById("supplierSelect").addEventListener("change", function () {
     const supplierId = this.value;
-    const ingredientSelect = document.getElementById("ingredientSelect");
-    ingredientSelect.innerHTML = '<option>Đang tải...</option>';
-
     fetch(`getIngredientsBySupplier?supplierId=${supplierId}`)
             .then(res => res.json())
             .then(data => {
-              let options = '<option value="">-- Chọn nguyên liệu --</option>';
+              const select = document.getElementById("ingredientSelect");
+              select.innerHTML = '<option value="">Chọn nguyên liệu</option>';
               data.forEach(item => {
-                options += `<option value="${item.ingredientId}">${item.ingredientName}</option>`;
+                const opt = document.createElement("option");
+                opt.value = item.ingredientId;
+                opt.textContent = item.ingredientName;
+                select.appendChild(opt);
               });
-              ingredientSelect.innerHTML = options;
-            })
-            .catch(() => {
-              ingredientSelect.innerHTML = '<option value="">Không có dữ liệu</option>';
             });
   });
 </script>
