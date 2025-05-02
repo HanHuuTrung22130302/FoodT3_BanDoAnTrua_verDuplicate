@@ -179,7 +179,7 @@ table tr:nth-child(even) {
 
 }
 
-.pagi a {
+.pagi .pagiOrder {
     padding: 8px 12px;
     border-radius: 5px;
     background: #f1f1f1;
@@ -188,14 +188,17 @@ table tr:nth-child(even) {
     border: 1px solid #ccc;
 }
 
-.pagi a.active {
-    background-color: #007bff;
+.pagi .pagiOrder.active {
+    background-color: #B5292F;
     color: white;
     font-weight: bold;
 }
+.pagi .pagiOrder:hover {
+    transform: translateY(-5px); /* Di chuyển lên trên 5px */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng cho nổi bật */
+}
 
-
-.pagi a:hover:not(.active) {
+.pagi .pagiOrder:hover:not(.active) {
     background-color: rgb(182, 179, 177);
     border-radius: 5px;
 }

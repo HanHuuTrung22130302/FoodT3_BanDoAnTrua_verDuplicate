@@ -89,7 +89,7 @@
                 <th>CHI TIẾT ĐƠN HÀNG</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="ajax-section" >
             <c:forEach var="oi" items="${ois}">
                 <tr>
                     <td>${String.format("%06d",oi.invoiceId)}</td>
@@ -199,7 +199,13 @@
                                                 <span class="popup-order-value">${oi.deliveryAddress}</span>
                                             </div>
                                         </div>
-
+                                        <div class="line_st"></div>
+                                        <div class="noteOrder">
+                                            <div class="popup-order-row">
+                                                <span class="popup-order-label">Ghi chú:</span>
+                                                <span class="popup-order-value">${oi.note}</span>
+                                            </div>
+                                        </div>
                                         <div class="line_st"></div>
                                         <c:forEach var="item" items="${oi.orderInvoiceDetail}">
                                             <div class="product-item">
@@ -233,25 +239,39 @@
             </c:forEach>
             </tbody>
         </table>
-        <div class="pagi"
-             style="width:800px; height:50px; margin:20px auto; padding-left:35px; text-align:center; z-index: 999">
+        <div id="pagi-section" class="pagi" style="width:800px; height:50px; margin:20px auto; padding-left:35px; text-align:center; z-index: 999">
             <c:if test="${currentPage > 1}">
-                <a onclick="" href="ordermanagement?option=${param.option}&page=${currentPage - 1}"><</a>
+                <div class="pagiOrder" onclick="tableOrder('${param.option}',${currentPage - 1});pagi('${param.option}',${currentPage - 1})"><</div>
             </c:if>
 
-            <c:forEach begin="1" end="${totalPages}" var="i">
-                <a href="ordermanagement?option=${param.option}&page=${i}"
-                   class="${currentPage == i ? 'active' : ''}">${i}</a>
+            <c:if test="${currentPage > 3}">
+                <div class="pagiOrder" onclick="tableOrder('${param.option}',1);pagi('${param.option}',1)">1</div>
+                <div class="pagiOrder">..</div>
+            </c:if>
+
+            <c:forEach begin="${currentPage - 1}" end="${currentPage + 1}" var="i">
+                <c:if test="${i > 0 && i <= totalPages}">
+                    <div onclick="tableOrder('${param.option}',${i});pagi('${param.option}',${totalPages})" class="pagiOrder ${currentPage == i ? 'active' : ''}">${i}</div>
+                </c:if>
             </c:forEach>
 
+            <c:if test="${currentPage < totalPages - 2}">
+                <div class="pagiOrder">..</div>
+                <div class="pagiOrder" onclick="tableOrder('${param.option}',${totalPages});pagi('${param.option}',${totalPages})">${totalPages}</div>
+            </c:if>
+
             <c:if test="${currentPage < totalPages}">
-                <a href="ordermanagement?option=${param.option}&page=${currentPage + 1}">></a>
+                <div class="pagiOrder" onclick="tableOrder('${param.option}',${currentPage + 1});pagi('${param.option}',${currentPage + 1})">></div>
             </c:if>
         </div>
+
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/js/module_popup_adminDonHang.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_stopPopup.js"></script>
 <script src="${pageContext.request.contextPath}/js/purchase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_ajax_admin_order.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_ajax_admin_order_pagi.js"></script>
 </body>
 </html>
