@@ -19,38 +19,44 @@ public class AdminInvoiceService {
 
 
     public List<OrderInvoice> getOption(String option, int offset) {
-        List<OrderInvoice> ois= new ArrayList<>();
-        switch (option) {
-            case "all":
-                ois = dao.getAdminInvoiceOrder(0,offset);
-                break;
-            case "waitingConfirm":
-                ois = dao.getAdminInvoiceOrder(1,offset);
-                break;
-            case "preparing":
-                ois = dao.getAdminInvoiceOrder(2,offset);
-                break;
-            case "shipping":
-                ois = dao.getAdminInvoiceOrder(3,offset);
-                break;
-            case "delivered":
-                ois = dao.getAdminInvoiceOrder(4,offset);
-                break;
-            case "canceled":
-                ois = dao.getAdminInvoiceOrder(5,offset);
-                break;
-            case "today":
-                ois = dao.getInvoiceByToday(offset);
-                break;
-            case "sameMonth":
-                ois = dao.getInvoiceByToday(offset);
-                break;
-            case "sameYear":
-                ois = dao.getInvoiceByThisYear(offset);
-                break;
-            default:
-                ois =  dao.getInvoicesByIdOrPrefix(option,offset);
-                break;
+        List<OrderInvoice> ois = new ArrayList<>();
+        int count = countDash(option);
+        if (count > 0) {
+            switch (count) {
+                case 1:
+                    ois = dao.getInvoiceByMonth(option, offset);
+                    break;
+                case 2:
+                    ois = dao.getInvoiceByDate(option, offset);
+                    break;
+            }
+        } else if (count == 0) {
+            switch (option) {
+                case "all":
+                    ois = dao.getAdminInvoiceOrder(0, offset);
+                    break;
+                case "waitingConfirm":
+                    ois = dao.getAdminInvoiceOrder(1, offset);
+                    break;
+                case "preparing":
+                    ois = dao.getAdminInvoiceOrder(2, offset);
+                    break;
+                case "shipping":
+                    ois = dao.getAdminInvoiceOrder(3, offset);
+                    break;
+                case "delivered":
+                    ois = dao.getAdminInvoiceOrder(4, offset);
+                    break;
+                case "canceled":
+                    ois = dao.getAdminInvoiceOrder(5, offset);
+                    break;
+                default:
+                    ois = dao.getInvoicesByIdOrPrefix(option, offset);
+                    if (ois.isEmpty())
+                        ois = dao.searchAdminInvoiceByRecipientName(option, offset);
+
+                    break;
+            }
         }
         for (OrderInvoice oi : ois) {
             List<OrderInvoiceDetail> details = dao.getInvoiceOrderDetails(oi.getInvoiceId());
@@ -60,18 +66,53 @@ public class AdminInvoiceService {
     }
 
     public int countInvoicesByOption(String option) {
-        return switch (option) {
-            case "waitingConfirm" -> dao.countAdminInvoiceOrder(1);
-            case "preparing"      -> dao.countAdminInvoiceOrder(2);
-            case "shipping"       -> dao.countAdminInvoiceOrder(3);
-            case "delivered"      -> dao.countAdminInvoiceOrder(4);
-            case "canceled"       -> dao.countAdminInvoiceOrder(5);
-            case "today"          -> dao.countInvoiceToday();
-            case "sameMonth"      -> dao.countInvoiceThisMonth();
-            case "sameYear"       -> dao.countInvoiceThisYear();
-            case "all"            -> dao.countAdminInvoiceOrder(0);
-            default               -> dao.countInvoiceByIdOrPrefix(option); // tìm theo mã đơn hàng
-        };
+        int count = countDash(option);
+
+        if (count > 0) {
+            return switch (count) {
+                case 1 -> dao.countInvoiceByMonth(option);
+                case 2 -> dao.countInvoiceByDate(option);
+                default -> 0;
+            };
+        } else {
+            switch (option) {
+                case "waitingConfirm":
+                    return dao.countAdminInvoiceOrder(1);
+                case "preparing":
+                    return dao.countAdminInvoiceOrder(2);
+                case "shipping":
+                    return dao.countAdminInvoiceOrder(3);
+                case "delivered":
+                    return dao.countAdminInvoiceOrder(4);
+                case "canceled":
+                    return dao.countAdminInvoiceOrder(5);
+                case "all":
+                    return dao.countAdminInvoiceOrder(0);
+                default:
+                    int countResult = dao.countInvoiceByIdOrPrefix(option);
+                    if (countResult == 0) {
+                        countResult = dao.countInvoiceByRecipientName(option);
+                    }
+                    return countResult;
+            }
+        }
     }
 
+    public void sendMoveStatusNext(int invoiceId){
+        dao.moveOrderStatusForward(invoiceId);
+    }
+    public void sendCancelStatusNext(int invoiceId,String reason){
+        dao.cancelOrder(invoiceId,reason);
+    }
+
+    public static int countDash(String input) {
+        if (input == null) return 0;
+        int count = 0;
+        for (char c : input.toCharArray()) {
+            if (c == '-') {
+                count++;
+            }
+        }
+        return count;
+    }
 }

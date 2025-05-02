@@ -36,19 +36,7 @@ function showCancelPopup(invoiceId) {
     }
 }
 
-function confirmCancelOrder(invoiceId) {
-    // Ẩn popup hủy
-    const cancelPopup = document.getElementById("cancelPopup" + invoiceId);
-    if (cancelPopup) {
-        cancelPopup.style.display = "none";
-    }
 
-    const mainPopup = document.getElementById("check" + invoiceId);
-    if (mainPopup) {
-        mainPopup.style.display = "none";
-    }
-
-}
 
 const typeSelect = document.getElementById('typeSelect');
 const inputGroup = document.getElementById('inputGroup');
@@ -57,26 +45,28 @@ function updateInput() {
     const type = typeSelect.value;
     inputGroup.innerHTML = '';
 
+    const input = document.createElement('input');
     if (type === 'day') {
-        const input = document.createElement('input');
         input.type = 'date';
         input.name = 'date';
-        inputGroup.appendChild(input);
     } else if (type === 'month') {
-        const input = document.createElement('input');
         input.type = 'month';
         input.name = 'month';
-        inputGroup.appendChild(input);
-    } else if (type === 'year') {
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.name = 'year';
-        input.min = '1900';
-        input.max = new Date().getFullYear();
-        input.placeholder = 'Nhập năm (VD: 2025)';
-        inputGroup.appendChild(input);
     }
+
+    input.id = "filterInput"; // Đặt ID để dễ lấy giá trị khi gửi AJAX
+    inputGroup.appendChild(input);
 }
 
 typeSelect.addEventListener('change', updateInput);
-updateInput(); // Khởi tạo lần đầu
+updateInput(); // gọi lần đầu khi load trang
+
+inputGroup.addEventListener("change", function (e) {
+    if (e.target && (e.target.name === "date" || e.target.name === "month")) {
+        const value = e.target.value; // "yyyy-MM-dd" hoặc "yyyy-MM"
+        const page = 1;
+
+        tableOrder(value, page);
+        pagi(value, page);
+    }
+});

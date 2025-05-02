@@ -500,17 +500,18 @@ public class AdminInvoiceOrderDao {
 
         return success;
     }
-    public boolean cancelOrder(int invoiceId) {
+    public boolean cancelOrder(int invoiceId, String reason) {
         Connection con = null;
         PreparedStatement ps = null;
         boolean success = false;
 
-        String query = "UPDATE order_status SET order_status = 5 WHERE invoice_id = ?";
+        String query = "UPDATE order_status SET order_status = 5, reason = ? WHERE invoice_id = ?";
 
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query);
-            ps.setInt(1, invoiceId);
+            ps.setString(1, reason);
+            ps.setInt(2, invoiceId);
 
             int affectedRows = ps.executeUpdate();
             success = affectedRows > 0;
@@ -524,8 +525,174 @@ public class AdminInvoiceOrderDao {
         return success;
     }
 
+    public List<OrderInvoice> searchAdminInvoiceByRecipientName(String keyword, int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE inv.recipient_name LIKE ? AND os.order_status BETWEEN 1 AND 5 " +
+                "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, "%" + keyword + "%");
+            ps.setInt(2, offset);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi tìm kiếm hóa đơn theo tên người nhận: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoices;
+    }
+    public List<OrderInvoice> getInvoiceByDate(String date, int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        String sql = "SELECT * FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE DATE(inv.order_date) = ? " +
+                "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, date); // yyyy-MM-dd
+            ps.setInt(2, offset);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo ngày: " + e.getMessage());
+        }
+
+        return invoices;
+    }
+    public List<OrderInvoice> getInvoiceByMonth(String monthYear, int offset) {
+        List<OrderInvoice> invoices = new ArrayList<>();
+        String sql = "SELECT * FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE DATE_FORMAT(inv.order_date, '%Y-%m') = ? " +
+                "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
+
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, monthYear); // yyyy-MM
+            ps.setInt(2, offset);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                invoices.add(new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                ));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo tháng: " + e.getMessage());
+        }
+
+        return invoices;
+    }
+    public int countInvoiceByDate(String date) {
+        String sql = "SELECT COUNT(*) FROM invoice WHERE DATE(order_date) = ?";
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, date);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng theo ngày: " + e.getMessage());
+        }
+        return 0;
+    }
+    public int countInvoiceByMonth(String month) {
+        String sql = "SELECT COUNT(*) FROM invoice WHERE DATE_FORMAT(order_date, '%Y-%m') = ?";
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, month);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng theo tháng: " + e.getMessage());
+        }
+        return 0;
+    }
+    public int countInvoiceByRecipientName(String name) {
+        String sql = "SELECT COUNT(*) FROM invoice WHERE recipient_name LIKE ?";
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi đếm đơn hàng theo tên người nhận: " + e.getMessage());
+        }
+        return 0;
+    }
+
+
     public static void main(String[] args) {
         AdminInvoiceOrderDao dao = new AdminInvoiceOrderDao();
-        System.out.println(dao.moveOrderStatusForward(12));
+        System.out.println(dao.getInvoiceByDate("2025-05-02",0).size());
     }
 }
