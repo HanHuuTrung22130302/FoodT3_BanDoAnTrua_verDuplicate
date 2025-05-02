@@ -6,6 +6,7 @@ import hcmuaf.nlu.edu.vn.testproject.models.Food;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FoodDAO {
 
@@ -203,32 +204,96 @@ public class FoodDAO {
 
 
     public List<Food> getTop4View() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        if (foodList.isEmpty()) {
-            return new ArrayList<>(); // Return empty list if no data
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY views DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
-
-
-        int toIndex = Math.min(4, foodList.size());
-        List<Food> top4View = foodList.subList(0, toIndex);
-        return top4View;
+        return foodList;
     }
 
     public List<Food> getTop4Sold() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getSold(), f1.getSold()));
-        int toIndex = Math.min(4, foodList.size());
-        List<Food> top4Sold = foodList.subList(0, toIndex);
-        return top4Sold;
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY sold DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return foodList;
     }
 
     public List<Food> getTop4Propose() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
-        int toIndex = Math.min(4, foodList.size());
-        List<Food> top4Propose = foodList.subList(0, toIndex);
-        return top4Propose;
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY created_at DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return foodList;
     }
 
     public Food getById(int id) {
@@ -236,26 +301,100 @@ public class FoodDAO {
         return data.get(id);
     }
 
-
     public List<Food> getAll() {
         return new ArrayList<>(data.values());
     }
 
     public List<Food> getTopSold() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getSold(), f1.getSold()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY sold DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
     public List<Food> getTopView() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY views DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
     public List<Food> getTopPropose() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY created_at DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
@@ -268,10 +407,18 @@ public class FoodDAO {
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, idFood);
-            ps.executeUpdate();
 
-            data.remove(idFood); // Xóa món ăn khỏi danh sách trong bộ nhớ
+            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(2, idFood);
+            
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                // Cập nhật lại toàn bộ danh sách thay vì chỉ xóa khỏi cache
+                getAllFood();
+                return true;
+            }
+            return false;
+
         } catch (SQLException e) {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
         } catch (ClassNotFoundException e) {
