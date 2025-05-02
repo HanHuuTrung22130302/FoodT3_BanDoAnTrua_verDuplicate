@@ -10,30 +10,26 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.gson.Gson;
 
 @WebServlet(name = "IngredientsController", value = "/Ingredients")
 public class IngredientsController extends HttpServlet {
-
     private IngredientDAO ingredientDAO;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         this.ingredientDAO = new IngredientDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-
-        String filter = request.getParameter("filter");
         List<Ingredients> ingredientsList;
         List<Supplier> supplierList;
+
+        String filter = request.getParameter("filter");
 
         try {
             if ("nearlyExpired".equals(filter)) {
@@ -41,29 +37,28 @@ public class IngredientsController extends HttpServlet {
             } else {
                 ingredientsList = ingredientDAO.getAllIngredients();
             }
-            supplierList = ingredientDAO.getAllSuppliers();
 
-            // Lấy danh sách nguyên liệu cho từng supplierId
+            supplierList = ingredientDAO.getAllSuppliers();
             Map<Integer, List<IngredientDTO>> ingredientsBySupplier = new HashMap<>();
+
             for (Supplier s : supplierList) {
                 int supplierId = s.getSupplierId();
                 List<IngredientDTO> ingredients = ingredientDAO.getIngredientsDTOBySupplierId(supplierId);
                 ingredientsBySupplier.put(supplierId, ingredients);
             }
-            // Chuyển đổi thành JSON trong servlet
-            String ingredientsBySupplierJson = gson.toJson(ingredientsBySupplier);
-            request.setAttribute("ingredientsBySupplierJson", ingredientsBySupplierJson);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        request.setAttribute("ingredientsList", ingredientsList);
-        request.setAttribute("supplierList", supplierList);
-        request.getRequestDispatcher("/views/supplier_food.jsp").forward(request, response);
+            request.setAttribute("ingredientsList", ingredientsList);
+            request.setAttribute("supplierList", supplierList);
+            request.setAttribute("ingredientsBySupplierJson", gson.toJson(ingredientsBySupplier));
+            request.getRequestDispatcher("/views/supplier_food.jsp").forward(request, response);
+
+        } catch (SQLException e) {
+            throw new ServletException("Lỗi khi truy xuất dữ liệu nguyên liệu", e);
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doGet(request, response);
     }
 }

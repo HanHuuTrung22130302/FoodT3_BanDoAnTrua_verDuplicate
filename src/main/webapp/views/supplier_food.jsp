@@ -22,6 +22,7 @@
   <jsp:include page="leftAdmin.jsp"></jsp:include>
 
   <div class="content">
+
     <div class="header">
       <form action="" method="get" id="searchForm">
         <input value="${search}" name="text" type="text" placeholder="Tìm kiếm theo tên, số điện thoại hoặc email..."/>
@@ -36,12 +37,24 @@
       </form>
     </div>
 
+    <!-- Hiển thị thông báo -->
+    <c:if test="${not empty param.success}">
+      <div style="color: green; margin: 10px 0;">
+          ${param.success}
+      </div>
+    </c:if>
+    <c:if test="${not empty param.error}">
+      <div style="color: red; margin: 10px 0;">
+        Lỗi: ${param.error}
+      </div>
+    </c:if>
+
     <div id="importPopup" class="popup hidden">
       <div class="popup_content">
         <span class="close_import_btn"><i class="fa-solid fa-xmark"></i></span>
         <h2>Nhập Hàng Mới</h2>
 
-        <form id="importForm" method="post" action="ImportIngredientController">
+        <form id="importForm" method="post" action="${pageContext.request.contextPath}/ImportIngredientController">
           <label>Chọn nhà cung cấp:</label>
           <select id="supplierSelect" name="supplierId" required onchange="updateIngredients()">
             <option value="">Chọn nhà cung cấp</option>

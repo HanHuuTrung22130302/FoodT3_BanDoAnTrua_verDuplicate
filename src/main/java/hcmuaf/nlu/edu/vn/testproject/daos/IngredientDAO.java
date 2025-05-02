@@ -273,6 +273,45 @@ public class IngredientDAO {
         return suppliers;
     }
 
+    public void addIngredient(int supplierId, String supplierName, String ingredientName, double amount, double price, String importDate, String expirationDate) throws SQLException {
+        String insertQuery = "INSERT INTO ingredients (ingredient_name, amount, price, supplier_id, supplier_name, import_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = new DbContext().getConnection()) {
+            // Bắt đầu giao dịch
+            conn.setAutoCommit(false);
+
+            try {
+                // Thêm bản ghi mới, để MySQL tự tăng ingredient_id
+                PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+                insertStmt.setString(1, ingredientName);
+                insertStmt.setDouble(2, amount);
+                insertStmt.setDouble(3, price);
+                insertStmt.setInt(4, supplierId);
+                insertStmt.setString(5, supplierName);
+                insertStmt.setString(6, importDate);
+                insertStmt.setString(7, expirationDate);
+
+                int rowsAffected = insertStmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Thêm nguyên liệu thành công: ingredient_name = " + ingredientName);
+                } else {
+                    throw new SQLException("Không thể thêm nguyên liệu!");
+                }
+
+                // Commit giao dịch
+                conn.commit();
+            } catch (SQLException e) {
+                // Rollback nếu có lỗi
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<IngredientDTO> getIngredientsDTOBySupplierId(int supplierId) {
         List<IngredientDTO> list = new ArrayList<>();
         String query = "SELECT ingredient_id, ingredient_name FROM ingredients WHERE supplier_id = ? GROUP BY ingredient_id, ingredient_name";
@@ -293,7 +332,35 @@ public class IngredientDAO {
         return list;
     }
 
+    public String getIngredientNameById(int ingredientId) throws SQLException {
+        String query = "SELECT ingredient_name FROM ingredients WHERE ingredient_id = ? LIMIT 1";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, ingredientId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("ingredient_name");
+            }
+            return null;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public String getSupplierNameById(int supplierId) throws SQLException {
+        String query = "SELECT supplier_name FROM suppliers WHERE supplier_id = ? LIMIT 1";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, supplierId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("supplier_name");
+            }
+            return null;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public static void main(String[] args) throws SQLException {
