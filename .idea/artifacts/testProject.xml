@@ -45,7 +45,6 @@
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:5.2.1" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="testProject/web/Web2" />
       <element id="javaee-facet-resources" facet="testProject/web/Web" />
     </root>
   </artifact>

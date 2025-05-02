@@ -70,7 +70,7 @@
                 <!-- Input sẽ thay đổi tại đây -->
             </div>
             <form action="SearchInvoice" method="get">
-                <input style="max-width: 1000px" name="text" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
+                <input style="display: flex; flex: 1;max-width: 1000px" name="text" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
                 <button type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>

@@ -29,10 +29,13 @@ function closePopup(popupId) {
     document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
 }
 
-function showCancelPopup(id) {
-    closePopup('check' + id);
-    showPopup('cancelPopup' + id);
+function showCancelPopup(invoiceId) {
+    const cancelPopup = document.getElementById("cancelPopup" + invoiceId);
+    if (cancelPopup) {
+        cancelPopup.style.display = "block";
+    }
 }
+
 function confirmCancelOrder(invoiceId) {
     // Ẩn popup hủy
     const cancelPopup = document.getElementById("cancelPopup" + invoiceId);
