@@ -2,20 +2,36 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quản lý thực phẩm</title>
-  <link href='${pageContext.request.contextPath}/Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
+  <link rel="icon" href="${pageContext.request.contextPath}/Images/LOGO_V2.png" type="image/x-icon"/>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers_food.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script>
+    var ingredientsBySupplier = ${ingredientsBySupplierJson};
+  </script>
+  <style>
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      z-index: 9999;
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 <div class="container">
-
   <jsp:include page="leftAdmin.jsp"></jsp:include>
+
+  <!-- Popup thông báo -->
+  <div id="notificationPopup" class="notification"></div>
 
   <div class="content">
     <div class="header">
@@ -25,23 +41,19 @@
           <option value="all" ${param.filter == 'all' || param.filter == null ? 'selected' : ''}>Tất cả</option>
           <option value="nearlyExpired" ${param.filter == 'nearlyExpired' ? 'selected' : ''}>Sắp hết hạn</option>
         </select>
-        <button type="submit">
-          <i class="fa-solid fa-search"></i>
-        </button>
+        <button type="submit"><i class="fa-solid fa-search"></i></button>
         <button type="button" id="openImportPopup">Nhập hàng</button>
-
       </form>
     </div>
 
-
+    <!-- Popup nhập hàng -->
     <div id="importPopup" class="popup hidden">
       <div class="popup_content">
         <span class="close_import_btn"><i class="fa-solid fa-xmark"></i></span>
         <h2>Nhập Hàng Mới</h2>
-
-        <form id="importForm" method="post" action="ImportIngredientController">
+        <form id="importForm" method="post" action="${pageContext.request.contextPath}/ImportIngredientController">
           <label>Chọn nhà cung cấp:</label>
-          <select id="supplierSelect" name="supplierId" required>
+          <select id="supplierSelect" name="supplierId" required onchange="updateIngredients()">
             <option value="">Chọn nhà cung cấp</option>
             <c:forEach var="s" items="${supplierList}">
               <option value="${s.supplierId}">${s.supplierName}</option>
@@ -70,9 +82,7 @@
       </div>
     </div>
 
-
-
-
+    <!-- Bảng dữ liệu nguyên liệu -->
     <table>
       <thead>
       <tr>
@@ -101,8 +111,39 @@
     </table>
   </div>
 </div>
-</body>
+
 <script>
+  // Hiển thị popup thông báo
+  function showNotification(message, type) {
+    const popup = document.getElementById("notificationPopup");
+    popup.textContent = message;
+    popup.style.display = "block";
+    popup.style.backgroundColor = (type === 'success') ? "green" : "red";
+
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 3000);
+  }
+
+  function updateIngredients() {
+    const supplierId = document.getElementById("supplierSelect").value;
+    const select = document.getElementById("ingredientSelect");
+    select.innerHTML = '<option value="">Chọn nguyên liệu</option>';
+
+    if (!supplierId) {
+      select.innerHTML = '<option value="">Vui lòng chọn nhà cung cấp trước</option>';
+      return;
+    }
+
+    const ingredients = ingredientsBySupplier[supplierId] || [];
+    ingredients.forEach(item => {
+      const opt = document.createElement("option");
+      opt.value = item.ingredientId;
+      opt.textContent = item.ingredientName;
+      select.appendChild(opt);
+    });
+  }
+
   document.getElementById("openImportPopup").addEventListener("click", () => {
     document.getElementById("importPopup").classList.remove("hidden");
   });
@@ -111,21 +152,17 @@
     document.getElementById("importPopup").classList.add("hidden");
   });
 
-  // AJAX load nguyên liệu theo nhà cung cấp
-  document.getElementById("supplierSelect").addEventListener("change", function () {
-    const supplierId = this.value;
-    fetch(`getIngredientsBySupplier?supplierId=${supplierId}`)
-            .then(res => res.json())
-            .then(data => {
-              const select = document.getElementById("ingredientSelect");
-              select.innerHTML = '<option value="">Chọn nguyên liệu</option>';
-              data.forEach(item => {
-                const opt = document.createElement("option");
-                opt.value = item.ingredientId;
-                opt.textContent = item.ingredientName;
-                select.appendChild(opt);
-              });
-            });
-  });
+  window.onload = function () {
+    updateIngredients();
+
+    // Gọi thông báo nếu có param
+    <c:if test="${not empty param.success}">
+    showNotification("${param.success}", "success");
+    </c:if>
+    <c:if test="${not empty param.error}">
+    showNotification("Lỗi: ${param.error}", "error");
+    </c:if>
+  };
 </script>
+</body>
 </html>
