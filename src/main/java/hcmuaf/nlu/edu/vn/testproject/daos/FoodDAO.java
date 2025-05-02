@@ -412,7 +412,7 @@ public class FoodDAO {
             ps = conn.prepareStatement(query);
             ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
             ps.setInt(2, idFood);
-            
+
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 // Cập nhật lại toàn bộ danh sách thay vì chỉ xóa khỏi cache

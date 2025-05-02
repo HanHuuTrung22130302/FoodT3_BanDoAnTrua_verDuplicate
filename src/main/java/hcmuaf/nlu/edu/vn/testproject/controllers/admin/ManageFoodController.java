@@ -240,7 +240,7 @@ public class ManageFoodController extends HttpServlet {
                 List<Food> existingFoods = foodDAO.getAll();
                 boolean isDuplicate = existingFoods.stream()
                     .anyMatch(f -> f.getFoodName().equalsIgnoreCase(foodName));
-                    
+
                 if (isDuplicate) {
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
@@ -259,27 +259,27 @@ public class ManageFoodController extends HttpServlet {
 
                 // Tạo đối tượng Food mới
                 Food newFood = new Food(0, foodName, price, 0, 0, imgPath, description, ingredients, category, 0, 0, new Timestamp(System.currentTimeMillis()), null);
-                
+
                 // Thêm món ăn vào database
                 boolean result = foodServiceListFilter.addFood(newFood);
-                
+
                 // Ghi log
                 logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Thêm món ăn", result ? "Thành công" : "Thất bại", "Tên món ăn: " + foodName);
-                
+
                 // Chuẩn bị response
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                
+
                 if (result) {
                     // Lấy ID của món vừa thêm
                     int newFoodId = foodDAO.getLastInsertedFoodId();
-                    
+
                     // Cập nhật lại danh sách món ăn trong cache
                     foodDAO.getAllFood();
-                    
+
                     // Lấy thông tin đầy đủ của món vừa thêm
                     Food addedFood = foodDAO.getFoodById(newFoodId);
-                    
+
                     if (addedFood != null) {
                         // Trả về thông tin đầy đủ của món ăn
                         Map<String, Object> responseData = new HashMap<>();
@@ -290,7 +290,7 @@ public class ManageFoodController extends HttpServlet {
                         responseData.put("description", addedFood.getDescription());
                         responseData.put("categoryId", addedFood.getCategoryId());
                         responseData.put("image", addedFood.getImage());
-                        
+
                         response.getWriter().write(new Gson().toJson(responseData));
                     } else {
                         // Nếu không lấy được thông tin từ database, sử dụng thông tin từ form
@@ -302,7 +302,7 @@ public class ManageFoodController extends HttpServlet {
                         responseData.put("description", description);
                         responseData.put("categoryId", category);
                         responseData.put("image", imgPath);
-                        
+
                         response.getWriter().write(new Gson().toJson(responseData));
                     }
                 } else {
@@ -335,7 +335,7 @@ public class ManageFoodController extends HttpServlet {
                     List<Food> existingFoods = foodDAO.getAll();
                     boolean isDuplicate = existingFoods.stream()
                         .anyMatch(f -> f.getFoodId() != idFood && f.getFoodName().equalsIgnoreCase(foodName));
-                        
+
                     if (isDuplicate) {
                         response.setContentType("application/json");
                         response.setCharacterEncoding("UTF-8");
@@ -366,7 +366,7 @@ public class ManageFoodController extends HttpServlet {
                 logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Cập nhật món ăn", result ? "Thành công" : "Thất bại", "Mã món ăn: " + idFood);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
-                
+
                 if (result) {
                     // Lấy thông tin đầy đủ của món vừa cập nhật
                     Food food = foodDAO.getFoodById(idFood);
@@ -379,7 +379,7 @@ public class ManageFoodController extends HttpServlet {
                         responseData.put("description", food.getDescription());
                         responseData.put("categoryId", food.getCategoryId());
                         responseData.put("image", food.getImage());
-                        
+
                         response.getWriter().write(new Gson().toJson(responseData));
                     } else {
                         response.getWriter().write("{\"success\":true, \"image\":\"" + imgPath + "\"}");

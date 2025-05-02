@@ -12,7 +12,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/food_service.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_css_adminDonHang.css"/>
 </head>
 <body>
 <div class="container">
@@ -26,39 +26,56 @@
                 ${currentCategory == null || currentCategory == 'all' ? 'selected' : ''}>
                     Tất cả
                 </option>
+                <option value="ordermanagement?option=waitingConfirm"
+                ${currentCategory == null || currentCategory == 'waitingConfirm' ? 'selected' : ''}>
+                    Chờ xác nhận
+                </option>
+                <option value="ordermanagement?option=preparing"
+                ${currentCategory == null || currentCategory == 'preparing' ? 'selected' : ''}>
+                    Đang chuẩn bị
+                </option>
                 <option value="ordermanagement?option=shipping"
                 ${currentCategory == null || currentCategory == 'shipping' ? 'selected' : ''}>
-                    Đang giao
+                    Đang giao hàng
                 </option>
                 <option value="ordermanagement?option=delivered"
                 ${currentCategory == null || currentCategory == 'delivered' ? 'selected' : ''}>
-                    Đã giao
+                    Đã hoàn thành
                 </option>
                 <option value="ordermanagement?option=canceled"
                 ${currentCategory == null || currentCategory == 'canceled' ? 'selected' : ''}>
                     Đã hủy
                 </option>
-                <option value="ordermanagement?option=yearmonth"
-                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>
-                    Theo tháng
-                </option>
-                <option value="ordermanagement?option=year"
-                ${currentCategory == null || currentCategory == 'year' ? 'selected' : ''}>
-                    Theo năm
-                </option>
+                <%--                <option value="ordermanagement?option=yearmonth"--%>
+                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
+                <%--                    Theo ngày--%>
+                <%--                </option>--%>
+                <%--                <option value="ordermanagement?option=yearmonth"--%>
+                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
+                <%--                    Theo tuần--%>
+                <%--                </option>--%>
+                <%--                <option value="ordermanagement?option=yearmonth"--%>
+                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
+                <%--                    Theo tháng--%>
+                <%--                </option>--%>
+
+            </select>
+            <select id="typeSelect">
+                <option value="day">Ngày</option>
+                <option value="month">Tháng</option>
+                <option value="year">Năm</option>
             </select>
 
+            <div class="input-group" id="inputGroup">
+                <!-- Input sẽ thay đổi tại đây -->
+            </div>
             <form action="SearchInvoice" method="get">
-                <input style="width: 800px" name="text" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
+                <input style="max-width: 1000px" name="text" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
                 <button type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>
             </form>
 
-            <div class="icons">
-                <a href="ordermanagement"><i class="fas fa-sync-alt"> </i></a>
-
-            </div>
         </div>
 
         <table>
@@ -69,6 +86,7 @@
                 <th>NGÀY ĐẶT</th>
                 <th>TỔNG TIỀN</th>
                 <th>TRẠNG THÁI</th>
+                <th>CHI TIẾT ĐƠN HÀNG</th>
             </tr>
             </thead>
             <tbody>
@@ -79,20 +97,136 @@
                     <td>${oi.orderDate}</td>
                     <td class="money">${oi.totalAmount}</td>
                     <td>
-                        <button class="details-button">
+                        <button class="details-button" onclick="showPopup('check${oi.invoiceId}')"
+                                <c:if test="${oi.orderStatus == 4 || oi.orderStatus == 5}">disabled</c:if>>
                             <c:choose>
                                 <c:when test="${oi.orderStatus == 1}">
-                                    Đang giao
+                                    Chờ xác nhận
                                 </c:when>
                                 <c:when test="${oi.orderStatus == 2}">
-                                    Đã giao
+                                    Đang chuẩn bị
                                 </c:when>
                                 <c:when test="${oi.orderStatus == 3}">
+                                    Đang giao hàng
+                                </c:when>
+                                <c:when test="${oi.orderStatus == 4}">
+                                    Đã hoàn thành
+                                </c:when>
+                                <c:when test="${oi.orderStatus == 5}">
                                     Đã hủy
                                 </c:when>
-
                             </c:choose>
                         </button>
+                        <div id="check${oi.invoiceId}" class="popup">
+                            <div class="popup-content-check">
+                                <div class="closeDetail" onclick="closePopup('check${oi.invoiceId}')">&times;</div>
+                                <div class="checkText">
+                                    Thực hiện hành động kế tiếp cho đơn hàng ID: ${String.format("%06d", oi.invoiceId)}?
+                                </div>
+
+                                <div class="popup-actions">
+                                    <div class="buttonSubmitCheck">
+                                        <c:choose>
+                                            <c:when test="${oi.orderStatus == 1}">
+                                                Xác nhận làm đơn hàng id: ${String.format("%06d",oi.invoiceId)}
+                                            </c:when>
+                                            <c:when test="${oi.orderStatus == 2}">
+                                                Xác nhận chuyển đơn hàng cho shiper
+                                            </c:when>
+                                            <c:when test="${oi.orderStatus == 3}">
+                                                Xác nhận hoàn thành đơn hàng
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+
+                                    <button class="button-cancel-order" onclick="showCancelPopup(${oi.invoiceId})">Hủy đơn hàng</button>
+
+                                    <div id="cancelPopup${oi.invoiceId}" class="cancel-popup" style="display: none;">
+                                        <div class="popup-content-cancel">
+                                            <div class="popup-header">Xác nhận hủy đơn hàng ID: ${String.format("%06d", oi.invoiceId)}</div>
+                                            <textarea class="cancel-reason" placeholder="Lý do hủy..."></textarea>
+                                            <div class="popup-actions-cancel">
+                                                <button class="button-confirm-cancel" onclick="confirmCancelOrder(${oi.invoiceId})">Xác nhận</button>
+                                                <button class="button-cancel-cancel" onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="buttonDetailInvoice" onclick="showPopup('detail${oi.invoiceId}');scrollToTop('detail${oi.invoiceId}')">Chi tiết
+                        </button>
+                        <div id="detail${oi.invoiceId}" class="popup">
+                            <div class="popup-content-detail">
+                                <div class="closeDetail" onclick="closePopup('detail${oi.invoiceId}');">
+                                    &times;
+                                </div>
+                                <div class="popup-body">
+                                    <div class="order-card">
+                                        <div class="popup-order-top">
+                                            <div class="popup-order-id">
+                                                <span class="popup-order-label">ID đơn hàng:</span>
+                                                <span class="popup-order-value">#${String.format("%06d", oi.invoiceId)}</span>
+                                            </div>
+                                            <div class="popup-order-status">
+                                                <span class="popup-order-label">Tình trạng:</span>
+                                                <span class="popup-order-value">
+                                                    <c:choose>
+                                                        <c:when test="${oi.orderStatus == 1}">Đang chờ xác nhận</c:when>
+                                                        <c:when test="${oi.orderStatus == 2}">Đang chuẩn bị</c:when>
+                                                        <c:when test="${oi.orderStatus == 3}">Đang giao hàng</c:when>
+                                                        <c:when test="${oi.orderStatus == 4}">Đã hoàn thành</c:when>
+                                                        <c:when test="${oi.orderStatus == 5}">Đã hủy</c:when>
+                                                    </c:choose>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="line_st"></div>
+                                        <div class="popup-order-info">
+                                            <div class="popup-order-row">
+                                                <span class="popup-order-label">Họ tên người nhận:</span>
+                                                <span class="popup-order-value">${oi.recipientName}</span>
+                                            </div>
+                                            <div class="popup-order-row">
+                                                <span class="popup-order-label">Số điện thoại:</span>
+                                                <span class="popup-order-value">${oi.phoneNumber}</span>
+                                            </div>
+                                            <div class="popup-order-row">
+                                                <span class="popup-order-label">Địa chỉ nhận hàng:</span>
+                                                <span class="popup-order-value">${oi.deliveryAddress}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="line_st"></div>
+                                        <c:forEach var="item" items="${oi.orderInvoiceDetail}">
+                                            <div class="product-item">
+                                                <img
+                                                        src="${item.image}"
+                                                        class="product-image"
+                                                />
+                                                <div class="product-info">
+                                                    <h3 class="product-name">${item.foodName}</h3>
+                                                    <p class="product-quantity">Số lượng: ${item.quantity}</p>
+                                                </div>
+                                                <div class="product-total">
+                                                    <div class="money">${item.totalAmount}&nbsp;đ</div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+
+                                        <div class="line_end"></div>
+                                        <div class="order-total">
+                                            Tổng tiền:
+                                            <span class="total-money" id="totalAmount"
+                                                  style="font-size: 22px">${oi.totalAmount}&nbsp;đ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -116,7 +250,8 @@
         </div>
     </div>
 </div>
-
+<script src="${pageContext.request.contextPath}/js/module_popup_adminDonHang.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_stopPopup.js"></script>
 <script src="${pageContext.request.contextPath}/js/purchase.js"></script>
 </body>
 </html>
