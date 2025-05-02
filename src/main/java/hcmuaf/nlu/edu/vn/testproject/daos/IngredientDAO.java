@@ -9,10 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IngredientDAO {
 
@@ -314,23 +311,35 @@ public class IngredientDAO {
 
     public List<IngredientDTO> getIngredientsDTOBySupplierId(int supplierId) {
         List<IngredientDTO> list = new ArrayList<>();
-        String query = "SELECT ingredient_id, ingredient_name FROM ingredients WHERE supplier_id = ? GROUP BY ingredient_id, ingredient_name";
+        String query = "SELECT ingredient_id, ingredient_name FROM ingredients WHERE supplier_id = ?";
+
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
+
             ps.setInt(1, supplierId);
             ResultSet rs = ps.executeQuery();
+
+            Set<String> seenNames = new HashSet<>(); // Để lọc tên trùng
+
             while (rs.next()) {
-                IngredientDTO dto = new IngredientDTO(
-                        rs.getInt("ingredient_id"),
-                        rs.getString("ingredient_name")
-                );
-                list.add(dto);
+                String name = rs.getString("ingredient_name");
+                if (seenNames.add(name)) { // Nếu tên chưa xuất hiện trước đó
+                    IngredientDTO dto = new IngredientDTO(
+                            rs.getInt("ingredient_id"), // ID có thể là của bất kỳ nguyên liệu nào trùng tên
+                            name
+                    );
+                    list.add(dto);
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
+
+
 
     public String getIngredientNameById(int ingredientId) throws SQLException {
         String query = "SELECT ingredient_name FROM ingredients WHERE ingredient_id = ? LIMIT 1";
