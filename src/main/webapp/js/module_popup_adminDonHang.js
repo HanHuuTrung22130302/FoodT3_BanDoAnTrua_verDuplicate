@@ -46,3 +46,34 @@ function confirmCancelOrder(invoiceId) {
     }
 
 }
+
+const typeSelect = document.getElementById('typeSelect');
+const inputGroup = document.getElementById('inputGroup');
+
+function updateInput() {
+    const type = typeSelect.value;
+    inputGroup.innerHTML = '';
+
+    if (type === 'day') {
+        const input = document.createElement('input');
+        input.type = 'date';
+        input.name = 'date';
+        inputGroup.appendChild(input);
+    } else if (type === 'month') {
+        const input = document.createElement('input');
+        input.type = 'month';
+        input.name = 'month';
+        inputGroup.appendChild(input);
+    } else if (type === 'year') {
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.name = 'year';
+        input.min = '1900';
+        input.max = new Date().getFullYear();
+        input.placeholder = 'Nhập năm (VD: 2025)';
+        inputGroup.appendChild(input);
+    }
+}
+
+typeSelect.addEventListener('change', updateInput);
+updateInput(); // Khởi tạo lần đầu
