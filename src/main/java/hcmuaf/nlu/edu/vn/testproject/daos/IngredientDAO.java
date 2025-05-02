@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
+import hcmuaf.nlu.edu.vn.testproject.dto.IngredientDTO;
 import hcmuaf.nlu.edu.vn.testproject.models.Ingredients;
 import hcmuaf.nlu.edu.vn.testproject.models.Supplier;
 
@@ -272,12 +273,32 @@ public class IngredientDAO {
         return suppliers;
     }
 
+    public List<IngredientDTO> getIngredientsDTOBySupplierId(int supplierId) {
+        List<IngredientDTO> list = new ArrayList<>();
+        String query = "SELECT ingredient_id, ingredient_name FROM ingredients WHERE supplier_id = ? GROUP BY ingredient_id, ingredient_name";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, supplierId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                IngredientDTO dto = new IngredientDTO(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name")
+                );
+                list.add(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
 
 
     public static void main(String[] args) throws SQLException {
         IngredientDAO dao = new IngredientDAO();
-        List<Ingredients> list = dao.getIngredientsBySupplierId(1);
+        List<IngredientDTO> list = dao.getIngredientsDTOBySupplierId(1);
         System.out.println(list);
     }
 }

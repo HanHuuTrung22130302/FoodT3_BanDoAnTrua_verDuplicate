@@ -10,6 +10,10 @@
   <link href='${pageContext.request.contextPath}/Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers_food.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script>
+    // Sử dụng JSON đã được chuyển đổi trong servlet
+    var ingredientsBySupplier = ${ingredientsBySupplierJson};
+  </script>
 </head>
 
 <body>
@@ -29,10 +33,8 @@
           <i class="fa-solid fa-search"></i>
         </button>
         <button type="button" id="openImportPopup">Nhập hàng</button>
-
       </form>
     </div>
-
 
     <div id="importPopup" class="popup hidden">
       <div class="popup_content">
@@ -41,7 +43,7 @@
 
         <form id="importForm" method="post" action="ImportIngredientController">
           <label>Chọn nhà cung cấp:</label>
-          <select id="supplierSelect" name="supplierId" required>
+          <select id="supplierSelect" name="supplierId" required onchange="updateIngredients()">
             <option value="">Chọn nhà cung cấp</option>
             <c:forEach var="s" items="${supplierList}">
               <option value="${s.supplierId}">${s.supplierName}</option>
@@ -69,9 +71,6 @@
         </form>
       </div>
     </div>
-
-
-
 
     <table>
       <thead>
@@ -103,6 +102,30 @@
 </div>
 </body>
 <script>
+  function updateIngredients() {
+    const supplierId = document.getElementById("supplierSelect").value;
+    console.log("Supplier ID gửi đi:", supplierId);
+    const select = document.getElementById("ingredientSelect");
+    select.innerHTML = '<option value="">Chọn nguyên liệu</option>';
+
+    if (!supplierId) {
+      select.innerHTML = '<option value="">Vui lòng chọn nhà cung cấp trước</option>';
+      return;
+    }
+
+    const ingredients = ingredientsBySupplier[supplierId] || [];
+    console.log("Dữ liệu nguyên liệu cho supplierId " + supplierId + ": ", ingredients);
+    if (ingredients.length === 0) {
+      console.log("Không có nguyên liệu nào cho supplierId: " + supplierId);
+    }
+    ingredients.forEach(item => {
+      const opt = document.createElement("option");
+      opt.value = item.ingredientId;
+      opt.textContent = item.ingredientName;
+      select.appendChild(opt);
+    });
+  }
+
   document.getElementById("openImportPopup").addEventListener("click", () => {
     document.getElementById("importPopup").classList.remove("hidden");
   });
@@ -111,21 +134,8 @@
     document.getElementById("importPopup").classList.add("hidden");
   });
 
-  // AJAX load nguyên liệu theo nhà cung cấp
-  document.getElementById("supplierSelect").addEventListener("change", function () {
-    const supplierId = this.value;
-    fetch(`getIngredientsBySupplier?supplierId=${supplierId}`)
-            .then(res => res.json())
-            .then(data => {
-              const select = document.getElementById("ingredientSelect");
-              select.innerHTML = '<option value="">Chọn nguyên liệu</option>';
-              data.forEach(item => {
-                const opt = document.createElement("option");
-                opt.value = item.ingredientId;
-                opt.textContent = item.ingredientName;
-                select.appendChild(opt);
-              });
-            });
-  });
+  window.onload = function() {
+    updateIngredients();
+  };
 </script>
 </html>
