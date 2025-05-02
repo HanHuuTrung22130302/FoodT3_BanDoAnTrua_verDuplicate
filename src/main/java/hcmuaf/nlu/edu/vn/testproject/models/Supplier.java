@@ -33,4 +33,16 @@ public class Supplier {
     public void setEmail(String email) { this.email = email; }
     public int getStatus() { return status; }
     public void setStatus(int status) { this.status = status; }
+
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "supplierId=" + supplierId +
+                ", supplierName='" + supplierName + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.IngredientDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Ingredients;
+import hcmuaf.nlu.edu.vn.testproject.models.Supplier;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -22,6 +23,7 @@ public class IngredientsController extends HttpServlet {
 
         String filter = request.getParameter("filter");
         List<Ingredients> ingredientsList;
+        List<Supplier> supplierList;
 
         try {
             if ("nearlyExpired".equals(filter)) {
@@ -29,11 +31,13 @@ public class IngredientsController extends HttpServlet {
             } else {
                 ingredientsList = ingredientDAO.getAllIngredients();
             }
+            supplierList = ingredientDAO.getAllSuppliers();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         request.setAttribute("ingredientsList", ingredientsList);
+        request.setAttribute("supplierList", supplierList);
         request.getRequestDispatcher("/views/supplier_food.jsp").forward(request, response);
     }
 

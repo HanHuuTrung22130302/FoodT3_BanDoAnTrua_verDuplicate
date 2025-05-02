@@ -2,13 +2,16 @@ package hcmuaf.nlu.edu.vn.testproject.daos;
 
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
 import hcmuaf.nlu.edu.vn.testproject.models.Ingredients;
+import hcmuaf.nlu.edu.vn.testproject.models.Supplier;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IngredientDAO {
 
@@ -187,10 +190,94 @@ public class IngredientDAO {
         return list;
     }
 
+    public Map<Integer, List<Ingredients>> getIngredientsGroupedBySupplier() {
+        Map<Integer, List<Ingredients>> result = new HashMap<>();
+        String query = "SELECT * FROM ingredients ORDER BY supplier_id";
+
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Ingredients ing = new Ingredients(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("amount"),
+                        rs.getDouble("price"),
+                        rs.getInt("supplier_id"),
+                        rs.getString("supplier_name"),
+                        rs.getDate("import_date"),
+                        rs.getDate("expiration_date")
+                );
+
+                int supplierId = ing.getSupplierId();
+                result.computeIfAbsent(supplierId, k -> new ArrayList<>()).add(ing);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<Ingredients> getIngredientsBySupplierId(int supplierId) {
+        List<Ingredients> list = new ArrayList<>();
+        String query = "SELECT * FROM ingredients WHERE supplier_id = ?";
+
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, supplierId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Ingredients i = new Ingredients(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("amount"),
+                        rs.getDouble("price"),
+                        rs.getInt("supplier_id"),
+                        rs.getString("supplier_name"),
+                        rs.getDate("import_date"),
+                        rs.getDate("expiration_date")
+                );
+                list.add(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<Supplier> getAllSuppliers() {
+        List<Supplier> suppliers = new ArrayList<>();
+        String query = "SELECT * FROM suppliers WHERE status = 1"; // Chỉ lấy các nhà cung cấp có status = 1
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Supplier supplier = new Supplier();
+                supplier.setSupplierId(rs.getInt("supplier_id"));
+                supplier.setSupplierName(rs.getString("supplier_name"));
+                supplier.setAddress(rs.getString("address"));
+                supplier.setPhone(rs.getString("phone"));
+                supplier.setEmail(rs.getString("email"));
+                supplier.setStatus(rs.getInt("status"));
+                suppliers.add(supplier);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suppliers;
+    }
+
+
+
 
     public static void main(String[] args) throws SQLException {
         IngredientDAO dao = new IngredientDAO();
-        List<Ingredients> list = dao.getNearlyExpiredIngredients();
+        List<Ingredients> list = dao.getIngredientsBySupplierId(1);
         System.out.println(list);
     }
 }
