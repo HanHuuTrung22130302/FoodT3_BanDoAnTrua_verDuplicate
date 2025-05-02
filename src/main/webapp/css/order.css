@@ -74,30 +74,36 @@ body {
     width: 100%;
     padding: 20px;
 }
-
 .header {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    padding: 0 10px;
+    gap:10px;
 }
 
+.header form {
+    display: flex;
+    flex: 1;
+    max-width: 1000px;
+}
 
-.header select, .header input {
+.header input {
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 10px;
+    min-width: 0;
 }
 
-.header input[type="text"] {
-    flex: 1;
-}
-
-.header .icons i {
-    margin-right: 10px;
+.header button {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
     cursor: pointer;
 }
+
 
 
 /* Xử lý table */
@@ -331,7 +337,7 @@ body.no-scroll {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    width: 400px;
+    width: 600px;
     height: 300px;
 }
 .popup-header{
