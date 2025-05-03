@@ -12,13 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.text.DecimalFormat;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 
-@WebServlet(name = "AjaxOrderController", value = "/ajaxordermanagement")
-public class AjaxOrderController extends HttpServlet {
+@WebServlet(name = "SendMoveStatusAjaxOrderController", value = "/sendmovestatusajaxordermanagement")
+public class SendMoveStatusAjaxOrderController extends HttpServlet {
     private LogService logService = new LogService();
 
     @Override
@@ -26,6 +26,8 @@ public class AjaxOrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
+
+        int invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
 
         if (currentUser == null || currentUser.getRoleId() == 2) {
             logService.logActivity(0, 0, "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
@@ -47,7 +49,10 @@ public class AjaxOrderController extends HttpServlet {
         }
 
         AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
+        adminInvoiceService.sendMoveStatusNext(invoiceId);
+
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
+
 
         int totalLs = adminInvoiceService.countInvoicesByOption(option);
         int totalPages = (int) Math.ceil((double) totalLs / pageSize);

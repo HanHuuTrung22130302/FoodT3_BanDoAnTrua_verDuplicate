@@ -21,49 +21,18 @@
 
     <div class="content">
         <div class="header">
-            <select style="max-width: 150px" onchange="window.location.href=this.value">
-                <option value="ordermanagement?option=all"
-                ${currentCategory == null || currentCategory == 'all' ? 'selected' : ''}>
-                    Tất cả
-                </option>
-                <option value="ordermanagement?option=waitingConfirm"
-                ${currentCategory == null || currentCategory == 'waitingConfirm' ? 'selected' : ''}>
-                    Chờ xác nhận
-                </option>
-                <option value="ordermanagement?option=preparing"
-                ${currentCategory == null || currentCategory == 'preparing' ? 'selected' : ''}>
-                    Đang chuẩn bị
-                </option>
-                <option value="ordermanagement?option=shipping"
-                ${currentCategory == null || currentCategory == 'shipping' ? 'selected' : ''}>
-                    Đang giao hàng
-                </option>
-                <option value="ordermanagement?option=delivered"
-                ${currentCategory == null || currentCategory == 'delivered' ? 'selected' : ''}>
-                    Đã hoàn thành
-                </option>
-                <option value="ordermanagement?option=canceled"
-                ${currentCategory == null || currentCategory == 'canceled' ? 'selected' : ''}>
-                    Đã hủy
-                </option>
-                <%--                <option value="ordermanagement?option=yearmonth"--%>
-                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
-                <%--                    Theo ngày--%>
-                <%--                </option>--%>
-                <%--                <option value="ordermanagement?option=yearmonth"--%>
-                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
-                <%--                    Theo tuần--%>
-                <%--                </option>--%>
-                <%--                <option value="ordermanagement?option=yearmonth"--%>
-                <%--                ${currentCategory == null || currentCategory == 'yearmonth' ? 'selected' : ''}>--%>
-                <%--                    Theo tháng--%>
-                <%--                </option>--%>
+            <select style="max-width: 150px" onchange="handleSelectChange(this.value)">
+                <option value="all|1" ${currentCategory == null || currentCategory == 'all' ? 'selected' : ''}>Tất cả</option>
+                <option value="waitingConfirm|1" ${currentCategory == 'waitingConfirm' ? 'selected' : ''}>Chờ xác nhận</option>
+                <option value="preparing|1" ${currentCategory == 'preparing' ? 'selected' : ''}>Đang chuẩn bị</option>
+                <option value="shipping|1" ${currentCategory == 'shipping' ? 'selected' : ''}>Đang giao hàng</option>
+                <option value="delivered|1" ${currentCategory == 'delivered' ? 'selected' : ''}>Đã hoàn thành</option>
+                <option value="canceled|1" ${currentCategory == 'canceled' ? 'selected' : ''}>Đã hủy</option>
 
             </select>
             <select id="typeSelect">
                 <option value="day">Ngày</option>
                 <option value="month">Tháng</option>
-                <option value="year">Năm</option>
             </select>
 
             <div class="input-group" id="inputGroup">
@@ -75,7 +44,9 @@
                     <i class="fa-solid fa-search"></i>
                 </button>
             </form>
-
+            <div class="icons">
+                <a href="ordermanagement"><i class="fas fa-sync-alt"> </i></a>
+            </div>
         </div>
 
         <table>
@@ -125,7 +96,7 @@
                                 </div>
 
                                 <div class="popup-actions">
-                                    <div class="buttonSubmitCheck">
+                                    <div class="buttonSubmitCheck" onclick="movestatus('${oi.invoiceId}','${param.option}',${param.page})">
                                         <c:choose>
                                             <c:when test="${oi.orderStatus == 1}">
                                                 Xác nhận làm đơn hàng id: ${String.format("%06d",oi.invoiceId)}
@@ -251,7 +222,7 @@
 
             <c:forEach begin="${currentPage - 1}" end="${currentPage + 1}" var="i">
                 <c:if test="${i > 0 && i <= totalPages}">
-                    <div onclick="tableOrder('${param.option}',${i});pagi('${param.option}',${totalPages})" class="pagiOrder ${currentPage == i ? 'active' : ''}">${i}</div>
+                    <div onclick="tableOrder('${param.option}',${i});pagi('${param.option}',${i})" class="pagiOrder ${currentPage == i ? 'active' : ''}">${i}</div>
                 </c:if>
             </c:forEach>
 
@@ -273,5 +244,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_ajax_admin_order.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_ajax_admin_order_pagi.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_ajax_admin_order_move_status.js"></script>
+<script src="${pageContext.request.contextPath}/js/module_ajax_admin_order_cancel_status.js"></script>
+<script>
+    function handleSelectChange(value) {
+        const [option, page] = value.split("|");
+        tableOrder(option, page);
+        pagi(option, page);
+    }
+
+</script>
 </body>
 </html>
