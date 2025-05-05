@@ -282,4 +282,29 @@ public class AccountDAO {
             }
         }
     }
+
+    public boolean activateAccount(int accountId) {
+        String query = "UPDATE account SET is_deleted = 0 WHERE account_id = ? AND is_deleted = 1";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            int rowsAffected = ps.executeUpdate();
+            
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.err.println("Lỗi trong activateAccount: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

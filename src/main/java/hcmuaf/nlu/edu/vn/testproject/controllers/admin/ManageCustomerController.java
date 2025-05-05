@@ -176,6 +176,21 @@ public class ManageCustomerController extends HttpServlet {
                     jsonResponse.put("success", false);
                     jsonResponse.put("error", "Không thể hủy chặn tài khoản");
                 }
+            } else if ("activate".equals(action)) {
+                boolean success = accountDAO.activateAccount(accountId);
+                if (success) {
+                    logAction = "Kích hoạt tài khoản";
+                    logResult = "Thành công";
+                    logDetails = "Kích hoạt tài khoản ID: " + accountId;
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Đã kích hoạt tài khoản thành công");
+                } else {
+                    logAction = "Kích hoạt tài khoản";
+                    logResult = "Thất bại";
+                    logDetails = "Không thể kích hoạt tài khoản ID: " + accountId;
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("error", "Không thể kích hoạt tài khoản");
+                }
             } else {
                 jsonResponse.put("success", false);
                 jsonResponse.put("error", "Hành động không hợp lệ");

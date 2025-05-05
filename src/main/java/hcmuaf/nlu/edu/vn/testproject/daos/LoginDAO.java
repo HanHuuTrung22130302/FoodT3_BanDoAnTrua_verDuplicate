@@ -21,6 +21,9 @@ public class LoginDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Account account = extractAccountFromResultSet(rs);
+                    if (isAccountDeleted(account)) {
+                        return null;
+                    }
                     if (isAccountLocked(account)) {
                         return null;
                     }
@@ -49,6 +52,7 @@ public class LoginDAO {
         );
         account.setFailedAttempts(rs.getInt("failed_attempts"));
         account.setLocked(rs.getBoolean("is_locked"));
+        account.setDeleted(rs.getBoolean("is_deleted"));
         Timestamp lockTime = rs.getTimestamp("lock_time");
         if (lockTime != null) {
             account.setLockTime(lockTime.toLocalDateTime());
@@ -125,5 +129,9 @@ public class LoginDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isAccountDeleted(Account account) {
+        return account.isDeleted();
     }
 }
