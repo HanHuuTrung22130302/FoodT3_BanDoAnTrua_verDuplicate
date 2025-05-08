@@ -80,11 +80,11 @@
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="quan" name="quan" type="text" placeholder="Quận/Huyện" class="form-control" required />
+                <input id="phuongxa" name="phuongxa" type="text" placeholder="Phường/Xã" class="form-control" required />
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="thanhpho" name="thanhpho" type="text" placeholder="Thành phố" class="form-control" required />
+                <input id="quan" name="quan" type="text" placeholder="Quận/Huyện" class="form-control" required />
                 <span class="form-message"></span>
               </div>
             </div>

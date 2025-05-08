@@ -23,6 +23,7 @@ public class ShippingDAO {
             conn.setRequestProperty("ShopId", String.valueOf(SHOP_ID));
             conn.setDoOutput(true);
 
+            // Tạo body JSON
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("from_district_id", fromDistrictId);
             jsonBody.put("service_id", 53320); // dịch vụ tiêu chuẩn GHN
