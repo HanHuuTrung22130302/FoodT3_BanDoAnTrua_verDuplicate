@@ -18,7 +18,7 @@ function cancelstatus(reason,invoiceId,option, page) {
         }
     });
 }
-function confirmCancelOrder(invoiceId) {
+function confirmCancelOrder(invoiceId,option,page) {
     // Lấy lý do từ textarea
     const popup = document.getElementById('cancelPopup' + invoiceId);
     const reason = popup.querySelector('.cancel-reason').value.trim();
@@ -29,9 +29,9 @@ function confirmCancelOrder(invoiceId) {
     }
 
     // Lấy option và page từ URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const option = urlParams.get("option") || "all";
-    const page = urlParams.get("page") || 1;
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const option = urlParams.get("option");
+    // const page = urlParams.get("page");
 
     // Gọi AJAX đã có sẵn
     cancelstatus(reason, invoiceId, option, page);

@@ -22,8 +22,10 @@
     <div class="content">
         <div class="header">
             <select style="max-width: 150px" onchange="handleSelectChange(this.value)">
-                <option value="all|1" ${currentCategory == null || currentCategory == 'all' ? 'selected' : ''}>Tất cả</option>
-                <option value="waitingConfirm|1" ${currentCategory == 'waitingConfirm' ? 'selected' : ''}>Chờ xác nhận</option>
+                <option value="all|1" ${currentCategory == null || currentCategory == 'all' ? 'selected' : ''}>Tất cả
+                </option>
+                <option value="waitingConfirm|1" ${currentCategory == 'waitingConfirm' ? 'selected' : ''}>Chờ xác nhận
+                </option>
                 <option value="preparing|1" ${currentCategory == 'preparing' ? 'selected' : ''}>Đang chuẩn bị</option>
                 <option value="shipping|1" ${currentCategory == 'shipping' ? 'selected' : ''}>Đang giao hàng</option>
                 <option value="delivered|1" ${currentCategory == 'delivered' ? 'selected' : ''}>Đã hoàn thành</option>
@@ -39,7 +41,8 @@
                 <!-- Input sẽ thay đổi tại đây -->
             </div>
             <form action="SearchInvoice" method="get">
-                <input style="display: flex; flex: 1;max-width: 1000px" name="text" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
+                <input style="display: flex; flex: 1;max-width: 1000px" name="text" type="text"
+                       placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
                 <button type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>
@@ -54,17 +57,19 @@
             <tr>
                 <th>MÃ ĐƠN</th>
                 <th>KHÁCH HÀNG</th>
+                <th>SĐT</th>
                 <th>NGÀY ĐẶT</th>
                 <th>TỔNG TIỀN</th>
                 <th>TRẠNG THÁI</th>
                 <th>CHI TIẾT ĐƠN HÀNG</th>
             </tr>
             </thead>
-            <tbody id="ajax-section" >
+            <tbody id="ajax-section">
             <c:forEach var="oi" items="${ois}">
                 <tr>
                     <td>${String.format("%06d",oi.invoiceId)}</td>
                     <td>${oi.recipientName}</td>
+                    <td>${oi.phoneNumber}</td>
                     <td>${oi.orderDate}</td>
                     <td class="money">${oi.totalAmount}</td>
                     <td>
@@ -96,7 +101,8 @@
                                 </div>
 
                                 <div class="popup-actions">
-                                    <div class="buttonSubmitCheck" onclick="movestatus('${oi.invoiceId}','${param.option}',${param.page})">
+                                    <div class="buttonSubmitCheck"
+                                         onclick="movestatus('${oi.invoiceId}','${param.option}',${param.page})">
                                         <c:choose>
                                             <c:when test="${oi.orderStatus == 1}">
                                                 Xác nhận làm đơn hàng id: ${String.format("%06d",oi.invoiceId)}
@@ -110,15 +116,22 @@
                                         </c:choose>
                                     </div>
 
-                                    <button class="button-cancel-order" onclick="showCancelPopup(${oi.invoiceId})">Hủy đơn hàng</button>
+                                    <button class="button-cancel-order" onclick="showCancelPopup(${oi.invoiceId})">Hủy
+                                        đơn hàng
+                                    </button>
 
                                     <div id="cancelPopup${oi.invoiceId}" class="cancel-popup" style="display: none;">
                                         <div class="popup-content-cancel">
-                                            <div class="popup-header">Xác nhận hủy đơn hàng ID: ${String.format("%06d", oi.invoiceId)}</div>
+                                            <div class="popup-header">Xác nhận hủy đơn hàng
+                                                ID: ${String.format("%06d", oi.invoiceId)}</div>
                                             <textarea class="cancel-reason" placeholder="Lý do hủy..."></textarea>
                                             <div class="popup-actions-cancel">
-                                                <button class="button-confirm-cancel" onclick="confirmCancelOrder(${oi.invoiceId})">Xác nhận</button>
-                                                <button class="button-cancel-cancel" onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng</button>
+                                                <button class="button-confirm-cancel"
+                                                        onclick="confirmCancelOrder(${oi.invoiceId},'${param.option}',${param.page})">Xác nhận
+                                                </button>
+                                                <button class="button-cancel-cancel"
+                                                        onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -127,7 +140,9 @@
                         </div>
                     </td>
                     <td>
-                        <button class="buttonDetailInvoice" onclick="showPopup('detail${oi.invoiceId}');scrollToTop('detail${oi.invoiceId}')">Chi tiết
+                        <button class="buttonDetailInvoice"
+                                onclick="showPopup('detail${oi.invoiceId}');scrollToTop('detail${oi.invoiceId}')">Chi
+                            tiết
                         </button>
                         <div id="detail${oi.invoiceId}" class="popup">
                             <div class="popup-content-detail">
@@ -140,6 +155,16 @@
                                             <div class="popup-order-id">
                                                 <span class="popup-order-label">ID đơn hàng:</span>
                                                 <span class="popup-order-value">#${String.format("%06d", oi.invoiceId)}</span>
+                                            </div>
+                                            <div class="popup-order-status">
+                                                <span class="popup-order-label">Thanh toán:</span>
+                                                <span class="popup-order-value">
+                                                    <c:choose>
+                                                        <c:when test="${oi.paymentMethod == 1}">COD</c:when>
+                                                        <c:when test="${oi.paymentMethod == 2}">Chuyển khoản</c:when>
+                                                        <c:otherwise>Không xác định</c:otherwise>
+                                                    </c:choose>
+                                                </span>
                                             </div>
                                             <div class="popup-order-status">
                                                 <span class="popup-order-label">Tình trạng:</span>
@@ -210,9 +235,13 @@
             </c:forEach>
             </tbody>
         </table>
-        <div id="pagi-section" class="pagi" style="width:800px; height:50px; margin:20px auto; padding-left:35px; text-align:center; z-index: 999">
+        <div id="pagi-section" class="pagi"
+             style="width:800px; height:50px; margin:20px auto; padding-left:35px; text-align:center; z-index: 999">
             <c:if test="${currentPage > 1}">
-                <div class="pagiOrder" onclick="tableOrder('${param.option}',${currentPage - 1});pagi('${param.option}',${currentPage - 1})"><</div>
+                <div class="pagiOrder"
+                     onclick="tableOrder('${param.option}',${currentPage - 1});pagi('${param.option}',${currentPage - 1})">
+                    <
+                </div>
             </c:if>
 
             <c:if test="${currentPage > 3}">
@@ -222,17 +251,22 @@
 
             <c:forEach begin="${currentPage - 1}" end="${currentPage + 1}" var="i">
                 <c:if test="${i > 0 && i <= totalPages}">
-                    <div onclick="tableOrder('${param.option}',${i});pagi('${param.option}',${i})" class="pagiOrder ${currentPage == i ? 'active' : ''}">${i}</div>
+                    <div onclick="tableOrder('${param.option}',${i});pagi('${param.option}',${i})"
+                         class="pagiOrder ${currentPage == i ? 'active' : ''}">${i}</div>
                 </c:if>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages - 2}">
                 <div class="pagiOrder">..</div>
-                <div class="pagiOrder" onclick="tableOrder('${param.option}',${totalPages});pagi('${param.option}',${totalPages})">${totalPages}</div>
+                <div class="pagiOrder"
+                     onclick="tableOrder('${param.option}',${totalPages});pagi('${param.option}',${totalPages})">${totalPages}</div>
             </c:if>
 
             <c:if test="${currentPage < totalPages}">
-                <div class="pagiOrder" onclick="tableOrder('${param.option}',${currentPage + 1});pagi('${param.option}',${currentPage + 1})">></div>
+                <div class="pagiOrder"
+                     onclick="tableOrder('${param.option}',${currentPage + 1});pagi('${param.option}',${currentPage + 1})">
+                    >
+                </div>
             </c:if>
         </div>
 
