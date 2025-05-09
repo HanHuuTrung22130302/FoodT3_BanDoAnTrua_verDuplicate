@@ -131,6 +131,17 @@
                 </span>
               </div>
             </div>
+            <div class="priceFlx chk-delivery-time">
+              <div class="text">Dự kiến giao hàng</div>
+              <div class="price-detail">
+        <span>
+            <c:choose>
+              <c:when test="${not empty estimatedDeliveryTime}"><c:out value="${estimatedDeliveryTime}" /></c:when>
+              <c:otherwise>Chưa xác định</c:otherwise>
+            </c:choose>
+        </span>
+              </div>
+            </div>
           </div>
           <div class="policy-note">
             Bằng việc bấm vào nút “Đặt hàng”, tôi đồng ý với

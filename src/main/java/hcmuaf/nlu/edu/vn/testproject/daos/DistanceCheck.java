@@ -61,6 +61,20 @@ public class DistanceCheck {
         }
     }
 
+    public static String estimateDeliveryTime(double distanceKm) {
+        // Tốc độ trung bình: 30 km/h
+        double speedKmPerHour = 30.0;
+        // Tính thời gian di chuyển (giờ)
+        double travelTimeHours = distanceKm / speedKmPerHour;
+        // Chuyển thành phút
+        int travelTimeMinutes = (int) Math.ceil(travelTimeHours * 60);
+        // Quy đổi thành mốc 10, 20, 30, 40 phút
+        if (travelTimeMinutes <= 10) return "10 phút";
+        else if (travelTimeMinutes <= 20) return "20 phút";
+        else if (travelTimeMinutes <= 30) return "30 phút";
+        else return "40 phút"; // Giá trị tối đa
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 

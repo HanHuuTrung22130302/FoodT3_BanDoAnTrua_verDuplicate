@@ -5,6 +5,8 @@ import hcmuaf.nlu.edu.vn.testproject.daos.GHNMasterDataDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.ShippingDAO;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShippingService {
     private static final String WAREHOUSE_ADDRESS = "Trường Đại học Nông Lâm TP. Hồ Chí Minh, khu phố 6, Thủ Đức, Hồ Chí Minh, Việt Nam";
@@ -21,50 +23,49 @@ public class ShippingService {
      * @param district Quận/Huyện (VD: "Thành phố Thủ Đức")
      * @return Phí ship (VND) hoặc -1 nếu có lỗi
      */
-    public int calculateShippingFee(String street, String ward, String district) {
+    public Map<String, Object> calculateShippingFee(String street, String ward, String district) {
+        Map<String, Object> result = new HashMap<>();
         try {
-            // Tạo địa chỉ đơn giản hơn để Mapbox dễ nhận diện
             String destinationAddress = String.format("%s, %s, TP. Hồ Chí Minh, Việt Nam", ward, district);
-
-            // Kiểm tra địa chỉ đích bằng cách lấy tọa độ (có thể bỏ nếu không cần)
             double[] destinationCoords = DistanceCheck.getCoordinatesFromAddress(destinationAddress);
-            if (destinationCoords == null) {
-                System.err.println("Cảnh báo: Không lấy được tọa độ, nhưng vẫn tiếp tục tính phí ship.");
-                // Tiếp tục xử lý thay vì throw exception
+            double[] warehouseCoords = DistanceCheck.getCoordinatesFromAddress(WAREHOUSE_ADDRESS);
+            if (destinationCoords == null || warehouseCoords == null) {
+                System.err.println("Cảnh báo: Không lấy được tọa độ, dùng thời gian mặc định.");
+                result.put("estimatedDeliveryTime", "30 phút"); // Mặc định
+            } else {
+                double distanceKm = DistanceCheck.getDistanceBetweenPoints(
+                        warehouseCoords[0], warehouseCoords[1],
+                        destinationCoords[0], destinationCoords[1]
+                );
+                String deliveryTime = DistanceCheck.estimateDeliveryTime(distanceKm);
+                result.put("estimatedDeliveryTime", deliveryTime);
             }
 
-            // Lấy to_district_id từ tên quận/huyện
             int toDistrictId = GHNMasterDataDAO.getDistrictId(district);
             if (toDistrictId == -1) {
                 throw new IOException("Không tìm thấy mã quận/huyện cho: " + district);
             }
 
-            // Lấy to_ward_code từ tên phường/xã và to_district_id
             String toWardCode = GHNMasterDataDAO.getWardCode(ward, toDistrictId);
             if (toWardCode == null) {
                 throw new IOException("Không tìm thấy mã phường/xã cho: " + ward + " trong quận: " + district);
             }
 
-            // Tính phí ship bằng ShippingDAO
             int shippingFee = ShippingDAO.calculateShippingFee(
-                    FROM_DISTRICT_ID,
-                    toDistrictId,
-                    toWardCode,
-                    DEFAULT_HEIGHT,
-                    DEFAULT_LENGTH,
-                    DEFAULT_WIDTH,
-                    DEFAULT_WEIGHT
+                    FROM_DISTRICT_ID, toDistrictId, toWardCode,
+                    DEFAULT_HEIGHT, DEFAULT_LENGTH, DEFAULT_WIDTH, DEFAULT_WEIGHT
             );
-
             if (shippingFee < 0) {
                 throw new IOException("Lỗi khi tính phí ship từ API GHN");
             }
 
-            return shippingFee;
-
-        } catch (IOException e) {
-            System.err.println("Lỗi khi tính phí ship: " + e.getMessage());
-            return -1;
+            result.put("shippingFee", shippingFee);
+            return result;
+        } catch (Exception e) {
+            System.err.println("Lỗi khi tính phí ship/thời gian: " + e.getMessage());
+            result.put("shippingFee", -1);
+            result.put("estimatedDeliveryTime", "30 phút"); // Mặc định nếu lỗi
+            return result;
         }
     }
 
@@ -129,18 +130,6 @@ public class ShippingService {
     }
 
     public static void main(String[] args) {
-        ShippingService service = new ShippingService();
 
-        // Ví dụ: Tính phí ship đến Trường Đại học Quốc tế, Phường Linh Trung, TP. Thủ Đức
-//        String street = "Trường Đại học Quốc tế Đại học Quốc gia thành phố Hồ Chí Minh";
-//        String ward = "Phường Linh Trung";
-//        String district = "Thành phố Thủ Đức";
-
-        String street = "123 Lê Lợi";
-        String ward = "Phường Bến Nghé";
-        String district = "Quận 1";
-
-        int fee = service.calculateShippingFee(street, ward, district);
-        System.out.println("Phí ship: " + (fee >= 0 ? fee + " VND" : "Lỗi khi tính phí"));
     }
 }

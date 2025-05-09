@@ -4,12 +4,15 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ShippingDAO {
 
     private static final String GHN_TOKEN = "6bbdc943-2bde-11f0-bd93-06ccc2518db6";
     private static final int SHOP_ID = 5767145;
     private static final String API_URL = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+    private static final String LEADTIME_API_URL = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime";
 
     public static int calculateShippingFee(int fromDistrictId, int toDistrictId, String toWardCode, int height, int length, int width, int weight) {
         try {
@@ -76,6 +79,48 @@ public class ShippingDAO {
             return -1;
         }
     }
+
+    public static String getLeadTime(int fromDistrictId, int toDistrictId, String toWardCode) {
+        try {
+            URL url = new URL(LEADTIME_API_URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Token", GHN_TOKEN);
+            conn.setDoOutput(true);
+
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("from_district_id", fromDistrictId);
+            jsonBody.put("to_district_id", toDistrictId);
+            jsonBody.put("to_ward_code", toWardCode);
+            jsonBody.put("service_id", 53320); // Dịch vụ tiêu chuẩn
+
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(jsonBody.toString().getBytes("utf-8"));
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder responseStr = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseStr.append(line);
+            }
+            reader.close();
+            conn.disconnect();
+
+            JSONObject response = new JSONObject(responseStr.toString());
+            if (response.getInt("code") == 200) {
+                long timestamp = response.getJSONObject("data").getLong("leadtime");
+                return new SimpleDateFormat("dd/MM/yyyy").format(new Date(timestamp * 1000));
+            }
+            return null;
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy leadtime: " + e.getMessage());
+            return null;
+        }
+    }
+
+
     public static void main(String[] args) {
         // Từ Quận Gò Vấp (1442) → Quận 1 (1450), phường Bến Nghé (ward_code "20108")
         int fromDistrictId = 1442;
