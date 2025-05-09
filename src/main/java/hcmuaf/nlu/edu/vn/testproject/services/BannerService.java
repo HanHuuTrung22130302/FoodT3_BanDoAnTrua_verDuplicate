@@ -15,12 +15,14 @@ public class BannerService {
 
     public boolean addBanner(Banner banner) {
         dao.addBanner(banner);
-        return false;
+        dao.getAllBanner();
+        return true;
     }
 
     public boolean deleteBanner(int id) {
         dao.deleteBaner(id);
-        return false;
+        dao.getAllBanner();
+        return true;
     }
 
     public static void main(String[] args) {

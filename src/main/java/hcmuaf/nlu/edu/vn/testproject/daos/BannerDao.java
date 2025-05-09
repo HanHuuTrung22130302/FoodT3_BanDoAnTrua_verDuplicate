@@ -27,7 +27,7 @@ public class BannerDao {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllBanner() {
-
+        banners.clear(); // Xóa danh sách cũ trước khi lấy dữ liệu mới
         String query = "select * from banner";
         Connection con = null;
         PreparedStatement ps = null;

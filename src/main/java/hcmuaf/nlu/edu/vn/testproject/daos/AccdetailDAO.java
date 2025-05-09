@@ -17,7 +17,7 @@ public class AccdetailDAO {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
         String query = "SELECT account_detail.*, account.account_id as acc_id, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id" +
                 " FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
-                "WHERE account.role_id = ? AND account.is_deleted = 0";
+                "WHERE account.role_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -123,7 +123,7 @@ public class AccdetailDAO {
         List<AccountDetail> listAcc = new ArrayList<AccountDetail>();
         String query = "SELECT account_detail.*, account.account_id as acc_id, account.email, account.login_type, account.is_deleted, account.is_locked, account.lock_time, account.role_id " +
                 "FROM account_detail RIGHT JOIN account ON account_detail.account_id = account.account_id " +
-                "WHERE account.role_id = ? AND account.is_deleted = 0 " +
+                "WHERE account.role_id = ? " +
                 "AND (account_detail.full_name LIKE ? OR account_detail.phone_number LIKE ? OR account.email LIKE ?)";
         Connection conn = null;
         PreparedStatement ps = null;

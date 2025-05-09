@@ -462,4 +462,37 @@ function attachEventListeners() {
   document
     .querySelector("#special_filter")
     .addEventListener("change", handleSpecialFilter);
+
+  // Xử lý phân trang ban đầu
+  const pagiContainer = document.querySelector(".pagi");
+  if (pagiContainer) {
+    pagiContainer.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const page = e.target.getAttribute("data-page");
+        const currentOption = document
+          .querySelector("#special_filter")
+          .value.split("=")[1];
+        const currentCategory = document
+          .querySelector("#menu_filter")
+          .value.split("=")[1];
+        const searchText = document.querySelector('input[name="text"]').value;
+        handleFilter(currentOption, page, searchText, currentCategory);
+      });
+    });
+  }
 }
+
+// Khởi tạo khi trang được tải
+document.addEventListener("DOMContentLoaded", function () {
+  attachEventListeners();
+  // Xử lý phân trang ban đầu thông qua AJAX
+  const currentOption = document
+    .querySelector("#special_filter")
+    .value.split("=")[1];
+  const currentCategory = document
+    .querySelector("#menu_filter")
+    .value.split("=")[1];
+  const searchText = document.querySelector('input[name="text"]').value;
+  handleFilter(currentOption, 1, searchText, currentCategory);
+});
