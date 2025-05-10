@@ -13,6 +13,7 @@ public class Invoice {
     private int paymentMethod;
     private int isPaid;
     private String discountCode;
+    private String estimatedDeliveryTime;
 
     public Invoice() {
     }
@@ -30,6 +31,14 @@ public class Invoice {
         this.paymentMethod = paymentMethod;
         this.isPaid = isPaid;
         this.discountCode = discountCode;
+    }
+
+    public String getEstimatedDeliveryTime() {
+        return estimatedDeliveryTime;
+    }
+
+    public void setEstimatedDeliveryTime(String estimatedDeliveryTime) {
+        this.estimatedDeliveryTime = estimatedDeliveryTime;
     }
 
     public String getDiscountCode() { return discountCode; }

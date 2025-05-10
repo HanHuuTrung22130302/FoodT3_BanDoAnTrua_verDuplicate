@@ -3,9 +3,10 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 import hcmuaf.nlu.edu.vn.testproject.daos.DiscountDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.InvoiceDAO;
-import hcmuaf.nlu.edu.vn.testproject.daos.DistanceCheck;
+import hcmuaf.nlu.edu.vn.testproject.daos.GHNMasterDataDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.*;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodService;
+import hcmuaf.nlu.edu.vn.testproject.services.ShippingService;
 import hcmuaf.nlu.edu.vn.testproject.daos.Config;
 import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.RequestDispatcher;
@@ -22,19 +23,27 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@WebServlet(name = "CheckoutController", value = "/checkout")
+@WebServlet(name = "CheckoutController", value = {"/checkout", "/calculate-shipping"})
 public class CheckoutController extends HttpServlet {
 
     private FoodService foodService;
+    private ShippingService shippingService;
+    private GHNMasterDataDAO ghnMasterDataDAO;
     private LogService logService = new LogService();
     private static final String STORE_ADDRESS = "Trường Đại học Nông Lâm TP. Hồ Chí Minh, khu phố 6, Thủ Đức, Hồ Chí Minh, Việt Nam";
-    private static final double MAX_DELIVERY_DISTANCE = 40.0;
-    private static final double FREE_SHIPPING_DISTANCE = 10.0;
-    private static final int SHIPPING_FEE_PER_10KM = 10000;
+    private static final Set<String> VALID_DISTRICTS = new HashSet<>(Arrays.asList(
+            "Quận 1", "Quận 3", "Quận 4", "Quận 5", "Quận 6", "Quận 7", "Quận 8",
+            "Quận 10", "Quận 11", "Quận 12", "Quận Bình Tân", "Quận Bình Thạnh",
+            "Quận Gò Vấp", "Quận Phú Nhuận", "Quận Tân Bình", "Quận Tân Phú",
+            "Thành phố Thủ Đức", "Huyện Bình Chánh", "Huyện Cần Giờ", "Huyện Củ Chi",
+            "Huyện Hóc Môn", "Huyện Nhà Bè"
+    ));
 
     @Override
     public void init() throws ServletException {
         foodService = new FoodCartDAO();
+        shippingService = new ShippingService();
+        ghnMasterDataDAO = new GHNMasterDataDAO();
         super.init();
     }
 
@@ -74,6 +83,7 @@ public class CheckoutController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String servletPath = request.getServletPath();
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
         if (currentUser == null) {
@@ -83,43 +93,103 @@ public class CheckoutController extends HttpServlet {
         int idAcc = currentUser.getAccountId();
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
 
+        if ("/calculate-shipping".equals(servletPath)) {
+            calculateShippingFee(request, response);
+            return;
+        }
+
         String recipientName = request.getParameter("tennguoinhan");
         String phoneNumber = request.getParameter("sdtnhan");
         String houseNumber = request.getParameter("sonha");
+        String ward = request.getParameter("phuongxa");
         String district = request.getParameter("quan");
         String city = request.getParameter("thanhpho");
         String country = "Việt Nam";
-        String deliveryAddress = houseNumber + ", " + district + ", " + city + ", " + country;
+
+        // Chuẩn hóa đầu vào
+        if (houseNumber == null || houseNumber.trim().isEmpty()) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Số nhà, tên đường không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập số nhà, tên đường");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (ward == null || ward.trim().isEmpty()) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Phường/xã không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập phường/xã");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (district == null || district.trim().isEmpty()) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Quận/huyện không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập quận/huyện");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (city == null || city.trim().isEmpty()) {
+            city = "TP. Hồ Chí Minh";
+        }
+
+        district = district.replaceAll("-\\s*Hồ Chí Minh", "").trim();
+        if (!ward.toLowerCase().startsWith("phường")) {
+            ward = "Phường " + ward.trim();
+        }
+
+        if (!VALID_DISTRICTS.contains(district)) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Quận/huyện không hợp lệ: " + district);
+            request.setAttribute("errorMessage", "Chỉ hỗ trợ giao hàng trong TP. Hồ Chí Minh. Vui lòng chọn quận/huyện hợp lệ.");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        String deliveryAddress = String.format("%s, %s, %s, %s, %s", houseNumber, ward, district, city, country);
         String note = request.getParameter("note-order");
-        int totalAmount = Integer.parseInt(request.getParameter("totalAmount"));
-        int paymentMethod = Integer.parseInt(request.getParameter("paymentMethod"));
 
-        int shippingFee = 0;
+        int totalAmount;
         try {
-            double[] storeCoords = DistanceCheck.getCoordinatesFromAddress(STORE_ADDRESS);
-            double[] deliveryCoords = DistanceCheck.getCoordinatesFromAddress(deliveryAddress);
-            double distance = DistanceCheck.getDistanceBetweenPoints(
-                    storeCoords[0], storeCoords[1],
-                    deliveryCoords[0], deliveryCoords[1]
-            );
-
-            if (distance > MAX_DELIVERY_DISTANCE) {
-                logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Địa chỉ giao hàng quá xa (> " + MAX_DELIVERY_DISTANCE + "km)");
-                request.setAttribute("errorMessage", "Không thể giao hàng vì địa chỉ quá xa cửa hàng (> " + MAX_DELIVERY_DISTANCE + "km).");
-                request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
-                request.setAttribute("totalAmount", totalAmount);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
-                dispatcher.forward(request, response);
-                return;
+            String totalAmountStr = request.getParameter("totalAmount");
+            if (totalAmountStr == null || totalAmountStr.trim().isEmpty()) {
+                throw new NumberFormatException("totalAmount không được để trống");
             }
-
-            if (distance > FREE_SHIPPING_DISTANCE) {
-                double extraDistance = distance - FREE_SHIPPING_DISTANCE;
-                shippingFee = (int) Math.ceil(extraDistance / 10) * SHIPPING_FEE_PER_10KM;
+            totalAmount = Integer.parseInt(totalAmountStr);
+            if (totalAmount <= 0) {
+                throw new NumberFormatException("totalAmount phải lớn hơn 0");
             }
-        } catch (IOException e) {
-            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi kiểm tra địa chỉ: " + e.getMessage());
-            request.setAttribute("errorMessage", "Lỗi khi kiểm tra địa chỉ: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Giá trị totalAmount không hợp lệ: " + e.getMessage());
+            request.setAttribute("errorMessage", "Giá trị tổng tiền không hợp lệ. Vui lòng kiểm tra lại giỏ hàng.");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        int paymentMethod;
+        try {
+            String paymentMethodStr = request.getParameter("paymentMethod");
+            if (paymentMethodStr == null || paymentMethodStr.trim().isEmpty()) {
+                throw new NumberFormatException("paymentMethod không được để trống");
+            }
+            paymentMethod = Integer.parseInt(paymentMethodStr);
+        } catch (NumberFormatException e) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Phương thức thanh toán không hợp lệ: " + e.getMessage());
+            request.setAttribute("errorMessage", "Phương thức thanh toán không hợp lệ. Vui lòng chọn lại.");
+            request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
+            request.setAttribute("totalAmount", totalAmount);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        Integer shippingFee = (Integer) session.getAttribute("shippingFee");
+        if (shippingFee == null) {
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Chưa tính phí vận chuyển");
+            request.setAttribute("errorMessage", "Vui lòng kiểm tra phí vận chuyển trước khi đặt hàng.");
             request.setAttribute("order", new Order(cartDAO.getCartItems(idAcc)));
             request.setAttribute("totalAmount", totalAmount);
             RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
@@ -129,7 +199,6 @@ public class CheckoutController extends HttpServlet {
 
         int finalAmount = totalAmount + shippingFee;
 
-        // Thanh toán bằng VNPay (paymentMethod = 3)
         if (paymentMethod == 3) {
             String paymentUrl = createVNPayPaymentUrl(request, finalAmount);
             if (paymentUrl != null) {
@@ -142,9 +211,9 @@ public class CheckoutController extends HttpServlet {
                 pendingInvoice.setTotalAmount(finalAmount);
                 pendingInvoice.setPaymentMethod(paymentMethod);
                 pendingInvoice.setIsPaid(0);
-                pendingInvoice.setDiscountCode((String) session.getAttribute("discountCode")); // Lưu mã giảm giá vào hóa đơn
+                pendingInvoice.setDiscountCode((String) session.getAttribute("discountCode"));
+                pendingInvoice.setEstimatedDeliveryTime((String) session.getAttribute("estimatedDeliveryTime"));
                 session.setAttribute("pendingInvoice", pendingInvoice);
-                session.setAttribute("shippingFee", shippingFee);
                 logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Đang xử lý", "Chuyển hướng đến VNPay, Tổng tiền: " + finalAmount);
                 response.sendRedirect(paymentUrl);
                 return;
@@ -159,7 +228,6 @@ public class CheckoutController extends HttpServlet {
             }
         }
 
-        // Thanh toán thông thường (COD hoặc thẻ ngân hàng)
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderDate = sdf.format(new Date());
 
@@ -172,8 +240,9 @@ public class CheckoutController extends HttpServlet {
         invoice.setOrderDate(orderDate);
         invoice.setTotalAmount(finalAmount);
         invoice.setPaymentMethod(paymentMethod);
-        invoice.setIsPaid(paymentMethod == 2 ? 1 : 0);
-        invoice.setDiscountCode((String) session.getAttribute("discountCode")); // Lưu mã giảm giá vào hóa đơn
+        invoice.setIsPaid(0);
+        invoice.setDiscountCode((String) session.getAttribute("discountCode"));
+        invoice.setEstimatedDeliveryTime((String) session.getAttribute("estimatedDeliveryTime"));
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         DiscountDAO discountDAO = new DiscountDAO();
@@ -191,7 +260,6 @@ public class CheckoutController extends HttpServlet {
                 invoiceDAO.addInvoiceDetail(detail);
             }
 
-            // Ghi lại việc sử dụng mã giảm giá nếu có
             Discount appliedDiscount = (Discount) session.getAttribute("appliedDiscount");
             if (appliedDiscount != null) {
                 discountDAO.recordDiscountUsage(idAcc, appliedDiscount.getDiscountCodeId());
@@ -199,12 +267,14 @@ public class CheckoutController extends HttpServlet {
 
             cartDAO.clearCart(idAcc);
 
-            String paymentMethodStr = paymentMethod == 1 ? "COD" : "Thẻ ngân hàng";
-            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thành công", "Mã đơn hàng: " + invoice.getInvoiceId() + ", Phương thức: " + paymentMethodStr + ", Tổng tiền: " + finalAmount);
+            logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thành công", "Mã đơn hàng: " + invoice.getInvoiceId() + ", Phương thức: COD, Tổng tiền: " + finalAmount);
             session.setAttribute("paymentSuccessMessage", "Thanh toán thành công!");
             session.removeAttribute("appliedDiscount");
             session.removeAttribute("discountAmount");
             session.removeAttribute("discountCode");
+            session.removeAttribute("shippingFee");
+            session.removeAttribute("estimatedDeliveryTime");
+            session.removeAttribute("formData");
             response.sendRedirect("cart");
         } catch (Exception e) {
             logService.logActivity(idAcc, currentUser.getRoleId(), "Thanh toán", "Thất bại", "Lỗi hệ thống: " + e.getMessage());
@@ -216,11 +286,134 @@ public class CheckoutController extends HttpServlet {
         }
     }
 
+    private void calculateShippingFee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        int idAcc = ((Account) session.getAttribute("currentUser")).getAccountId();
+        FoodCartDAO cartDAO = (FoodCartDAO) foodService;
+
+        String recipientName = request.getParameter("tennguoinhan");
+        String phoneNumber = request.getParameter("sdtnhan");
+        String houseNumber = request.getParameter("sonha");
+        String ward = request.getParameter("phuongxa");
+        String district = request.getParameter("quan");
+        String city = request.getParameter("thanhpho");
+        String note = request.getParameter("note-order");
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        Map<String, String> formData = new HashMap<>();
+        formData.put("tennguoinhan", recipientName);
+        formData.put("sdtnhan", phoneNumber);
+        formData.put("sonha", houseNumber);
+        formData.put("phuongxa", ward);
+        formData.put("quan", district);
+        formData.put("thanhpho", city);
+        formData.put("note-order", note);
+        formData.put("paymentMethod", paymentMethod);
+        session.setAttribute("formData", formData);
+
+        List<Item> cartItems = cartDAO.getCartItems(idAcc);
+        if (cartItems.isEmpty()) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Giỏ hàng trống");
+            request.setAttribute("errorMessage", "Giỏ hàng trống. Vui lòng thêm sản phẩm.");
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        int subtotal = cartItems.stream().mapToInt(item -> item.getQuantity() * item.getFood().getPrice()).sum();
+        int discountAmount = session.getAttribute("discountAmount") != null ? (int) session.getAttribute("discountAmount") : 0;
+        int totalAmount = subtotal - discountAmount;
+
+        if (houseNumber == null || houseNumber.trim().isEmpty()) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Số nhà, tên đường không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập số nhà, tên đường");
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (ward == null || ward.trim().isEmpty()) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Phường/xã không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập phường/xã");
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (district == null || district.trim().isEmpty()) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Quận/huyện không được để trống");
+            request.setAttribute("errorMessage", "Vui lòng nhập quận/huyện");
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        if (city == null || city.trim().isEmpty()) {
+            city = "TP. Hồ Chí Minh";
+        }
+
+        district = district.replaceAll("-\\s*Hồ Chí Minh", "").trim();
+        if (!ward.toLowerCase().startsWith("phường")) {
+            ward = "Phường " + ward.trim();
+        }
+
+        if (!VALID_DISTRICTS.contains(district)) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Quận/huyện không hợp lệ: " + district);
+            request.setAttribute("errorMessage", "Chỉ hỗ trợ giao hàng trong TP. Hồ Chí Minh. Vui lòng chọn quận/huyện hợp lệ.");
+            forwardWithError(request, response, idAcc);
+            return;
+        }
+
+        try {
+            Map<String, Object> shippingResult = shippingService.calculateShippingFee(houseNumber, ward, district);
+            int shippingFee = (int) shippingResult.get("shippingFee");
+            String estimatedDeliveryTime = (String) shippingResult.get("estimatedDeliveryTime");
+
+            if (shippingFee == -1) {
+                logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
+                        "Tính phí ship", "Thất bại", "Không thể tính phí ship");
+                request.setAttribute("errorMessage", "Không thể tính phí ship cho địa chỉ này.");
+                forwardWithError(request, response, idAcc);
+                return;
+            }
+
+            session.setAttribute("shippingFee", shippingFee);
+            session.setAttribute("estimatedDeliveryTime", estimatedDeliveryTime);
+            request.setAttribute("shippingFee", shippingFee);
+            request.setAttribute("estimatedDeliveryTime", estimatedDeliveryTime);
+            request.setAttribute("order", new Order(cartItems));
+            request.setAttribute("totalAmount", totalAmount);
+            request.setAttribute("subtotal", subtotal);
+            request.setAttribute("discountAmount", discountAmount);
+
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
+                    "Tính phí ship", "Thành công", "Phí ship: " + shippingFee + " VND, Dự kiến giao: " + estimatedDeliveryTime);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
+                    "Tính phí ship", "Thất bại", "Lỗi: " + e.getMessage());
+            request.setAttribute("errorMessage", "Lỗi khi tính phí ship: " + e.getMessage());
+            forwardWithError(request, response, idAcc);
+        }
+    }
+
+    private void forwardWithError(HttpServletRequest request, HttpServletResponse response, int idAcc) throws ServletException, IOException {
+        FoodCartDAO cartDAO = (FoodCartDAO) foodService;
+        List<Item> cartItems = cartDAO.getCartItems(idAcc);
+        int subtotal = cartItems.stream().mapToInt(item -> item.getQuantity() * item.getFood().getPrice()).sum();
+        HttpSession session = request.getSession();
+        int discountAmount = session.getAttribute("discountAmount") != null ? (int) session.getAttribute("discountAmount") : 0;
+        int totalAmount = subtotal - discountAmount;
+        request.setAttribute("order", new Order(cartItems));
+        request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("subtotal", subtotal);
+        request.setAttribute("discountAmount", discountAmount);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+        dispatcher.forward(request, response);
+    }
+
     private String createVNPayPaymentUrl(HttpServletRequest req, int amount) {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        long vnpAmount = amount * 100; // VNPay yêu cầu nhân 100
+        long vnpAmount = amount * 100;
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_IpAddr = Config.getIpAddress(req);
         String vnp_TmnCode = Config.vnp_TmnCode;
