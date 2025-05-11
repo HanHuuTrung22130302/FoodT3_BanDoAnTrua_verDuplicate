@@ -11,7 +11,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ContactControlle", value = "/contactcontrolle")
+@WebServlet(name = "ContactController", value = "/contact")
 public class ContactController extends HttpServlet {
 
     @Override
@@ -42,7 +42,7 @@ public class ContactController extends HttpServlet {
         if(message == null || message.isEmpty())message="";
         ContactService cs = new ContactService();
         cs.sendContactSV(id, name, email, title, message);
-        response.sendRedirect("contactcontrolle");
+        response.sendRedirect("contact");
 
     }
 }

@@ -39,7 +39,7 @@
     <div class="form-section">
         <h2>Liên hệ với chúng tôi</h2>
 
-        <form id="contactForm" action="contactcontrolle" method="post">
+        <form id="contactForm" action="contact" method="post">
 
             <div class="form-group">
                 <label for="name">Họ và Tên *</label>
@@ -122,6 +122,17 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script src="${pageContext.request.contextPath}/js/home.js">
+</script>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#message'))
+        .then(editor => {
+            editor.ui.view.editable.element.style.height = '100px';
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 </body>
 

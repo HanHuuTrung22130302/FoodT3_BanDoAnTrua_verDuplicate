@@ -2,8 +2,10 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.IngredientDAO;
 import hcmuaf.nlu.edu.vn.testproject.dto.IngredientDTO;
+import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Ingredients;
 import hcmuaf.nlu.edu.vn.testproject.models.Supplier;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 public class IngredientsController extends HttpServlet {
     private IngredientDAO ingredientDAO;
     private final Gson gson = new Gson();
+    private LogService logService = new LogService();
 
     @Override
     public void init() {
@@ -26,13 +29,25 @@ public class IngredientsController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
+
+        if (currentUser == null || currentUser.getRoleId() == 2) {
+            logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
+            response.sendRedirect("home");
+            return;
+        }
+
         List<Ingredients> ingredientsList;
         List<Supplier> supplierList;
 
         String filter = request.getParameter("filter");
+        String searchTerm = request.getParameter("search");
 
         try {
-            if ("nearlyExpired".equals(filter)) {
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                ingredientsList = ingredientDAO.searchIngredients(searchTerm.trim());
+            } else if ("nearlyExpired".equals(filter)) {
                 ingredientsList = ingredientDAO.getNearlyExpiredIngredients();
             } else {
                 ingredientsList = ingredientDAO.getAllIngredients();

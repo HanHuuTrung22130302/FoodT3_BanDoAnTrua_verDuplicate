@@ -371,6 +371,41 @@ public class IngredientDAO {
         }
     }
 
+    public List<Ingredients> searchIngredients(String searchTerm) {
+        List<Ingredients> results = new ArrayList<>();
+        String query = "SELECT * FROM ingredients WHERE " +
+                "ingredient_id LIKE ? OR " +
+                "supplier_name LIKE ? OR " +
+                "ingredient_name LIKE ?";
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            String searchPattern = "%" + searchTerm + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Ingredients i = new Ingredients(
+                            rs.getInt("ingredient_id"),
+                            rs.getString("ingredient_name"),
+                            rs.getDouble("amount"),
+                            rs.getDouble("price"),
+                            rs.getInt("supplier_id"),
+                            rs.getString("supplier_name"),
+                            rs.getDate("import_date"),
+                            rs.getDate("expiration_date")
+                    );
+                    results.add(i);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
 
     public static void main(String[] args) throws SQLException {
         IngredientDAO dao = new IngredientDAO();
