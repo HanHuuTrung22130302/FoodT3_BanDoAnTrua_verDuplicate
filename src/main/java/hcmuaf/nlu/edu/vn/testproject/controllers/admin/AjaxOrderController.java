@@ -70,6 +70,7 @@ public class AjaxOrderController extends HttpServlet {
             out.println("<tr>");
             out.println("  <td>" + String.format("%06d", oi.getInvoiceId()) + "</td>");
             out.println("  <td>" + oi.getRecipientName() + "</td>");
+            out.println("  <td>" + oi.getPhoneNumber() + "</td>");
             out.println("  <td>" + oi.getOrderDate() + "</td>");
             out.println("  <td class='money'>" + formattedTotal + "</td>");
 
@@ -109,7 +110,7 @@ public class AjaxOrderController extends HttpServlet {
                     String.format("%06d", oi.getInvoiceId()) + "</div>");
             out.println("              <textarea class='cancel-reason' placeholder='Lý do hủy...'></textarea>");
             out.println("              <div class='popup-actions-cancel'>");
-            out.println("                <button class='button-confirm-cancel' onclick='confirmCancelOrder(" + oi.getInvoiceId() + ")'>Xác nhận</button>");
+            out.println("                <button class='button-confirm-cancel' onclick='confirmCancelOrder(" + oi.getInvoiceId()+","+option+"," +page+ ")'>Xác nhận</button>");
             out.println("                <button class='button-cancel-cancel' onclick=\"closePopup('cancelPopup" + oi.getInvoiceId() + "')\">Đóng</button>");
             out.println("              </div></div></div>");
             out.println("        </div></div></div>");
@@ -128,6 +129,18 @@ public class AjaxOrderController extends HttpServlet {
             out.println("            <div class='popup-order-top'>");
             out.println("              <div class='popup-order-id'><span class='popup-order-label'>ID đơn hàng:</span> <span class='popup-order-value'>#" +
                     String.format("%06d", oi.getInvoiceId()) + "</span></div>");
+            String paymentText;
+            if (oi.getPaymentMethod() == 1) {
+                paymentText = "COD";
+            } else if (oi.getPaymentMethod() == 2) {
+                paymentText = "Chuyển khoản";
+            } else {
+                paymentText = "Không xác định";
+            }
+            out.println("<div class=\"popup-order-status\">");
+            out.println("    <span class=\"popup-order-label\">Thanh toán:</span>");
+            out.println("    <span class=\"popup-order-value\">" + paymentText + "</span>");
+            out.println("</div>");
             out.println("              <div class='popup-order-status'><span class='popup-order-label'>Tình trạng:</span> <span class='popup-order-value'>" + statusText + "</span></div>");
             out.println("            </div>");
 

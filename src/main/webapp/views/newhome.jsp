@@ -94,18 +94,34 @@
                     <ul class="menu-list">
 
                         <li class="menu-item">
-                            <a href="allmenu?option=tatca" class="tabbar"> <i class="fa-solid fa-bars"></i>Thực đơn</a>
+                            <a href="allmenu?option=tatca" class="tabbar">
+                                <i class="fa-solid fa-bars"></i>Thực đơn
+                            </a>
                             <ul class="submenu">
-                                <li><a href="allmenu?option=tatca"><i class="fa-solid fa-bowl-rice"></i>Tất cả</a>
+                                <li>
+                                    <a href="allmenu?option=tatca">
+                                        <i class="fa-solid fa-bowl-rice"></i>Tất cả
+                                    </a>
                                 </li>
-                                <li><a href="allmenu?option=1"><i class="fa-solid fa-bowl-rice"></i>Món cơm</a>
-                                </li>
-                                <li><a href="allmenu?option=2"><i class="fa-solid fa-bowl-food"></i>Món bún</a>
-                                </li>
-                                <li><a href="allmenu?option=3"><i class="fa-solid fa-bowl-food"></i>Món phở</a>
-                                </li>
-                                <li><a href="allmenu?option=4"><i class="fa-solid fa-glass-water"></i>Nước</a>
-                                </li>
+
+                                <c:forEach var="category" items="${listC}">
+                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice" />
+
+                                    <c:choose>
+                                        <c:when test="${category.categoryName.contains('Bún') || category.categoryName.contains('Phở')}">
+                                            <c:set var="iconClass" value="fa-solid fa-bowl-food" />
+                                        </c:when>
+                                        <c:when test="${category.categoryName.contains('Nước')}">
+                                            <c:set var="iconClass" value="fa-solid fa-glass-water" />
+                                        </c:when>
+                                    </c:choose>
+
+                                    <li>
+                                        <a href="allmenu?option=${category.categoryId}">
+                                            <i class="${iconClass}"></i>${category.categoryName}
+                                        </a>
+                                    </li>
+                                </c:forEach>
                             </ul>
                         </li>
                         <li class="menu-item"><a href="home">Trang chủ</a></li>
