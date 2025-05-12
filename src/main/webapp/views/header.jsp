@@ -37,7 +37,8 @@
                         </div>
                     </c:if>
                     <div class="nav_item_shop">
-                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>" class="nav-item">
+                        <a href="<%= (session.getAttribute("currentUser") != null) ? "PurchaseOrder" : "login" %>"
+                           class="nav-item">
                             <i class="fa-solid fa-truck-fast"></i> Đơn hàng
                         </a>
                         <a href="order" class="count">
@@ -81,14 +82,14 @@
                                 </li>
 
                                 <c:forEach var="category" items="${listC}">
-                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice" />
+                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice"/>
 
                                     <c:choose>
                                         <c:when test="${category.categoryName.contains('Bún') || category.categoryName.contains('Phở')}">
-                                            <c:set var="iconClass" value="fa-solid fa-bowl-food" />
+                                            <c:set var="iconClass" value="fa-solid fa-bowl-food"/>
                                         </c:when>
                                         <c:when test="${category.categoryName.contains('Nước')}">
-                                            <c:set var="iconClass" value="fa-solid fa-glass-water" />
+                                            <c:set var="iconClass" value="fa-solid fa-glass-water"/>
                                         </c:when>
                                     </c:choose>
 
@@ -104,7 +105,7 @@
                         <li class="menu-item"><a href="home">Trang chủ</a></li>
 
                         <li class="menu-item"><a href="about">Giới thiệu</a></li>
-                        <li class="menu-item"><a href="contactcontrolle">Liên hệ</a></li>
+                        <li class="menu-item"><a href="contact">Liên hệ</a></li>
                     </ul>
                 </div>
                 <div class="search">

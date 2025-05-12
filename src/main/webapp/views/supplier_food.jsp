@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Quản lý thực phẩm</title>
     <link rel="icon" href="${pageContext.request.contextPath}/Images/LOGO_V2.png" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/s.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
     <script>
         var ingredientsBySupplier = JSON.parse('${ingredientsBySupplierJson}');
@@ -155,11 +155,11 @@
 
     window.onload = function () {
         updateIngredients();
-        
+
         // Gọi thông báo nếu có param
         var successMsg = "${param.success}";
         var errorMsg = "${param.error}";
-        
+
         if (successMsg) showNotification(successMsg, "success");
         if (errorMsg) showNotification("Lỗi: " + errorMsg, "error");
     };
