@@ -11,12 +11,11 @@
 
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newhome.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/menu.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/contact.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/signinCssModule.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="../js/module_dangnhap.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
     <style>
         .input-field::placeholder {
             color: #ccc;

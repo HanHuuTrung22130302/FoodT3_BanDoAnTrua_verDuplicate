@@ -12,7 +12,7 @@ $(document).ready(function () {
             dataType: "json", // Chỉ định kiểu dữ liệu trả về là JSON
             success: function (response) {
                 if (response.status === "success") {
-                    // Hiển thị thông báo thành công (màu xanh) và không tự động chuyển về form đăng nhập
+                    // Hiển thị thông báo thành công
                     $("#messageContainer")
                         .css("color", "red")
                         .addClass("success")
@@ -21,9 +21,8 @@ $(document).ready(function () {
                         );
                     // Xóa form sau khi đăng ký thành công
                     $("form[action='signup']")[0].reset();
-                    // Bỏ đoạn setTimeout để không tự động chuyển về form đăng nhập
                 } else {
-                    // Hiển thị thông báo lỗi (màu đỏ)
+                    // Hiển thị thông báo lỗi
                     $("#messageContainer")
                         .css("color", "red")
                         .addClass("error")

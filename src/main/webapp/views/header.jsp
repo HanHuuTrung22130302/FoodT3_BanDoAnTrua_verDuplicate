@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css">
 <div id="header">
     <div class="containerheaderAll">
         <div class="containers">
@@ -32,7 +33,7 @@
                                 <c:if test="${sessionScope.currentUser.roleId == 2}">
                                     <a href="AccDetail" id="user-link">Thông tin</a>
                                 </c:if>
-                                <a href="logout" id="logout">Đăng xuất</a>
+                                <a href="#" onclick="showLogoutPopup(); return false;" id="logout">Đăng xuất</a>
                             </div>
                         </div>
                     </c:if>
@@ -120,3 +121,42 @@
         </div>
     </div>
 </div>
+
+<!-- Popup đăng xuất -->
+<div class="logout-popup-overlay" id="logoutPopup">
+    <div class="logout-popup">
+        <h3>Bạn có chắc chắn muốn đăng xuất?</h3>
+        <div class="logout-popup-buttons">
+            <button class="logout-confirm" onclick="confirmLogout()">Đăng xuất</button>
+            <button class="logout-cancel" onclick="hideLogoutPopup()">Hủy</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    function hideLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout';
+    }
+
+    // Đóng popup khi click ra ngoài
+    document.getElementById('logoutPopup').addEventListener('click', function (e) {
+        if (e.target === this) {
+            hideLogoutPopup();
+        }
+    });
+
+    // Đóng popup khi nhấn phím ESC
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            hideLogoutPopup();
+        }
+    });
+</script>
