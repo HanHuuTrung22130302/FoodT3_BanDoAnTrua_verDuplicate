@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_home_n.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css">
     <script src="${pageContext.request.contextPath}/js/module_dangnhap.js"></script>
 </head>
 
@@ -55,7 +55,7 @@
                                     <a href="AccDetail" id="user-link">Thông tin</a>
                                     <%--                                    <a href="user?idAcc=${sessionScope.currentUser.idAcc}" id="user-link">Thông tin</a>--%>
                                 </c:if>
-                                <a href="logout" id="logout">Đăng xuất</a>
+                                <a href="#" onclick="showLogoutPopup(); return false;" id="logout">Đăng xuất</a>
                             </div>
                         </div>
                     </c:if>
@@ -105,14 +105,14 @@
                                 </li>
 
                                 <c:forEach var="category" items="${listC}">
-                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice" />
+                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice"/>
 
                                     <c:choose>
                                         <c:when test="${category.categoryName.contains('Bún') || category.categoryName.contains('Phở')}">
-                                            <c:set var="iconClass" value="fa-solid fa-bowl-food" />
+                                            <c:set var="iconClass" value="fa-solid fa-bowl-food"/>
                                         </c:when>
                                         <c:when test="${category.categoryName.contains('Nước')}">
-                                            <c:set var="iconClass" value="fa-solid fa-glass-water" />
+                                            <c:set var="iconClass" value="fa-solid fa-glass-water"/>
                                         </c:when>
                                     </c:choose>
 
@@ -127,7 +127,7 @@
                         <li class="menu-item"><a href="home">Trang chủ</a></li>
 
                         <li class="menu-item"><a href="about">Giới thiệu</a></li>
-                        <li class="menu-item"><a href="contactcontrolle">Liên hệ</a></li>
+                        <li class="menu-item"><a href="contact">Liên hệ</a></li>
                     </ul>
                 </div>
                 <div class="search">
@@ -139,6 +139,17 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup đăng xuất -->
+<div class="logout-popup-overlay" id="logoutPopup">
+    <div class="logout-popup">
+        <h3>Bạn có chắc chắn muốn đăng xuất?</h3>
+        <div class="logout-popup-buttons">
+            <button class="logout-confirm" onclick="confirmLogout()">Đăng xuất</button>
+            <button class="logout-cancel" onclick="hideLogoutPopup()">Hủy</button>
         </div>
     </div>
 </div>
@@ -267,10 +278,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -398,10 +412,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -529,10 +546,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -660,10 +680,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -741,6 +764,34 @@
 <script src="${pageContext.request.contextPath}/js/chatbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
+
+<script>
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    function hideLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout';
+    }
+
+    // Đóng popup khi click ra ngoài
+    document.getElementById('logoutPopup').addEventListener('click', function (e) {
+        if (e.target === this) {
+            hideLogoutPopup();
+        }
+    });
+
+    // Đóng popup khi nhấn phím ESC
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            hideLogoutPopup();
+        }
+    });
+</script>
 </body>
 
 </html>
