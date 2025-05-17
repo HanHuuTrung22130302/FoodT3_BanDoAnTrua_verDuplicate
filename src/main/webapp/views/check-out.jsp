@@ -17,9 +17,6 @@
     .calculate-shipping-btn { margin-top: 10px; padding: 10px 20px; background-color: #b5292f; color: white; border: none; cursor: pointer; border-radius: 10px; }
     .calculate-shipping-btn:disabled { background-color: #cccccc; cursor: not-allowed; }
     .loading { display: none; margin-left: 10px; color: #b5292f; }
-
-
-
   </style>
 </head>
 <body>
@@ -35,7 +32,7 @@
     <h2 class="checkout-title">Thanh toán</h2>
   </div>
   <c:if test="${not empty requestScope.errorMessage}">
-    <div class="errorMessage">${requestScope.errorMessage}</div>
+    <div class="errorMessage" style="display: block;">${requestScope.errorMessage}</div>
     <c:remove var="errorMessage" scope="request" />
   </c:if>
   <form action="${pageContext.request.contextPath}/checkout" method="post" id="checkout-form">
@@ -213,11 +210,17 @@
       checkoutForm.prepend(errorMessageDiv);
     }
 
+    // Ẩn errorMessageDiv mặc định nếu không có nội dung
+    if (!errorMessageDiv.textContent.trim()) {
+      errorMessageDiv.style.display = 'none';
+    }
+
     // Validate form inputs
     function validateInputs() {
       const requiredFields = ['sonha', 'phuongxa', 'quan'];
       let isValid = true;
       errorMessageDiv.textContent = '';
+      errorMessageDiv.style.display = 'none'; // Ẩn khi bắt đầu validate
 
       requiredFields.forEach(fieldId => {
         const input = document.getElementById(fieldId);
@@ -230,6 +233,11 @@
         }
       });
 
+      if (!isValid) {
+        errorMessageDiv.textContent = 'Vui lòng điền đầy đủ thông tin giao hàng.';
+        errorMessageDiv.style.display = 'block';
+      }
+
       return isValid;
     }
 
@@ -241,12 +249,9 @@
       const totalAmountInput = document.getElementById('total-amount');
       const baseTotal = parseInt(totalAmountInput.value) || 0;
 
-      // Sử dụng giá trị trực tiếp từ data.shippingFee (đã là số)
       const shippingFee = Number(data.shippingFee);
 
-      // Kiểm tra xem shippingFee có hợp lệ không
       if (!isNaN(shippingFee) && shippingFee >= 0) {
-        // Gán giá trị thủ công thay vì dùng template literal
         shippingFeeSpan.textContent = shippingFee === 0 ? 'Miễn phí' : (shippingFee + ' đ');
         console.log('Setting shippingFeeSpan to:', shippingFeeSpan.textContent);
         deliveryTimeSpan.textContent = data.estimatedDeliveryTime || 'Chưa xác định';
@@ -255,7 +260,7 @@
 
         // Buộc làm mới DOM
         shippingFeeSpan.style.display = 'none';
-        shippingFeeSpan.offsetHeight; // Trigger reflow
+        shippingFeeSpan.offsetHeight;
         shippingFeeSpan.style.display = '';
       } else {
         shippingFeeSpan.textContent = 'Chưa tính';
@@ -264,6 +269,7 @@
         totalPriceSpan.textContent = baseTotal + ' đ';
         completeCheckoutBtn.disabled = true;
         errorMessageDiv.textContent = data.errorMessage || 'Không thể tính phí ship cho địa chỉ này.';
+        errorMessageDiv.style.display = 'block'; // Hiển thị khi có lỗi
       }
     }
 
@@ -276,6 +282,7 @@
       calculateShippingBtn.disabled = true;
       loadingSpinner.style.display = 'inline-block';
       errorMessageDiv.textContent = '';
+      errorMessageDiv.style.display = 'none'; // Ẩn trước khi gửi AJAX
 
       const formData = new FormData(checkoutForm);
       const data = {
@@ -297,12 +304,13 @@
       })
               .then(response => response.json())
               .then(data => {
-                console.log('AJAX Response:', data); // Log phản hồi JSON
+                console.log('AJAX Response:', data);
                 console.log('Type of shippingFee:', typeof data.shippingFee);
                 updateShippingUI(data);
               })
               .catch(error => {
                 errorMessageDiv.textContent = 'Lỗi khi tính phí ship. Vui lòng thử lại.';
+                errorMessageDiv.style.display = 'block'; // Hiển thị khi có lỗi AJAX
                 console.error('Error:', error);
                 updateShippingUI({ shippingFee: -1, estimatedDeliveryTime: 'Chưa xác định' });
               })
@@ -314,11 +322,12 @@
 
     // Prevent form submission if shipping fee is not calculated
     checkoutForm.addEventListener('submit', (e) => {
-      const shippingFeeSpan = document.getElementById('shipping-fee').textContent;
+      const shippingFeesSpan = document.getElementById('shipping-fee').textContent;
       const deliveryTimeSpan = document.getElementById('estimated-delivery-time').textContent;
-      if (shippingFeeSpan === 'Chưa tính' || deliveryTimeSpan === 'Chưa xác định') {
+      if (shippingFeesSpan === 'Chưa tính' || deliveryTimeSpan === 'Chưa xác định') {
         e.preventDefault();
         errorMessageDiv.textContent = 'Vui lòng kiểm tra phí ship trước khi đặt hàng.';
+        errorMessageDiv.style.display = 'block'; // Hiển thị khi submit mà chưa tính phí
       }
     });
   });
