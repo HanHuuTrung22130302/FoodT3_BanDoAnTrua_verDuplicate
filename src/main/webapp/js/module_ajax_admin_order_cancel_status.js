@@ -2,7 +2,7 @@ function cancelstatus(reason,invoiceId,option, page) {
 
     $.ajax({
         url: "sendcancelstatusajaxordermanagement",
-        type: "get",
+        type: "post",
         data: {
             reason: reason,
             invoiceId: invoiceId,
@@ -18,6 +18,9 @@ function cancelstatus(reason,invoiceId,option, page) {
         }
     });
 }
+
+
+
 function confirmCancelOrder(invoiceId,option,page) {
     // Lấy lý do từ textarea
     const popup = document.getElementById('cancelPopup' + invoiceId);

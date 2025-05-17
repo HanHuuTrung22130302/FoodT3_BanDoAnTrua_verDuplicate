@@ -478,28 +478,53 @@ public class AdminInvoiceOrderDao {
     }
     public boolean moveOrderStatusForward(int invoiceId) {
         Connection con = null;
-        PreparedStatement ps = null;
+        PreparedStatement psSelect = null;
+        PreparedStatement psUpdateStatus = null;
+        PreparedStatement psUpdatePaid = null;
+        ResultSet rs = null;
         boolean success = false;
-
-        String query = "UPDATE order_status SET order_status = order_status + 1 " +
-                "WHERE invoice_id = ? AND order_status < 5"; // Tránh vượt quá trạng thái hủy
 
         try {
             con = new DbContext().getConnection();
-            ps = con.prepareStatement(query);
-            ps.setInt(1, invoiceId);
 
-            int affectedRows = ps.executeUpdate();
-            success = affectedRows > 0;
+            // Lấy trạng thái hiện tại
+            String selectQuery = "SELECT order_status FROM order_status WHERE invoice_id = ?";
+            psSelect = con.prepareStatement(selectQuery);
+            psSelect.setInt(1, invoiceId);
+            rs = psSelect.executeQuery();
+
+            if (rs.next()) {
+                int currentStatus = rs.getInt("order_status");
+
+                if (currentStatus < 5) {
+                    String updateStatusQuery = "UPDATE order_status SET order_status = ? WHERE invoice_id = ?";
+                    psUpdateStatus = con.prepareStatement(updateStatusQuery);
+                    psUpdateStatus.setInt(1, currentStatus + 1);
+                    psUpdateStatus.setInt(2, invoiceId);
+
+                    int affectedRows = psUpdateStatus.executeUpdate();
+                    success = affectedRows > 0;
+
+                    if (currentStatus == 3 && success) {
+                        String updatePaidQuery = "UPDATE invoice SET is_paid = 2 WHERE invoice_id = ?";
+                        psUpdatePaid = con.prepareStatement(updatePaidQuery);
+                        psUpdatePaid.setInt(1, invoiceId);
+                        psUpdatePaid.executeUpdate();
+                    }
+                }
+            }
 
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi khi cập nhật trạng thái đơn hàng: " + e.getMessage());
         } finally {
-            closeResources(null, ps, con);
+            closeResources(rs, psSelect, null);
+            closeResources(null, psUpdateStatus, null);
+            closeResources(null, psUpdatePaid, con);
         }
 
         return success;
     }
+
     public boolean cancelOrder(int invoiceId, String reason) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -690,9 +715,38 @@ public class AdminInvoiceOrderDao {
         return 0;
     }
 
+    public String getCompletionTime(int invoiceId) {
+        String sql = "SELECT DATE_FORMAT(updated_at, '%H:%i:%s %d/%m/%Y') AS updated_at " +
+                "FROM order_status WHERE invoice_id = ? AND order_status IN (4, 5)";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("updated_at");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String getReason(int invoiceId) {
+        String sql = "SELECT reason FROM order_status WHERE invoice_id = ? AND order_status = 5";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("reason");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         AdminInvoiceOrderDao dao = new AdminInvoiceOrderDao();
-        System.out.println(dao.getInvoiceByDate("2025-05-02",0).size());
+        System.out.println(dao.getReason(26));
     }
 }

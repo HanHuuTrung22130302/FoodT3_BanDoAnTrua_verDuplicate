@@ -2,7 +2,7 @@ function movestatus(invoiceId,option, page) {
     // Tiếp tục thực hiện AJAX
     $.ajax({
         url: "sendmovestatusajaxordermanagement",
-        type: "get",
+        type: "post",
         data: {
             invoiceId: invoiceId,
             option: option,

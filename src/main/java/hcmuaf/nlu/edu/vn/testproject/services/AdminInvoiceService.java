@@ -54,7 +54,6 @@ public class AdminInvoiceService {
                     ois = dao.getInvoicesByIdOrPrefix(option, offset);
                     if (ois.isEmpty())
                         ois = dao.searchAdminInvoiceByRecipientName(option, offset);
-
                     break;
             }
         }
@@ -62,6 +61,8 @@ public class AdminInvoiceService {
             List<OrderInvoiceDetail> details = dao.getInvoiceOrderDetails(oi.getInvoiceId());
             oi.setOrderInvoiceDetail(details);
         }
+        setCompletionTimeForInvoices(ois);
+        setReasonForInvoices(ois);
         return ois;
     }
 
@@ -98,6 +99,30 @@ public class AdminInvoiceService {
         }
     }
 
+    public void setCompletionTimeForInvoices(List<OrderInvoice> invoices) {
+        for (OrderInvoice oi : invoices) {
+            int status = oi.getOrderStatus();
+            if (status == 4 || status == 5) {
+                String completionTime = dao.getCompletionTime(oi.getInvoiceId());
+                oi.setCompletionTime(completionTime);
+            } else {
+                oi.setCompletionTime(null);
+            }
+        }
+    }
+    public void setReasonForInvoices(List<OrderInvoice> invoices) {
+        for (OrderInvoice oi : invoices) {
+            int status = oi.getOrderStatus();
+            if (status == 5) {
+                // Lấy reason từ DAO và set
+                String reason = dao.getReason(oi.getInvoiceId());
+                oi.setReason(reason);
+            } else {
+                oi.setReason(null);
+            }
+        }
+    }
+
     public void sendMoveStatusNext(int invoiceId){
         dao.moveOrderStatusForward(invoiceId);
     }
@@ -114,5 +139,12 @@ public class AdminInvoiceService {
             }
         }
         return count;
+    }
+
+    public static void main(String[] args) {
+        AdminInvoiceService as = new AdminInvoiceService();
+        for (OrderInvoice oi : as.getOption("all", 0)) {
+            System.out.println(oi.toString());
+        }
     }
 }
