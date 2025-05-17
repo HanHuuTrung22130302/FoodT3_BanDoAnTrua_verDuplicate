@@ -17,6 +17,9 @@
     .calculate-shipping-btn { margin-top: 10px; padding: 10px 20px; background-color: #b5292f; color: white; border: none; cursor: pointer; border-radius: 10px; }
     .calculate-shipping-btn:disabled { background-color: #cccccc; cursor: not-allowed; }
     .loading { display: none; margin-left: 10px; color: #b5292f; }
+
+
+
   </style>
 </head>
 <body>
@@ -238,16 +241,27 @@
       const totalAmountInput = document.getElementById('total-amount');
       const baseTotal = parseInt(totalAmountInput.value) || 0;
 
-      // Kiểm tra xem data.shippingFee có hợp lệ không
-      if (typeof data.shippingFee === 'number' && data.shippingFee >= 0) {
-        shippingFeeSpan.textContent = data.shippingFee === 0 ? 'Miễn phí' : `${data.shippingFee} đ`;
+      // Sử dụng giá trị trực tiếp từ data.shippingFee (đã là số)
+      const shippingFee = Number(data.shippingFee);
+
+      // Kiểm tra xem shippingFee có hợp lệ không
+      if (!isNaN(shippingFee) && shippingFee >= 0) {
+        // Gán giá trị thủ công thay vì dùng template literal
+        shippingFeeSpan.textContent = shippingFee === 0 ? 'Miễn phí' : (shippingFee + ' đ');
+        console.log('Setting shippingFeeSpan to:', shippingFeeSpan.textContent);
         deliveryTimeSpan.textContent = data.estimatedDeliveryTime || 'Chưa xác định';
-        totalPriceSpan.textContent = `${baseTotal + data.shippingFee} đ`;
+        totalPriceSpan.textContent = (baseTotal + shippingFee) + ' đ';
         completeCheckoutBtn.disabled = false;
+
+        // Buộc làm mới DOM
+        shippingFeeSpan.style.display = 'none';
+        shippingFeeSpan.offsetHeight; // Trigger reflow
+        shippingFeeSpan.style.display = '';
       } else {
-        shippingFeeSpan.textContent = 'Chưa tính'; // Thay vì "Miễn phí"
+        shippingFeeSpan.textContent = 'Chưa tính';
+        console.log('Setting shippingFeeSpan to: Chưa tính');
         deliveryTimeSpan.textContent = 'Chưa xác định';
-        totalPriceSpan.textContent = `${baseTotal} đ`;
+        totalPriceSpan.textContent = baseTotal + ' đ';
         completeCheckoutBtn.disabled = true;
         errorMessageDiv.textContent = data.errorMessage || 'Không thể tính phí ship cho địa chỉ này.';
       }
@@ -283,7 +297,8 @@
       })
               .then(response => response.json())
               .then(data => {
-                console.log('AJAX Response:', data); // Debug: Xem dữ liệu trả về
+                console.log('AJAX Response:', data); // Log phản hồi JSON
+                console.log('Type of shippingFee:', typeof data.shippingFee);
                 updateShippingUI(data);
               })
               .catch(error => {

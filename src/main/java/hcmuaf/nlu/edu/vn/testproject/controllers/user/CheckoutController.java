@@ -437,6 +437,7 @@ public class CheckoutController extends HttpServlet {
         if (errorMessage != null) {
             jsonResponse.put("errorMessage", errorMessage);
         }
+        System.out.println("Sending JSON: " + jsonResponse.toString()); // Log JSON
         response.getWriter().write(jsonResponse.toString());
     }
 
