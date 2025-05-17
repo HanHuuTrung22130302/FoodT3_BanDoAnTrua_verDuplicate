@@ -178,7 +178,7 @@ table tr:hover {
 /* Xử lý pagination */
 .pagi {
     position: fixed;
-    bottom: 0;
+    bottom: -1%;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -389,6 +389,163 @@ body.no-scroll {
 }
 
 .button-confirm-cancel:hover, .button-cancel-cancel:hover {
+    background-color: #b5292f;
+    color: white;
+}
+
+/*infoButton*/
+
+.infoStatusOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-infoStatus{
+    width: 700px;
+    height: 100px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.popup-header-infoStatus {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-infoStatus{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-infoStatus {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+/*infocancel popup*/
+
+.infoStatusCancelOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-infoStatusCancel {
+    width: 700px;
+    height:220px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.popup-header-infoStatusCancel {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-infoStatusCancel {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-infoStatusCancel {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+.reason-text {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 18px;
+    color: #d32f2f; /* Màu đỏ cho nổi bật */
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    margin: 0 10px 10px 10px;
+}
+/*popup submit button*/
+.submitOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-submitOrder{
+    width: 600px;
+    height: 150px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.popup-header-submitOrder {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-submitOrder{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-submitOrder {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-confirm-submitOrder, .button-cancel-submitOrder {
+    margin-top: 10px;
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.button-confirm-submitOrder:hover, .button-cancel-submitOrder:hover {
     background-color: #b5292f;
     color: white;
 }

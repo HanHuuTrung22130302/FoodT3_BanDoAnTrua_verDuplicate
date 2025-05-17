@@ -16,6 +16,8 @@ public class OrderInvoice {
     private int paymentMethod;
     private int isPaid;
     private int orderStatus;
+    private String completionTime;
+    private String reason;
     private List<OrderInvoiceDetail> orderInvoiceDetail;
 
     public OrderInvoice() {
@@ -139,5 +141,29 @@ public class OrderInvoice {
 
     public void setOrderInvoiceDetail(List<OrderInvoiceDetail> orderInvoiceDetail) {
         this.orderInvoiceDetail = orderInvoiceDetail;
+    }
+
+    public String getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(String completionTime) {
+        this.completionTime = completionTime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderInvoice{" +
+                "invoiceId=" + invoiceId +
+                ", completionTime='" + completionTime + '\'' +
+                '}';
     }
 }

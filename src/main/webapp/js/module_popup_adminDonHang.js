@@ -36,6 +36,43 @@ function showCancelPopup(invoiceId) {
     }
 }
 
+function showSubmitStatusPopup(invoiceId) {
+    // const moveStatusPopup = document.getElementById("moveStatusPopup" + invoiceId);
+    // if (moveStatusPopup) {
+    //     moveStatusPopup.style.display = "block";
+    // }
+
+    const popupElement = document.getElementById("moveStatusPopup"+ invoiceId);
+    if (!popupElement) {
+        console.error("Không tìm thấy popup có ID:", invoiceId);
+        return;
+    }
+    popupElement.style.display = "flex";
+
+    document.body.classList.add('no-scroll');
+
+}
+
+function showInfoPopup(invoiceId) {
+    const popupElement = document.getElementById("showStatusPopup"+ invoiceId);
+    if (!popupElement) {
+        console.error("Không tìm thấy popup có ID:", invoiceId);
+        return;
+    }
+    popupElement.style.display = "flex";
+
+    document.body.classList.add('no-scroll');
+}
+function showInfoCancelPopup(invoiceId) {
+    const popupElement = document.getElementById("showStatusCancelPopup"+ invoiceId);
+    if (!popupElement) {
+        console.error("Không tìm thấy popup có ID:", invoiceId);
+        return;
+    }
+    popupElement.style.display = "flex";
+
+    document.body.classList.add('no-scroll');
+}
 
 
 const typeSelect = document.getElementById('typeSelect');
