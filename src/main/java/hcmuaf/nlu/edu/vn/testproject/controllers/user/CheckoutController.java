@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -291,15 +293,49 @@ public class CheckoutController extends HttpServlet {
         int idAcc = ((Account) session.getAttribute("currentUser")).getAccountId();
         FoodCartDAO cartDAO = (FoodCartDAO) foodService;
 
-        String recipientName = request.getParameter("tennguoinhan");
-        String phoneNumber = request.getParameter("sdtnhan");
-        String houseNumber = request.getParameter("sonha");
-        String ward = request.getParameter("phuongxa");
-        String district = request.getParameter("quan");
-        String city = request.getParameter("thanhpho");
-        String note = request.getParameter("note-order");
-        String paymentMethod = request.getParameter("paymentMethod");
+        // Check if request is JSON (AJAX)
+        String contentType = request.getContentType();
+        Map<String, String> params = new HashMap<>();
 
+        if (contentType != null && contentType.contains("application/json")) {
+            // Handle JSON request
+            BufferedReader reader = request.getReader();
+            StringBuilder jsonInput = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonInput.append(line);
+            }
+            JSONObject jsonObject = new JSONObject(jsonInput.toString());
+            params.put("tennguoinhan", jsonObject.optString("tennguoinhan"));
+            params.put("sdtnhan", jsonObject.optString("sdtnhan"));
+            params.put("sonha", jsonObject.optString("sonha"));
+            params.put("phuongxa", jsonObject.optString("phuongxa"));
+            params.put("quan", jsonObject.optString("quan"));
+            params.put("thanhpho", jsonObject.optString("thanhpho", "TP. Hồ Chí Minh"));
+            params.put("note-order", jsonObject.optString("note-order"));
+            params.put("paymentMethod", jsonObject.optString("paymentMethod"));
+        } else {
+            // Handle form-data request
+            params.put("tennguoinhan", request.getParameter("tennguoinhan"));
+            params.put("sdtnhan", request.getParameter("sdtnhan"));
+            params.put("sonha", request.getParameter("sonha"));
+            params.put("phuongxa", request.getParameter("phuongxa"));
+            params.put("quan", request.getParameter("quan"));
+            params.put("thanhpho", request.getParameter("thanhpho"));
+            params.put("note-order", request.getParameter("note-order"));
+            params.put("paymentMethod", request.getParameter("paymentMethod"));
+        }
+
+        String recipientName = params.get("tennguoinhan");
+        String phoneNumber = params.get("sdtnhan");
+        String houseNumber = params.get("sonha");
+        String ward = params.get("phuongxa");
+        String district = params.get("quan");
+        String city = params.get("thanhpho");
+        String note = params.get("note-order");
+        String paymentMethod = params.get("paymentMethod");
+
+        // Store form data in session
         Map<String, String> formData = new HashMap<>();
         formData.put("tennguoinhan", recipientName);
         formData.put("sdtnhan", phoneNumber);
@@ -314,8 +350,7 @@ public class CheckoutController extends HttpServlet {
         List<Item> cartItems = cartDAO.getCartItems(idAcc);
         if (cartItems.isEmpty()) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Giỏ hàng trống");
-            request.setAttribute("errorMessage", "Giỏ hàng trống. Vui lòng thêm sản phẩm.");
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Giỏ hàng trống. Vui lòng thêm sản phẩm.");
             return;
         }
 
@@ -325,22 +360,19 @@ public class CheckoutController extends HttpServlet {
 
         if (houseNumber == null || houseNumber.trim().isEmpty()) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Số nhà, tên đường không được để trống");
-            request.setAttribute("errorMessage", "Vui lòng nhập số nhà, tên đường");
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Vui lòng nhập số nhà, tên đường");
             return;
         }
 
         if (ward == null || ward.trim().isEmpty()) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Phường/xã không được để trống");
-            request.setAttribute("errorMessage", "Vui lòng nhập phường/xã");
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Vui lòng nhập phường/xã");
             return;
         }
 
         if (district == null || district.trim().isEmpty()) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Quận/huyện không được để trống");
-            request.setAttribute("errorMessage", "Vui lòng nhập quận/huyện");
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Vui lòng nhập quận/huyện");
             return;
         }
 
@@ -355,8 +387,7 @@ public class CheckoutController extends HttpServlet {
 
         if (!VALID_DISTRICTS.contains(district)) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(), "Tính phí ship", "Thất bại", "Quận/huyện không hợp lệ: " + district);
-            request.setAttribute("errorMessage", "Chỉ hỗ trợ giao hàng trong TP. Hồ Chí Minh. Vui lòng chọn quận/huyện hợp lệ.");
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Chỉ hỗ trợ giao hàng trong TP. Hồ Chí Minh. Vui lòng chọn quận/huyện hợp lệ.");
             return;
         }
 
@@ -368,30 +399,46 @@ public class CheckoutController extends HttpServlet {
             if (shippingFee == -1) {
                 logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
                         "Tính phí ship", "Thất bại", "Không thể tính phí ship");
-                request.setAttribute("errorMessage", "Không thể tính phí ship cho địa chỉ này.");
-                forwardWithError(request, response, idAcc);
+                sendJsonResponse(response, -1, null, "Không thể tính phí ship cho địa chỉ này.");
                 return;
             }
 
             session.setAttribute("shippingFee", shippingFee);
             session.setAttribute("estimatedDeliveryTime", estimatedDeliveryTime);
-            request.setAttribute("shippingFee", shippingFee);
-            request.setAttribute("estimatedDeliveryTime", estimatedDeliveryTime);
-            request.setAttribute("order", new Order(cartItems));
-            request.setAttribute("totalAmount", totalAmount);
-            request.setAttribute("subtotal", subtotal);
-            request.setAttribute("discountAmount", discountAmount);
 
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
                     "Tính phí ship", "Thành công", "Phí ship: " + shippingFee + " VND, Dự kiến giao: " + estimatedDeliveryTime);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
-            dispatcher.forward(request, response);
+
+            if (contentType != null && contentType.contains("application/json")) {
+                sendJsonResponse(response, shippingFee, estimatedDeliveryTime, null);
+            } else {
+                request.setAttribute("shippingFee", shippingFee);
+                request.setAttribute("estimatedDeliveryTime", estimatedDeliveryTime);
+                request.setAttribute("order", new Order(cartItems));
+                request.setAttribute("totalAmount", totalAmount);
+                request.setAttribute("subtotal", subtotal);
+                request.setAttribute("discountAmount", discountAmount);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("views/check-out.jsp");
+                dispatcher.forward(request, response);
+            }
         } catch (Exception e) {
             logService.logActivity(idAcc, ((Account) session.getAttribute("currentUser")).getRoleId(),
                     "Tính phí ship", "Thất bại", "Lỗi: " + e.getMessage());
-            request.setAttribute("errorMessage", "Lỗi khi tính phí ship: " + e.getMessage());
-            forwardWithError(request, response, idAcc);
+            sendJsonResponse(response, -1, null, "Lỗi khi tính phí ship: " + e.getMessage());
         }
+    }
+
+    private void sendJsonResponse(HttpServletResponse response, int shippingFee, String estimatedDeliveryTime, String errorMessage) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("shippingFee", shippingFee);
+        jsonResponse.put("estimatedDeliveryTime", estimatedDeliveryTime != null ? estimatedDeliveryTime : "");
+        if (errorMessage != null) {
+            jsonResponse.put("errorMessage", errorMessage);
+        }
+        System.out.println("Sending JSON: " + jsonResponse.toString()); // Log JSON
+        response.getWriter().write(jsonResponse.toString());
     }
 
     private void forwardWithError(HttpServletRequest request, HttpServletResponse response, int idAcc) throws ServletException, IOException {
