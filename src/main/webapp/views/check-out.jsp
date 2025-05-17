@@ -190,7 +190,115 @@
     <c:remove var="paymentSuccessMessage" scope="session" />
   }, 5000);
   </c:if>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const calculateShippingBtn = document.getElementById('calculate-shipping-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const checkoutForm = document.getElementById('checkout-form');
+    const completeCheckoutBtn = document.querySelector('.complete-checkout-btn');
+    const errorMessageDiv = document.querySelector('.errorMessage') || document.createElement('div');
+
+    if (!errorMessageDiv.classList.contains('errorMessage')) {
+      errorMessageDiv.classList.add('errorMessage');
+      checkoutForm.prepend(errorMessageDiv);
+    }
+
+    // Validate form inputs
+    function validateInputs() {
+      const requiredFields = ['sonha', 'phuongxa', 'quan'];
+      let isValid = true;
+      errorMessageDiv.textContent = '';
+
+      requiredFields.forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        const errorSpan = input.nextElementSibling;
+        if (!input.value.trim()) {
+          errorSpan.textContent = `Vui lòng nhập ${input.placeholder}`;
+          isValid = false;
+        } else {
+          errorSpan.textContent = '';
+        }
+      });
+
+      return isValid;
+    }
+
+    // Update UI with shipping data
+    function updateShippingUI(data) {
+      const shippingFeeSpan = document.getElementById('shipping-fee');
+      const deliveryTimeSpan = document.getElementById('estimated-delivery-time');
+      const totalPriceSpan = document.getElementById('checkout-cart-price-final');
+      const totalAmountInput = document.getElementById('total-amount');
+      const baseTotal = parseInt(totalAmountInput.value) || 0;
+
+      if (data.shippingFee >= 0) {
+        shippingFeeSpan.textContent = data.shippingFee === 0 ? 'Miễn phí' : `${data.shippingFee} đ`;
+        deliveryTimeSpan.textContent = data.estimatedDeliveryTime || 'Chưa xác định';
+        totalPriceSpan.textContent = `${baseTotal + data.shippingFee} đ`;
+        completeCheckoutBtn.disabled = false;
+      } else {
+        shippingFeeSpan.textContent = 'Miễn phí';
+        deliveryTimeSpan.textContent = 'Chưa xác định';
+        totalPriceSpan.textContent = `${baseTotal} đ`;
+        completeCheckoutBtn.disabled = true;
+        errorMessageDiv.textContent = data.errorMessage || 'Không thể tính phí ship cho địa chỉ này.';
+      }
+    }
+
+    // Handle AJAX request for shipping calculation
+    calculateShippingBtn.addEventListener('click', () => {
+      if (!validateInputs()) {
+        return;
+      }
+
+      calculateShippingBtn.disabled = true;
+      loadingSpinner.style.display = 'inline-block';
+      errorMessageDiv.textContent = '';
+
+      const formData = new FormData(checkoutForm);
+      const data = {
+        tennguoinhan: formData.get('tennguoinhan'),
+        sdtnhan: formData.get('sdtnhan'),
+        sonha: formData.get('sonha'),
+        phuongxa: formData.get('phuongxa'),
+        quan: formData.get('quan'),
+        'note-order': formData.get('note-order'),
+        paymentMethod: formData.get('paymentMethod')
+      };
+
+      fetch('${pageContext.request.contextPath}/calculate-shipping', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+              .then(response => response.json())
+              .then(data => {
+                updateShippingUI(data);
+              })
+              .catch(error => {
+                errorMessageDiv.textContent = 'Lỗi khi tính phí ship. Vui lòng thử lại.';
+                console.error('Error:', error);
+                updateShippingUI({ shippingFee: -1, estimatedDeliveryTime: 'Chưa xác định' });
+              })
+              .finally(() => {
+                calculateShippingBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+              });
+    });
+
+    // Prevent form submission if shipping fee is not calculated
+    checkoutForm.addEventListener('submit', (e) => {
+      const shippingFeeSpan = document.getElementById('shipping-fee').textContent;
+      if (shippingFeeSpan === 'Miễn phí' && !document.getElementById('estimated-delivery-time').textContent) {
+        e.preventDefault();
+        errorMessageDiv.textContent = 'Vui lòng kiểm tra phí ship trước khi đặt hàng.';
+      }
+    });
+  });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="${pageContext.request.contextPath}/js/check-out.js"></script>
 </body>
