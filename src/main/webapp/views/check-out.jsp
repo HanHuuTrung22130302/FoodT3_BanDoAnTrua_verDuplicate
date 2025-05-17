@@ -14,7 +14,9 @@
     .form-group { margin-bottom: 15px; }
     .form-message { color: red; font-size: 12px; }
     .errorMessage { color: white; margin-bottom: 10px; }
-    .calculate-shipping-btn { margin-top: 10px; padding: 10px 20px; background-color: #b5292f; color: white; border: none; cursor: pointer;border-radius: 10px; }
+    .calculate-shipping-btn { margin-top: 10px; padding: 10px 20px; background-color: #b5292f; color: white; border: none; cursor: pointer; border-radius: 10px; }
+    .calculate-shipping-btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+    .loading { display: none; margin-left: 10px; color: #b5292f; }
   </style>
 </head>
 <body>
@@ -29,10 +31,11 @@
     </div>
     <h2 class="checkout-title">Thanh toán</h2>
   </div>
-  <c:if test="${not empty errorMessage}">
-    <div class="errorMessage">${errorMessage}</div>
+  <c:if test="${not empty requestScope.errorMessage}">
+    <div class="errorMessage">${requestScope.errorMessage}</div>
+    <c:remove var="errorMessage" scope="request" />
   </c:if>
-  <form action="${pageContext.request.contextPath}/checkout" method="post">
+  <form action="${pageContext.request.contextPath}/checkout" method="post" id="checkout-form">
     <main class="checkout-section container">
       <div class="checkout-col-left">
         <div class="checkout-row">
@@ -87,7 +90,8 @@
                 <input id="quan" name="quan" type="text" placeholder="Quận/Huyện" class="form-control" value="${formData.quan}" required />
                 <span class="form-message"></span>
               </div>
-              <button type="submit" formaction="${pageContext.request.contextPath}/calculate-shipping" class="calculate-shipping-btn">Kiểm tra phí ship</button>
+              <button type="button" id="calculate-shipping-btn" class="calculate-shipping-btn">Kiểm tra phí ship</button>
+              <span class="loading" id="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...</span>
             </div>
           </div>
         </div>
@@ -123,10 +127,13 @@
             <div class="priceFlx chk-ship">
               <div class="text">Phí vận chuyển</div>
               <div class="price-detail chk-free-ship">
-                <span>
+                <span id="shipping-fee">
                   <c:choose>
-                    <c:when test="${empty shippingFee || shippingFee == 0}">Miễn phí</c:when>
-                    <c:otherwise><c:out value="${shippingFee}" /> đ</c:otherwise>
+                    <c:when test="${not empty shippingFee}">
+                      <c:out value="${shippingFee == 0 ? 'Miễn phí' : shippingFee}" />
+                      <c:if test="${shippingFee != 0}"> đ</c:if>
+                    </c:when>
+                    <c:otherwise>Chưa tính</c:otherwise>
                   </c:choose>
                 </span>
               </div>
@@ -134,12 +141,12 @@
             <div class="priceFlx chk-delivery-time">
               <div class="text">Dự kiến giao hàng</div>
               <div class="price-detail">
-        <span>
-            <c:choose>
-              <c:when test="${not empty estimatedDeliveryTime}"><c:out value="${estimatedDeliveryTime}" /></c:when>
-              <c:otherwise>Chưa xác định</c:otherwise>
-            </c:choose>
-        </span>
+                <span id="estimated-delivery-time">
+                  <c:choose>
+                    <c:when test="${not empty estimatedDeliveryTime}"><c:out value="${estimatedDeliveryTime}" /></c:when>
+                    <c:otherwise>Chưa xác định</c:otherwise>
+                  </c:choose>
+                </span>
               </div>
             </div>
           </div>
@@ -161,8 +168,8 @@
             </div>
           </div>
         </div>
-        <input type="hidden" name="totalAmount" value="${totalAmount}" />
-        <button class="complete-checkout-btn" type="submit">Đặt hàng</button>
+        <input type="hidden" name="totalAmount" id="total-amount" value="${totalAmount}" />
+        <button class="complete-checkout-btn" type="submit" disabled>Đặt hàng</button>
       </div>
     </main>
   </form>
@@ -231,13 +238,14 @@
       const totalAmountInput = document.getElementById('total-amount');
       const baseTotal = parseInt(totalAmountInput.value) || 0;
 
-      if (data.shippingFee >= 0) {
+      // Kiểm tra xem data.shippingFee có hợp lệ không
+      if (typeof data.shippingFee === 'number' && data.shippingFee >= 0) {
         shippingFeeSpan.textContent = data.shippingFee === 0 ? 'Miễn phí' : `${data.shippingFee} đ`;
         deliveryTimeSpan.textContent = data.estimatedDeliveryTime || 'Chưa xác định';
         totalPriceSpan.textContent = `${baseTotal + data.shippingFee} đ`;
         completeCheckoutBtn.disabled = false;
       } else {
-        shippingFeeSpan.textContent = 'Miễn phí';
+        shippingFeeSpan.textContent = 'Chưa tính'; // Thay vì "Miễn phí"
         deliveryTimeSpan.textContent = 'Chưa xác định';
         totalPriceSpan.textContent = `${baseTotal} đ`;
         completeCheckoutBtn.disabled = true;
@@ -275,6 +283,7 @@
       })
               .then(response => response.json())
               .then(data => {
+                console.log('AJAX Response:', data); // Debug: Xem dữ liệu trả về
                 updateShippingUI(data);
               })
               .catch(error => {
@@ -291,14 +300,14 @@
     // Prevent form submission if shipping fee is not calculated
     checkoutForm.addEventListener('submit', (e) => {
       const shippingFeeSpan = document.getElementById('shipping-fee').textContent;
-      if (shippingFeeSpan === 'Miễn phí' && !document.getElementById('estimated-delivery-time').textContent) {
+      const deliveryTimeSpan = document.getElementById('estimated-delivery-time').textContent;
+      if (shippingFeeSpan === 'Chưa tính' || deliveryTimeSpan === 'Chưa xác định') {
         e.preventDefault();
         errorMessageDiv.textContent = 'Vui lòng kiểm tra phí ship trước khi đặt hàng.';
       }
     });
   });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="${pageContext.request.contextPath}/js/check-out.js"></script>
 </body>
