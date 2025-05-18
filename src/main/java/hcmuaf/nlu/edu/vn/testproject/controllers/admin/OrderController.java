@@ -24,9 +24,12 @@ public class OrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
+        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            logService.logActivity(0, 0, "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
+
+        if (!adminInvoiceService.isAdmin(currentUser.getAccountId()) || currentUser == null) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
+            session.invalidate();
             response.sendRedirect("home");
             return;
         }
@@ -44,7 +47,7 @@ public class OrderController extends HttpServlet {
             option = "all";
         }
 
-        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
+
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
 
         int totalLs = adminInvoiceService.countInvoicesByOption(option);
