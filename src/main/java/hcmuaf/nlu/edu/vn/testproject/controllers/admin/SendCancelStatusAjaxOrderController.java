@@ -35,9 +35,10 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
         String invoiceIdStr = request.getParameter("invoiceId");
         String reason = request.getParameter("reason");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            logService.logActivity(0, 0, "Hủy đơn hàng", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect("home");
+        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
+
+        if (!adminInvoiceService.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
             return;
         }
 
@@ -71,7 +72,6 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
             option = "all";
         }
 
-        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
         adminInvoiceService.sendCancelStatusNext(invoiceId, reason != null ? reason : "");
 
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
@@ -97,7 +97,7 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
             if (oi.getPaymentMethod() == 1) {
                 paymentText = "COD";
             } else if (oi.getPaymentMethod() == 2) {
-                paymentText = "BANK";
+                paymentText = "VNPay";
             } else {
                 paymentText = "Không xác định";
             }

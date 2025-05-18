@@ -26,10 +26,10 @@ public class AjaxOrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
+        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            logService.logActivity(0, 0, "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect("home");
+        if (!adminInvoiceService.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
             return;
         }
 
@@ -46,7 +46,7 @@ public class AjaxOrderController extends HttpServlet {
             option = "all";
         }
 
-        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
+
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
 
         int totalLs = adminInvoiceService.countInvoicesByOption(option);
@@ -70,7 +70,7 @@ public class AjaxOrderController extends HttpServlet {
             if (oi.getPaymentMethod() == 1) {
                 paymentText = "COD";
             } else if (oi.getPaymentMethod() == 2) {
-                paymentText = "BANK";
+                paymentText = "VNPay";
             } else {
                 paymentText = "Không xác định";
             }

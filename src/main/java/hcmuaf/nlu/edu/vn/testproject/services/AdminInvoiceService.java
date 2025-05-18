@@ -140,11 +140,12 @@ public class AdminInvoiceService {
         }
         return count;
     }
+public boolean isAdmin(int accountId) {
+        return dao.isAdmin(accountId);
+}
 
     public static void main(String[] args) {
         AdminInvoiceService as = new AdminInvoiceService();
-        for (OrderInvoice oi : as.getOption("all", 0)) {
-            System.out.println(oi.toString());
-        }
+        System.out.println(as.isAdmin(3));
     }
 }

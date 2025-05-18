@@ -34,9 +34,10 @@ public class SendMoveStatusAjaxOrderController extends HttpServlet {
 
         String invoiceIdStr = request.getParameter("invoiceId");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            logService.logActivity(0, 0, "Cập nhật trạng thái đơn hàng", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect("home");
+        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
+
+        if (!adminInvoiceService.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
             return;
         }
 
@@ -70,7 +71,6 @@ public class SendMoveStatusAjaxOrderController extends HttpServlet {
             option = "all";
         }
 
-        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
         adminInvoiceService.sendMoveStatusNext(invoiceId);
 
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
@@ -96,7 +96,7 @@ public class SendMoveStatusAjaxOrderController extends HttpServlet {
             if (oi.getPaymentMethod() == 1) {
                 paymentText = "COD";
             } else if (oi.getPaymentMethod() == 2) {
-                paymentText = "BANK";
+                paymentText = "VNPay";
             } else {
                 paymentText = "Không xác định";
             }

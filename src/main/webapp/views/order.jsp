@@ -76,7 +76,7 @@
                     <td>
                         <c:choose>
                             <c:when test="${oi.paymentMethod == 1}">COD</c:when>
-                            <c:when test="${oi.paymentMethod == 2}">BANK</c:when>
+                            <c:when test="${oi.paymentMethod == 2}">VNPay</c:when>
                             <c:otherwise>Không xác định</c:otherwise>
                         </c:choose>
                     </td>
@@ -249,7 +249,7 @@
                                                 <span class="popup-order-value">
                                                     <c:choose>
                                                         <c:when test="${oi.paymentMethod == 1}">COD</c:when>
-                                                        <c:when test="${oi.paymentMethod == 2}">Chuyển khoản</c:when>
+                                                        <c:when test="${oi.paymentMethod == 2}">VNPay</c:when>
                                                         <c:otherwise>Không xác định</c:otherwise>
                                                     </c:choose>
                                                 </span>
