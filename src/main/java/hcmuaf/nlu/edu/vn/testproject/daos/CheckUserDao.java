@@ -63,5 +63,21 @@ public class CheckUserDao {
         }
         return null; // nếu không tìm thấy
     }
-
+    public boolean isAdmin(int accountId) {
+        String sql = "SELECT role_id, is_locked, is_deleted FROM account WHERE account_id = ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int roleId = rs.getInt("role_id");
+                int isLocked = rs.getInt("is_locked");
+                int isDeleted = rs.getInt("is_deleted");
+                return roleId == 1 && isLocked == 0 && isDeleted == 0;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

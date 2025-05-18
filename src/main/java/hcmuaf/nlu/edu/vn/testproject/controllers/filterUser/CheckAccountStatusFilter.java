@@ -9,7 +9,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "CheckAccountStatusFilter", urlPatterns = {"/*"})
+@WebFilter(filterName = "CheckAccountStatusFilter", urlPatterns = {"/about","/AccDetail","/user","/addtoCart","/allmenu","/home","/PurchaseOrderDetail","/PurchaseOrder","/contact"})
 public class CheckAccountStatusFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
