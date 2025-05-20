@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.IngredientDAO;
 import hcmuaf.nlu.edu.vn.testproject.dto.IngredientDTO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
@@ -21,6 +22,7 @@ public class IngredientsController extends HttpServlet {
     private IngredientDAO ingredientDAO;
     private final Gson gson = new Gson();
     private LogService logService = new LogService();
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     public void init() {
@@ -32,8 +34,9 @@ public class IngredientsController extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
+            session.invalidate();
             response.sendRedirect("home");
             return;
         }
