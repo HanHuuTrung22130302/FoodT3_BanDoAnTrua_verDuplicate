@@ -8,13 +8,16 @@ import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(name = "AccDetailController", value = "/AccDetail")
 public class AccDetailController extends HttpServlet {
-
+    private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,7 +27,7 @@ public class AccDetailController extends HttpServlet {
         List<Category> categoryList = cs.getCategories();
         request.setAttribute("listC", categoryList);
         if (currentUser != null) {
-            int userId = currentUser.getAccountId();  // Lấy ID từ session
+            int userId = currentUser.getAccountId();
             AccdetailDAO accountDAO = new AccdetailDAO();
             Account account = accountDAO.getAccountById(userId);
             AccountDetail accDetail = accountDAO.getAccDetailById(userId);
@@ -38,60 +41,77 @@ public class AccDetailController extends HttpServlet {
                 request.getRequestDispatcher("views/UserInformation.jsp").forward(request, response);
             }
         } else {
-            response.sendRedirect("views/signin.jsp");  // Nếu không có session, chuyển hướng đến trang đăng nhập
+            response.sendRedirect("home");
         }
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy thông tin từ form
-        String fullName = request.getParameter("fullName");
-        String phoneNumber = request.getParameter("phoneNumber");
-        String birthDate = request.getParameter("birthDate");
-        String gender = request.getParameter("gender");
-        String address = request.getParameter("address");
+        Map<String, Object> result = new HashMap<>();
 
-        // Lấy đối tượng Account từ session
-        Account account = (Account) request.getSession().getAttribute("currentUser");  // Sử dụng "currentUser"
+        try {
+            // Lấy thông tin từ form và xử lý null
+            String fullName = request.getParameter("fullName");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String birthDate = request.getParameter("birthDate");
+            String genderStr = request.getParameter("gender");
+            String address = request.getParameter("address");
 
-        if (account != null) {
-            // Lấy thông tin chi tiết tài khoản (AccDetail) từ Account
-            AccountDetail accDetail = account.getAccountDetail();
-
-            if (accDetail == null) {
-                // Nếu chưa có AccDetail, tạo mới AccDetail
-                accDetail = new AccountDetail();
+            // Validate dữ liệu đầu vào
+            if (fullName == null || fullName.trim().isEmpty() ||
+                    phoneNumber == null || phoneNumber.trim().isEmpty() ||
+                    birthDate == null || birthDate.trim().isEmpty() ||
+                    genderStr == null || genderStr.trim().isEmpty() ||
+                    address == null || address.trim().isEmpty()) {
+                result.put("success", false);
+                result.put("message", "Vui lòng điền đầy đủ thông tin!");
+                response.getWriter().write(gson.toJson(result));
+                return;
             }
 
-            // Cập nhật thông tin người dùng vào AccDetail
-            accDetail.setFullName(fullName);
-            accDetail.setPhoneNumber(phoneNumber);
-            accDetail.setAddress(address);
-            accDetail.setBirthDate(birthDate);
-            accDetail.setGender(Integer.parseInt(gender));
+            // Parse gender với xử lý lỗi
+            int gender;
+            try {
+                genderStr = genderStr != null ? genderStr : "0"; // Mặc định là Nam nếu null
+                gender = Integer.parseInt(genderStr);
+            } catch (NumberFormatException e) {
+                gender = 0; // Mặc định là Nam nếu parse lỗi
+            }
 
-            // Cập nhật thông tin vào cơ sở dữ liệu (cập nhật hoặc tạo mới AccDetail)
-            AccdetailDAO accdetailDAO = new AccdetailDAO();
-            if (accDetail.getAccountId() == 0) {
-                // Nếu chưa có AccDetail trong cơ sở dữ liệu (ID = 0), thêm mới
-                accdetailDAO.addAccDetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, Integer.parseInt(gender));
+            // Lấy đối tượng Account từ session
+            Account account = (Account) request.getSession().getAttribute("currentUser");
+
+            if (account != null) {
+                // Cập nhật thông tin vào cơ sở dữ liệu
+                AccdetailDAO accdetailDAO = new AccdetailDAO();
+                AccountDetail existingDetail = accdetailDAO.getAccDetailById(account.getAccountId());
+
+                if (existingDetail == null) {
+                    // Nếu chưa có AccDetail, thêm mới
+                    accdetailDAO.addAccDetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, gender);
+                } else {
+                    // Nếu đã có AccDetail, thực hiện cập nhật
+                    accdetailDAO.updateAccdetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, gender);
+                }
+
+                // Cập nhật lại thông tin trong session
+                AccountDetail updatedDetail = accdetailDAO.getAccDetailById(account.getAccountId());
+                account.setAccountDetail(updatedDetail);
+                request.getSession().setAttribute("currentUser", account);
+
+                result.put("success", true);
+                result.put("message", "Cập nhật thông tin thành công!");
             } else {
-                // Nếu đã có AccDetail, thực hiện cập nhật
-                accdetailDAO.updateAccdetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, Integer.parseInt(gender));
+                result.put("success", false);
+                result.put("message", "Không tìm thấy thông tin tài khoản!");
             }
-
-            // Cập nhật lại thông tin trong session
-            account.setAccountDetail(accDetail);  // Cập nhật lại thông tin AccDetail trong Account
-            request.getSession().setAttribute("currentUser", account);  // Lưu lại thông tin tài khoản với AccDetail đã cập nhật
-
-            // Chuyển hướng đến trang thông tin người dùng sau khi cập nhật
-            response.sendRedirect("AccDetail");
-        } else {
-            response.getWriter().write("Không tìm thấy tài khoản trong session.");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "Có lỗi xảy ra: " + e.getMessage());
+            e.printStackTrace(); // Log lỗi để debug
         }
+        response.getWriter().write(gson.toJson(result));
     }
-
 }
 
 
