@@ -30,7 +30,6 @@ public class CategoryController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 1, "Truy cập trang quản lý danh mục", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }
@@ -55,7 +54,6 @@ public class CategoryController extends HttpServlet {
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Không có quyền truy cập");
             sendJsonResponse(response, jsonResponse);
-            session.invalidate();
             return;
         }
 

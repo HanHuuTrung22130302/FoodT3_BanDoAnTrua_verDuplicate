@@ -41,7 +41,6 @@ public class BannerController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem danh sách banner", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }
@@ -68,7 +67,6 @@ public class BannerController extends HttpServlet {
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Không có quyền truy cập");
             out.print(gson.toJson(jsonResponse));
-            session.invalidate();
             return;
         }
 

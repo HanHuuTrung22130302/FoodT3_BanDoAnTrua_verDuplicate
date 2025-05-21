@@ -31,7 +31,6 @@ public class AdminController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem bảng quản trị", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }

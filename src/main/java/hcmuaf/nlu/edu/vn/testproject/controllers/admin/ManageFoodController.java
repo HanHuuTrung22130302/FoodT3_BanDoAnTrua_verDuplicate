@@ -49,7 +49,6 @@ public class ManageFoodController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }
@@ -138,8 +137,6 @@ public class ManageFoodController extends HttpServlet {
             responseData.put("currentCategoryId", categoryId);
             responseData.put("search", txtSearch);
 
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(new Gson().toJson(responseData));
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,7 +212,6 @@ public class ManageFoodController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Quản lý món ăn", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }

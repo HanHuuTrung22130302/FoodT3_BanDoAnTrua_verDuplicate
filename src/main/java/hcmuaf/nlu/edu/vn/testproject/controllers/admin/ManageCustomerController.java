@@ -30,7 +30,6 @@ public class ManageCustomerController extends HttpServlet {
 
         if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem danh sách thành viên", "Thất bại", "Không có quyền truy cập");
-            session.invalidate();
             response.sendRedirect("home");
             return;
         }
@@ -77,7 +76,6 @@ public class ManageCustomerController extends HttpServlet {
             jsonResponse.put("success", false);
             jsonResponse.put("error", "Bạn không có quyền thực hiện thao tác này");
             out.print(jsonResponse.toString());
-            session.invalidate();
             return;
         }
 
