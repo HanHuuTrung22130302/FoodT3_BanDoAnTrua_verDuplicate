@@ -175,18 +175,14 @@ public class AccdetailDAO {
         }
     }
 
-    public static void main(String[] args) {
-        AccdetailDAO dao = new AccdetailDAO();
-        System.out.println(dao.getAccountById(16));
-        System.out.println(dao.getAccDetailById(16));
-    }
-
-    public void addAccDetail(int idAcc, String fullName, String address, String phoneNumber, String birthDate, int gender) {
+    public boolean addAccDetail(int idAcc, String fullName, String address, String phoneNumber, String birthDate, int gender) {
         Connection con = null;
         PreparedStatement ps = null;
         String query = "INSERT INTO account_detail (account_id, full_name, phone_number, address, birth_date, gender, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(),NOW())";
         try {
             con = new DbContext().getConnection();
+            con.setAutoCommit(false);
+
             ps = con.prepareStatement(query);
             ps.setInt(1, idAcc);
             ps.setString(2, fullName);
@@ -195,14 +191,36 @@ public class AccdetailDAO {
             ps.setString(5, birthDate);
             ps.setInt(6, gender);
 
-            // Thực thi câu lệnh thêm mới
-            ps.executeUpdate();
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                con.commit();
+                return true;
+            } else {
+                con.rollback();
+                return false;
+            }
         } catch (Exception e) {
+            System.err.println("Lỗi khi thêm account detail: " + e.getMessage());
             e.printStackTrace();
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Lỗi khi rollback: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+            return false;
         } finally {
-            // Đảm bảo đóng tài nguyên sau khi thực hiện xong
+            try {
+                if (con != null) {
+                    con.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi reset auto commit: " + e.getMessage());
+                e.printStackTrace();
+            }
             closeResources(null, ps, con);
         }
     }
-
 }

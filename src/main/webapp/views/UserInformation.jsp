@@ -203,6 +203,7 @@ prefix="c" %>
           url: "AccDetail",
           type: "POST",
           data: $("#profileForm").serialize(),
+          dataType: "json",
           success: function (response) {
             if (response.success) {
               Swal.fire({
@@ -216,12 +217,14 @@ prefix="c" %>
               Swal.fire({
                 icon: "error",
                 title: "Lỗi!",
-                text: response.message,
+                text:
+                  response.message || "Có lỗi xảy ra khi cập nhật thông tin",
               });
             }
           },
           error: function (xhr, status, error) {
             console.error("Error:", error);
+            console.log("Response:", xhr.responseText);
             Swal.fire({
               icon: "error",
               title: "Lỗi!",

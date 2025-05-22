@@ -20,7 +20,7 @@
             <div class="social-container">
                 <a href="#" class="social">
                     <i class="fab fa-facebook-f"></i></a>
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-7cooqsg6h3rda6ouocf2aq0fvqi5fcjh.apps.googleusercontent.com&approval_prompt=force" class="social">
                     <i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
@@ -39,7 +39,7 @@
             <div class="social-container">
                 <a href="#" class="social">
                     <i class="fab fa-facebook-f"></i></a>
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-7cooqsg6h3rda6ouocf2aq0fvqi5fcjh.apps.googleusercontent.com&approval_prompt=force" class="social">
                     <i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
