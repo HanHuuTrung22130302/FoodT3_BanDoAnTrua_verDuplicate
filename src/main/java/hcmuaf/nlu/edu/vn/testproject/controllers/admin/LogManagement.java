@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.LogEntry;
 import hcmuaf.nlu.edu.vn.testproject.services.LogService;
@@ -8,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -18,6 +20,7 @@ import java.util.List;
 @WebServlet(name = "LogManagement", value = "/LogManagement")
 public class LogManagement extends HttpServlet {
     private LogService logService;
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     public void init() throws ServletException {
@@ -27,11 +30,11 @@ public class LogManagement extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
 
-        Account currentUser = (Account) request.getSession().getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+            session.invalidate();
             response.sendRedirect("home");
             return;
         }

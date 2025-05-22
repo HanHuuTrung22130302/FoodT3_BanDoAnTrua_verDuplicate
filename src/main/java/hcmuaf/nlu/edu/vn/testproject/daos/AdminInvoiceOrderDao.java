@@ -754,7 +754,7 @@ public class AdminInvoiceOrderDao {
                 int roleId = rs.getInt("role_id");
                 int isLocked = rs.getInt("is_locked");
                 int isDeleted = rs.getInt("is_deleted");
-                return roleId == 1 && isLocked == 0 && isDeleted == 0;
+                return (roleId == 1 || roleId == 3) && isLocked == 0 && isDeleted == 0;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

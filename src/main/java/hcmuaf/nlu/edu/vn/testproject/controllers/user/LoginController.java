@@ -57,7 +57,7 @@ public class LoginController extends HttpServlet {
         }
 
         if (account.isDeleted()) {
-            out.print("{\"status\": \"error\", \"message\": \"Tài khoản của bạn đã bị khóa\"}");
+            out.print("{\"status\": \"error\", \"message\": \"Tài khoản của bạn đã bị chặn\"}");
             return;
         }
 

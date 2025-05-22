@@ -12,6 +12,7 @@ public class CheckUserDao {
 
     public CheckUserDao() {
     }
+
     public boolean isLocked(int accountId) {
         String sql = "SELECT is_locked FROM account WHERE account_id = ?";
         try (Connection conn = new DbContext().getConnection();
@@ -63,6 +64,7 @@ public class CheckUserDao {
         }
         return null; // nếu không tìm thấy
     }
+
     public boolean isAdmin(int accountId) {
         String sql = "SELECT role_id, is_locked, is_deleted FROM account WHERE account_id = ?";
         try (Connection conn = new DbContext().getConnection();
@@ -73,7 +75,7 @@ public class CheckUserDao {
                 int roleId = rs.getInt("role_id");
                 int isLocked = rs.getInt("is_locked");
                 int isDeleted = rs.getInt("is_deleted");
-                return roleId == 1 && isLocked == 0 && isDeleted == 0;
+                return (roleId == 1 || roleId == 3) && isLocked == 0 && isDeleted == 0;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

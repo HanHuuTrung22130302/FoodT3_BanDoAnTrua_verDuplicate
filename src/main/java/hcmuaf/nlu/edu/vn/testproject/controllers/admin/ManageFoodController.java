@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Category;
@@ -39,14 +40,14 @@ public class ManageFoodController extends HttpServlet {
     private CategoryService cs = new CategoryService();
     private FoodServiceListFilter foodServiceListFilter = new FoodServiceListFilter();
     private LogService logService = new LogService();
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;
@@ -136,8 +137,6 @@ public class ManageFoodController extends HttpServlet {
             responseData.put("currentCategoryId", categoryId);
             responseData.put("search", txtSearch);
 
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(new Gson().toJson(responseData));
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,8 +151,6 @@ public class ManageFoodController extends HttpServlet {
         if (idFood != null) {
             try {
                 Food food = foodDAO.getFoodById(Integer.parseInt(idFood));
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(new Gson().toJson(food));
                 return;
             } catch (Exception e) {
@@ -213,7 +210,7 @@ public class ManageFoodController extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Quản lý món ăn", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;
@@ -225,8 +222,6 @@ public class ManageFoodController extends HttpServlet {
             int idFood = Integer.parseInt(request.getParameter("idFood"));
             boolean success = foodServiceListFilter.deleteFood(idFood);
             logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xóa món ăn", success ? "Thành công" : "Thất bại", "Mã món ăn: " + idFood);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"success\":" + success + "}");
         } else if ("add".equals(action)) {
             try {
@@ -242,8 +237,6 @@ public class ManageFoodController extends HttpServlet {
                     .anyMatch(f -> f.getFoodName().equalsIgnoreCase(foodName));
 
                 if (isDuplicate) {
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     response.getWriter().write("{\"success\":false, \"message\":\"Tên món ăn đã tồn tại\"}");
                     return;
                 }
@@ -265,10 +258,6 @@ public class ManageFoodController extends HttpServlet {
 
                 // Ghi log
                 logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Thêm món ăn", result ? "Thành công" : "Thất bại", "Tên món ăn: " + foodName);
-
-                // Chuẩn bị response
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
 
                 if (result) {
                     // Lấy ID của món vừa thêm
@@ -324,8 +313,6 @@ public class ManageFoodController extends HttpServlet {
                 // Lấy thông tin món ăn hiện tại
                 Food currentFood = foodDAO.getFoodById(idFood);
                 if (currentFood == null) {
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
                     response.getWriter().write("{\"success\":false, \"message\":\"Không tìm thấy món ăn\"}");
                     return;
                 }
@@ -337,8 +324,6 @@ public class ManageFoodController extends HttpServlet {
                         .anyMatch(f -> f.getFoodId() != idFood && f.getFoodName().equalsIgnoreCase(foodName));
 
                     if (isDuplicate) {
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
                         response.getWriter().write("{\"success\":false, \"message\":\"Tên món ăn đã tồn tại\"}");
                         return;
                     }
@@ -364,8 +349,6 @@ public class ManageFoodController extends HttpServlet {
                 foodDAO.getAllFood();
 
                 logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Cập nhật món ăn", result ? "Thành công" : "Thất bại", "Mã món ăn: " + idFood);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
 
                 if (result) {
                     // Lấy thông tin đầy đủ của món vừa cập nhật

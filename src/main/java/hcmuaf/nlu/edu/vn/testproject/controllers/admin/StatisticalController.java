@@ -1,11 +1,13 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.InvoiceDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.InvoiceDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import com.google.gson.Gson;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -23,9 +25,21 @@ import java.util.LinkedHashMap;
 
 @WebServlet(name = "StatisticalController", value = "/statistical")
 public class StatisticalController extends HttpServlet {
+    private LogService logService = new LogService();
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
+
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(0, 0, "Xem danh sách món ăn", "Thất bại", "Không có quyền truy cập");
+            session.invalidate();
+            response.sendRedirect("home");
+            return;
+        }
+
         // Kiểm tra nếu là yêu cầu AJAX
         String requestedWith = request.getHeader("X-Requested-With");
 
@@ -49,7 +63,7 @@ public class StatisticalController extends HttpServlet {
 
         // Lấy dữ liệu thống kê
         Map<String, Object> data = new HashMap<>();
-        
+
         // Lấy tổng quan
         int totalRevenue = 0;
         int totalOrders = 0;
@@ -124,7 +138,7 @@ public class StatisticalController extends HttpServlet {
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
-        
+
         // Lấy tham số thời gian
         String timeFilter = request.getParameter("timeFilter");
         if (timeFilter == null || timeFilter.isEmpty()) {
