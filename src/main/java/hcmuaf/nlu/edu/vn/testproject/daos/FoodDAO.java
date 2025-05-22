@@ -568,4 +568,10 @@ public class FoodDAO {
         }
         return 0;
     }
+
+    public static void main(String[] args) {
+        FoodDAO foodDAO = new FoodDAO();
+        Food food = foodDAO.getFoodById(1);
+        System.out.println(food);
+    }
 }

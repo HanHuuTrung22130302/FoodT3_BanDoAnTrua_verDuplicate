@@ -57,7 +57,7 @@ public class VerifyService {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
             msg.setSubject("Xác thực email đăng ký", "UTF-8");
 
-            String link = "http://localhost:8080/testProject/verify?token=" + token;
+            String link = "http://foodt3.online/verify?token=" + token;
             String content = "<h1>Xin chào " + name + "</h1>" +
                     "<p>Vui lòng nhấp vào liên kết dưới đây để xác thực email của bạn (hết hạn sau 20 phút):</p>" +
                     "<a href='" + link + "'>Xác thực email</a>";
