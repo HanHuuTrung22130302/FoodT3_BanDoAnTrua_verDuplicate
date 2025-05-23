@@ -102,7 +102,7 @@ public class AdminInvoiceService {
     public void setCompletionTimeForInvoices(List<OrderInvoice> invoices) {
         for (OrderInvoice oi : invoices) {
             int status = oi.getOrderStatus();
-            if (status == 4 || status == 5) {
+            if (status == 4 || status == 5||status==6) {
                 String completionTime = dao.getCompletionTime(oi.getInvoiceId());
                 oi.setCompletionTime(completionTime);
             } else {
@@ -126,6 +126,9 @@ public class AdminInvoiceService {
     public void sendMoveStatusNext(int invoiceId){
         dao.moveOrderStatusForward(invoiceId);
     }
+    public void sendMoveStatusBombOrder(int invoiceId,String reason){
+        dao.bombOrder(invoiceId,reason);
+    }
     public void sendCancelStatusNext(int invoiceId,String reason){
         dao.cancelOrder(invoiceId,reason);
     }
@@ -144,8 +147,19 @@ public boolean isAdmin(int accountId) {
         return dao.isAdmin(accountId);
 }
 
+
+
+    public OrderInvoice getInvoiceById(int invoiceId) {
+        OrderInvoice oi = dao.getInvoiceById(invoiceId);
+        if (oi != null) {
+            setCompletionTimeForInvoices(Collections.singletonList(oi));
+            setReasonForInvoices(Collections.singletonList(oi));
+        }
+        return oi;
+    }
+
     public static void main(String[] args) {
         AdminInvoiceService as = new AdminInvoiceService();
-        System.out.println(as.isAdmin(3));
+//        as.sendMoveStatusBombOrder(21);
     }
 }

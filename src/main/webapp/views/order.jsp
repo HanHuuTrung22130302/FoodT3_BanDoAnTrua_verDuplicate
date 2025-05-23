@@ -98,12 +98,17 @@
                         </c:if>
                         <c:if test="${oi.orderStatus == 4}">
                             <button class="details-button" onclick="showInfoPopup('${oi.invoiceId}')">
-                                        Đã hoàn thành
+                                Đã hoàn thành
                             </button>
                         </c:if>
                         <c:if test="${oi.orderStatus == 5}">
                             <button class="details-button" onclick="showInfoCancelPopup('${oi.invoiceId}')">
-                                        Đã hủy
+                                Đã hủy
+                            </button>
+                        </c:if>
+                        <c:if test="${oi.orderStatus == 6}">
+                            <button class="details-button" onclick="showInfoBombPopup('${oi.invoiceId}')">
+                                KH không lấy
                             </button>
                         </c:if>
                         <div id="showStatusPopup${oi.invoiceId}" class="infoStatusOrder-popup"
@@ -113,7 +118,8 @@
                                     &times;
                                 </div>
                                 <div class="popup-header-infoStatus">
-                                            Đơn hàng ${String.format("%06d",oi.invoiceId)} đã hoàn thành vào lúc: ${oi.completionTime}
+                                    Đơn hàng ${String.format("%06d",oi.invoiceId)} đã hoàn thành vào
+                                    lúc: ${oi.completionTime}
                                 </div>
                             </div>
                         </div>
@@ -125,10 +131,27 @@
                                     &times;
                                 </div>
                                 <div class="popup-header-infoStatusCancel">
-                                            Đơn hàng ${String.format("%06d",oi.invoiceId)} đã bị hủy vào lúc: ${oi.completionTime}
+                                    Đơn hàng ${String.format("%06d",oi.invoiceId)} đã bị hủy vào
+                                    lúc: ${oi.completionTime}
                                 </div>
                                 <div class="reason-text">
                                     <span style="font-weight: 700;color: black">Lý do hủy đơn hàng:</span> ${oi.reason}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="showStatusBombPopup${oi.invoiceId}" class="infoStatusCancelOrder-popup"
+                             style="display: none;">
+                            <div class="popup-content-infoStatusCancel">
+                                <div class="closeDetail" onclick="closePopup('showStatusBombPopup${oi.invoiceId}');">
+                                    &times;
+                                </div>
+                                <div class="popup-header-infoStatusCancel">
+                                    Đơn hàng ${String.format("%06d",oi.invoiceId)} đã bị hủy vào
+                                    lúc: ${oi.completionTime}
+                                </div>
+                                <div class="reason-text">
+                                    <span style="font-weight: 700;color: black">Lý do:</span> ${oi.reason}
                                 </div>
                             </div>
                         </div>
@@ -203,6 +226,12 @@
                                         </div>
                                     </div>
 
+                                    <c:if test="${oi.orderStatus == 3}">
+                                        <button class="button-cancel-order" onclick="showCancelBombPopup(${oi.invoiceId})">Hủy
+                                            với lí do khác
+                                        </button>
+                                    </c:if>
+
                                     <button class="button-cancel-order" onclick="showCancelPopup(${oi.invoiceId})">Hủy
                                         đơn hàng
                                     </button>
@@ -213,10 +242,15 @@
                                                 ID: ${String.format("%06d", oi.invoiceId)}</div>
                                             <textarea class="cancel-reason" placeholder="Lý do hủy..."></textarea>
                                             <div class="popup-actions-cancel">
-                                                <button class="button-confirm-cancel"
-                                                        onclick="confirmCancelOrder(${oi.invoiceId},'${param.option}',${param.page})">
+                                                <button id="confirm-cancel-${oi.invoiceId}" class="button-confirm-cancel" style="display:none"
+                                                        onclick="confirmCancelOrder(${oi.invoiceId}, '${param.option}', ${param.page})">
                                                     Xác nhận
                                                 </button>
+
+<%--                                                <button id="confirm-cancel-bomb-${oi.invoiceId}" class="button-confirm-cancel" style="display:none"--%>
+<%--                                                        onclick="confirmCancelBombOrder(${oi.invoiceId}, '${param.option}', ${param.page})">--%>
+<%--                                                    Xác nhận--%>
+<%--                                                </button>--%>
                                                 <button class="button-cancel-cancel"
                                                         onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng
                                                 </button>
@@ -232,31 +266,37 @@
                                 onclick="showPopup('detail${oi.invoiceId}');scrollToTop('detail${oi.invoiceId}')">Chi
                             tiết
                         </button>
+                        <a href="exportBillController?id=${oi.invoiceId}" >
+                            <button class="buttonDetailInvoice" type="button">Xuất PDF</button>
+                        </a>
+
+
                         <div id="detail${oi.invoiceId}" class="popup">
-                            <div class="popup-content-detail">
-                                <div class="closeDetail" onclick="closePopup('detail${oi.invoiceId}');">
-                                    &times;
-                                </div>
-                                <div class="popup-body">
-                                    <div class="order-card">
-                                        <div class="popup-order-top">
-                                            <div class="popup-order-id">
-                                                <span class="popup-order-label">ID đơn hàng:</span>
-                                                <span class="popup-order-value">#${String.format("%06d", oi.invoiceId)}</span>
-                                            </div>
-                                            <div class="popup-order-status">
-                                                <span class="popup-order-label">Thanh toán:</span>
-                                                <span class="popup-order-value">
+                            <div id="print${oi.invoiceId}">
+                                <div class="popup-content-detail">
+                                    <div class="closeDetail" onclick="closePopup('detail${oi.invoiceId}');">
+                                        &times;
+                                    </div>
+                                    <div class="popup-body">
+                                        <div class="order-card">
+                                            <div class="popup-order-top">
+                                                <div class="popup-order-id">
+                                                    <span class="popup-order-label">ID đơn hàng:</span>
+                                                    <span class="popup-order-value">#${String.format("%06d", oi.invoiceId)}</span>
+                                                </div>
+                                                <div class="popup-order-status">
+                                                    <span class="popup-order-label">Thanh toán:</span>
+                                                    <span class="popup-order-value">
                                                     <c:choose>
                                                         <c:when test="${oi.paymentMethod == 1}">COD</c:when>
                                                         <c:when test="${oi.paymentMethod == 2}">VNPay</c:when>
                                                         <c:otherwise>Không xác định</c:otherwise>
                                                     </c:choose>
                                                 </span>
-                                            </div>
-                                            <div class="popup-order-status">
-                                                <span class="popup-order-label">Tình trạng:</span>
-                                                <span class="popup-order-value">
+                                                </div>
+                                                <div class="popup-order-status">
+                                                    <span class="popup-order-label">Tình trạng:</span>
+                                                    <span class="popup-order-value">
                                                      <c:choose>
                                                          <c:when test="${oi.orderStatus == 1}">
                                                              Chờ xác nhận
@@ -271,57 +311,58 @@
                                                              Đã hoàn thành vào lúc ${oi.completionTime}
                                                          </c:when>
                                                          <c:when test="${oi.orderStatus == 5}">
-                                                             Đã hủy  vào lúc ${oi.completionTime}
+                                                             Đã hủy vào lúc ${oi.completionTime}
                                                          </c:when>
                                                      </c:choose>
                                                 </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="line_st"></div>
-                                        <div class="popup-order-info">
-                                            <div class="popup-order-row">
-                                                <span class="popup-order-label">Họ tên người nhận:</span>
-                                                <span class="popup-order-value">${oi.recipientName}</span>
-                                            </div>
-                                            <div class="popup-order-row">
-                                                <span class="popup-order-label">Số điện thoại:</span>
-                                                <span class="popup-order-value">${oi.phoneNumber}</span>
-                                            </div>
-                                            <div class="popup-order-row">
-                                                <span class="popup-order-label">Địa chỉ nhận hàng:</span>
-                                                <span class="popup-order-value">${oi.deliveryAddress}</span>
-                                            </div>
-                                        </div>
-                                        <div class="line_st"></div>
-                                        <div class="noteOrder">
-                                            <div class="popup-order-row">
-                                                <span class="popup-order-label">Ghi chú:</span>
-                                                <span class="popup-order-value">${oi.note}</span>
-                                            </div>
-                                        </div>
-                                        <div class="line_st"></div>
-                                        <c:forEach var="item" items="${oi.orderInvoiceDetail}">
-                                            <div class="product-item">
-                                                <img
-                                                        src="${item.image}"
-                                                        class="product-image"
-                                                />
-                                                <div class="product-info">
-                                                    <h3 class="product-name">${item.foodName}</h3>
-                                                    <p class="product-quantity">Số lượng: ${item.quantity}</p>
-                                                </div>
-                                                <div class="product-total">
-                                                    <div class="money">${item.totalAmount}&nbsp;đ</div>
                                                 </div>
                                             </div>
-                                        </c:forEach>
 
-                                        <div class="line_end"></div>
-                                        <div class="order-total">
-                                            Tổng tiền:
-                                            <span class="total-money" id="totalAmount"
-                                                  style="font-size: 22px">${oi.totalAmount}&nbsp;đ</span>
+                                            <div class="line_st"></div>
+                                            <div class="popup-order-info">
+                                                <div class="popup-order-row">
+                                                    <span class="popup-order-label">Họ tên người nhận:</span>
+                                                    <span class="popup-order-value">${oi.recipientName}</span>
+                                                </div>
+                                                <div class="popup-order-row">
+                                                    <span class="popup-order-label">Số điện thoại:</span>
+                                                    <span class="popup-order-value">${oi.phoneNumber}</span>
+                                                </div>
+                                                <div class="popup-order-row">
+                                                    <span class="popup-order-label">Địa chỉ nhận hàng:</span>
+                                                    <span class="popup-order-value">${oi.deliveryAddress}</span>
+                                                </div>
+                                            </div>
+                                            <div class="line_st"></div>
+                                            <div class="noteOrder">
+                                                <div class="popup-order-row">
+                                                    <span class="popup-order-label">Ghi chú:</span>
+                                                    <span class="popup-order-value">${oi.note}</span>
+                                                </div>
+                                            </div>
+                                            <div class="line_st"></div>
+                                            <c:forEach var="item" items="${oi.orderInvoiceDetail}">
+                                                <div class="product-item">
+                                                    <img
+                                                            src="${item.image}"
+                                                            class="product-image"
+                                                    />
+                                                    <div class="product-info">
+                                                        <h3 class="product-name">${item.foodName}</h3>
+                                                        <p class="product-quantity">Số lượng: ${item.quantity}</p>
+                                                    </div>
+                                                    <div class="product-total">
+                                                        <div class="money">${item.totalAmount}&nbsp;đ</div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+
+                                            <div class="line_end"></div>
+                                            <div class="order-total">
+                                                Tổng tiền:
+                                                <span class="total-money" id="totalAmount"
+                                                      style="font-size: 22px">${oi.totalAmount}&nbsp;đ</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -370,6 +411,7 @@
 
     </div>
 </div>
+
 <script src="${pageContext.request.contextPath}/js/module_popup_adminDonHang.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_stopPopup.js"></script>
 <script src="${pageContext.request.contextPath}/js/purchase.js"></script>

@@ -33,6 +33,7 @@ public class OrderController extends HttpServlet {
             response.sendRedirect("home");
             return;
         }
+        logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thành công", "");
 
         int page = 1;
         if (request.getParameter("page") != null) {

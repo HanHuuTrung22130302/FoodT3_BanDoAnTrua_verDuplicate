@@ -57,11 +57,21 @@ public class AjaxOrderController extends HttpServlet {
         for (OrderInvoice oi : ois) {
             String statusText = "";
             switch (oi.getOrderStatus()) {
-                case 1: statusText = "Chờ xác nhận"; break;
-                case 2: statusText = "Đang chuẩn bị"; break;
-                case 3: statusText = "Đang giao hàng"; break;
-                case 4: statusText = "Đã hoàn thành"; break;
-                case 5: statusText = "Đã hủy"; break;
+                case 1:
+                    statusText = "Chờ xác nhận";
+                    break;
+                case 2:
+                    statusText = "Đang chuẩn bị";
+                    break;
+                case 3:
+                    statusText = "Đang giao hàng";
+                    break;
+                case 4:
+                    statusText = "Đã hoàn thành";
+                    break;
+                case 5:
+                    statusText = "Đã hủy";
+                    break;
             }
 
             boolean isDisabled = (oi.getOrderStatus() == 4 || oi.getOrderStatus() == 5);
@@ -91,7 +101,10 @@ public class AjaxOrderController extends HttpServlet {
                 out.println("    <button class='details-button' onclick=\"showInfoPopup('" + oi.getInvoiceId() + "')\">Đã hoàn thành</button>");
             } else if (oi.getOrderStatus() == 5) {
                 out.println("    <button class='details-button' onclick=\"showInfoCancelPopup('" + oi.getInvoiceId() + "')\">Đã hủy</button>");
+            } else if (oi.getOrderStatus() == 6) {
+                out.println("    <button class='details-button' onclick=\"showInfoBombPopup('" + oi.getInvoiceId() + "')\">KH không lấy</button>");
             }
+
 
             // Popup trạng thái hoàn thành
             out.println("    <div id='showStatusPopup" + oi.getInvoiceId() + "' class='infoStatusOrder-popup' style='display: none;'>");
@@ -112,6 +125,18 @@ public class AjaxOrderController extends HttpServlet {
             out.println("        </div>");
             out.println("        <div class='reason-text'>");
             out.println("          <span style='font-weight: 700; color: black'>Lý do hủy đơn hàng:</span> " + (oi.getReason() != null ? oi.getReason() : ""));
+            out.println("        </div>");
+            out.println("      </div>");
+            out.println("    </div>");
+
+            out.println("    <div id='showStatusBombPopup" + oi.getInvoiceId() + "' class='infoStatusCancelOrder-popup' style='display: none;'>");
+            out.println("      <div class='popup-content-infoStatusCancel'>");
+            out.println("        <div class='closeDetail' onclick=\"closePopup('showStatusBombPopup" + oi.getInvoiceId() + "');\">×</div>");
+            out.println("        <div class='popup-header-infoStatusCancel'>");
+            out.println("          Đơn hàng " + String.format("%06d", oi.getInvoiceId()) + " đã bị hủy vào lúc: " + (oi.getCompletionTime() != null ? oi.getCompletionTime() : ""));
+            out.println("        </div>");
+            out.println("        <div class='reason-text'>");
+            out.println("          <span style='font-weight: 700; color: black'>Lý do:</span> " + (oi.getReason() != null ? oi.getReason() : ""));
             out.println("        </div>");
             out.println("      </div>");
             out.println("    </div>");
@@ -175,6 +200,9 @@ public class AjaxOrderController extends HttpServlet {
             // Nút xem chi tiết
             out.println("  <td>");
             out.println("    <button class='buttonDetailInvoice' onclick=\"showPopup('detail" + oi.getInvoiceId() + "');scrollToTop('detail" + oi.getInvoiceId() + "')\">Chi tiết</button>");
+            out.println("<a href=\"exportBillController?id="+oi.getInvoiceId()+"\" >\n" +
+                    "                            <button class=\"buttonDetailInvoice\" type=\"button\">Xuất PDF</button>\n" +
+                    "                        </a>");
 
             // Popup chi tiết đơn
             out.println("    <div id='detail" + oi.getInvoiceId() + "' class='popup'>");
