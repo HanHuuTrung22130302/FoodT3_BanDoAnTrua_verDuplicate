@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# Local build
+echo "Building WAR file with Maven..."
+mvn clean package
+
+# Check if WAR was built successfully
+if [ ! -f target/ROOT.war ]; then
+  echo "❌ Build failed: ROOT.war not found."
+  exit 1
+fi
+
 SERVER=root@160.187.229.8
 REMOTE_DIR=/root/tomcat-app
 LOCAL_WAR=target/ROOT.war
 CONTAINER_NAME=tomcat10
 MYSQL_CONTAINER=mysql-db
+
 
 echo "Deleting old WAR and ROOT dir on server..."
 ssh -t $SERVER "rm -rf $REMOTE_DIR/ROOT.war $REMOTE_DIR/ROOT"

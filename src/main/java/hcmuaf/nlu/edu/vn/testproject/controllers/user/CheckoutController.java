@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @WebServlet(name = "CheckoutController", value = {"/checkout", "/calculate-shipping"})
@@ -483,9 +484,18 @@ public class CheckoutController extends HttpServlet {
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
-        cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.MINUTE, 1500000000);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+
+        // Ghi log tất cả tham số
+        System.out.println("VNPay Params: " + vnp_Params);
+        System.out.println("vnp_ReturnUrl: " + Config.vnp_ReturnUrl);
+        System.out.println("vnp_TxnRef: " + vnp_TxnRef);
+        System.out.println("==== VNPay Log ====");
+        System.out.println("vnp_CreateDate: " + vnp_CreateDate);
+        System.out.println("vnp_ExpireDate: " + vnp_ExpireDate);
+        System.out.println("Server LocalDateTime.now(): " + LocalDateTime.now());
 
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
