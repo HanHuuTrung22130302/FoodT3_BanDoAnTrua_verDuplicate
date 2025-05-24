@@ -775,7 +775,7 @@ public class AdminInvoiceOrderDao {
                 int roleId = rs.getInt("role_id");
                 int isLocked = rs.getInt("is_locked");
                 int isDeleted = rs.getInt("is_deleted");
-                return (roleId == 1 || roleId == 3) && isLocked == 0 && isDeleted == 0;
+                return roleId == 1 && isLocked == 0 && isDeleted == 0;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -826,6 +826,32 @@ public class AdminInvoiceOrderDao {
         return invoice;
     }
 
+    public String getCancelReasonByInvoiceId(int invoiceId) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String reason = null;
+
+        String query = "SELECT reason FROM order_status WHERE invoice_id = ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                reason = rs.getString("reason");
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi lấy lý do hủy đơn: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return reason;
+    }
 
     public static void main(String[] args) {
         AdminInvoiceOrderDao dao = new AdminInvoiceOrderDao();

@@ -42,7 +42,7 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
             logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "hủy đơn hàng", "Thất bại", "Không có quyền truy cập");
             return;
         }
-        logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "hủy đơn hàng", "Thành công", "");
+
 
         if (invoiceIdStr == null || invoiceIdStr.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invoice ID is required.");
@@ -75,11 +75,13 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
         }
 
 
-        if (optionCancel == null || optionCancel.equals("5"))
+        if (optionCancel == null || optionCancel.equals("5")) {
             adminInvoiceService.sendCancelStatusNext(invoiceId, reason != null ? reason : "");
-        else if (optionCancel == null || optionCancel.equals("6"))
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "hủy đơn hàng", "Thành công", adminInvoiceService.getReasonForInvoices(invoiceId));
+        } else if (optionCancel == null || optionCancel.equals("6")) {
             adminInvoiceService.sendMoveStatusBombOrder(invoiceId, reason != null ? reason : "");
-
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "hủy đơn hàng", "Thành công", adminInvoiceService.getReasonForInvoices(invoiceId));
+        }
         List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
 
         int totalLs = adminInvoiceService.countInvoicesByOption(option);
@@ -213,15 +215,33 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
             out.println("            </div>");
             out.println("          </div>");
 
+            if (oi.getOrderStatus() == 3) {
+                out.println("<button class=\"button-cancel-order\"\n" +
+                        "                                                onclick=\"showCancelBombPopup(" + oi.getInvoiceId() + ")\">Hủy\n" +
+                        "                                            với lí do khác\n" +
+                        "                                        </button>");
+
+                out.println("          <div id='cancelBombPopup" + oi.getInvoiceId() + "' class='cancel-popup' style='display: none;'>");
+                out.println("            <div class='popup-content-cancel'>");
+                out.println("              <div class='popup-header'>Xác nhận hủy đơn hàng ID: " +
+                        String.format("%06d", oi.getInvoiceId()) + " sau khi liên hệ hoặc không\n" +
+                        "                                                liên hệ được với khách hàng </div>");
+                out.println("              <textarea class='cancel-reason cancel-reason-bomb" + oi.getInvoiceId() + "' placeholder='Lý do hủy...'></textarea>");
+                out.println("              <div class='popup-actions-cancel'>");
+                out.println("                <button class='button-confirm-cancel' onclick='confirmCancelBombOrder(" + oi.getInvoiceId() + "," + option + "," + page + ")'>Xác nhận</button>");
+                out.println("                <button class='button-cancel-cancel' onclick=\"closePopup('cancelBombPopup" + oi.getInvoiceId() + "')\">Đóng</button>");
+                out.println("              </div></div></div>");
+
+            }
             // Nút hủy đơn
             out.println("          <button class='button-cancel-order' onclick='showCancelPopup(" + oi.getInvoiceId() + ")'>Hủy đơn hàng</button>");
 
             // Popup hủy
             out.println("          <div id='cancelPopup" + oi.getInvoiceId() + "' class='cancel-popup' style='display: none;'>");
             out.println("            <div class='popup-content-cancel'>");
-            out.println("              <div class='popup-header'>Xác nhận hủy đơn hàng ID: #" +
+            out.println("              <div class='popup-header'>Xác nhận hủy đơn hàng ID: " +
                     String.format("%06d", oi.getInvoiceId()) + "</div>");
-            out.println("              <textarea class='cancel-reason' placeholder='Lý do hủy...'></textarea>");
+            out.println("              <textarea class='cancel-reason cancel-reason" + oi.getInvoiceId() + "' placeholder='Lý do hủy...'></textarea>");
             out.println("              <div class='popup-actions-cancel'>");
             out.println("                <button class='button-confirm-cancel' onclick='confirmCancelOrder(" + oi.getInvoiceId() + "," + option + "," + page + ")'>Xác nhận</button>");
             out.println("                <button class='button-cancel-cancel' onclick=\"closePopup('cancelPopup" + oi.getInvoiceId() + "')\">Đóng</button>");
@@ -252,7 +272,11 @@ public class SendCancelStatusAjaxOrderController extends HttpServlet {
                             oi.getOrderStatus() == 2 ? "Đang chuẩn bị" :
                                     oi.getOrderStatus() == 3 ? "Đang giao hàng" :
                                             oi.getOrderStatus() == 4 ? "Đã hoàn thành vào lúc " + (oi.getCompletionTime() != null ? oi.getCompletionTime() : "") :
-                                                    "Đã hủy vào lúc " + (oi.getCompletionTime() != null ? oi.getCompletionTime() : "")) + "</span></div>");
+                                                    oi.getOrderStatus() == 5 ? "Đã hủy vào lúc " + (oi.getCompletionTime() != null ? oi.getCompletionTime() : "") :
+                                                            oi.getOrderStatus() == 6 ? "Khách hàng không nhận đơn vào lúc " + (oi.getCompletionTime() != null ? oi.getCompletionTime() : "") :
+                                                                    "Không xác định")
+                    + "</span></div>"
+            );
             out.println("            </div>");
 
             out.println("            <div class='line_st'></div>");

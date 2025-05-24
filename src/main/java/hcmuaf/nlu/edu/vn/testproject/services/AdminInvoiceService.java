@@ -113,7 +113,7 @@ public class AdminInvoiceService {
     public void setReasonForInvoices(List<OrderInvoice> invoices) {
         for (OrderInvoice oi : invoices) {
             int status = oi.getOrderStatus();
-            if (status == 5) {
+            if (status == 5||status==6) {
                 // Lấy reason từ DAO và set
                 String reason = dao.getReason(oi.getInvoiceId());
                 oi.setReason(reason);
@@ -157,6 +157,9 @@ public boolean isAdmin(int accountId) {
         }
         return oi;
     }
+public String getReasonForInvoices(int invoiceId) {
+        return dao.getReason(invoiceId);
+}
 
     public static void main(String[] args) {
         AdminInvoiceService as = new AdminInvoiceService();

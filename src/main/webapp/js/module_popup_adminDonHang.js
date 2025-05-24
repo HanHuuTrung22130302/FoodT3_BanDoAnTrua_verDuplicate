@@ -30,8 +30,6 @@ function closePopup(popupId) {
 }
 
 function showCancelPopup(invoiceId) {
-    document.getElementById(`confirm-cancel-bomb-${invoiceId}`).style.display = 'none';
-    document.getElementById(`confirm-cancel-${invoiceId}`).style.display = 'inline-block';
     const cancelPopup = document.getElementById("cancelPopup" + invoiceId);
     if (cancelPopup) {
         cancelPopup.style.display = "block";
@@ -39,9 +37,7 @@ function showCancelPopup(invoiceId) {
 
 }
 function showCancelBombPopup(invoiceId) {
-    document.getElementById(`confirm-cancel-${invoiceId}`).style.display = 'none';
-    document.getElementById(`confirm-cancel-bomb-${invoiceId}`).style.display = 'inline-block';
-    const cancelPopup = document.getElementById("cancelPopup" + invoiceId);
+    const cancelPopup = document.getElementById("cancelBombPopup" + invoiceId);
     if (cancelPopup) {
         cancelPopup.style.display = "block";
     }

@@ -1,9 +1,10 @@
-function cancelstatus(reason,invoiceId,option, page) {
+function cancelstatus(optionCancel,reason,invoiceId,option, page) {
 
     $.ajax({
         url: "sendcancelstatusajaxordermanagement",
         type: "post",
         data: {
+            optionCancel:optionCancel,
             reason: reason,
             invoiceId: invoiceId,
             option: option,
@@ -24,7 +25,7 @@ function cancelstatus(reason,invoiceId,option, page) {
 function confirmCancelOrder(invoiceId,option,page) {
     // Lấy lý do từ textarea
     const popup = document.getElementById('cancelPopup' + invoiceId);
-    const reason = popup.querySelector('.cancel-reason').value.trim();
+    const reason = popup.querySelector('.cancel-reason'+invoiceId).value.trim();
 
     if (!reason) {
         alert("Vui lòng nhập lý do hủy đơn hàng!");
@@ -38,8 +39,8 @@ function confirmCancelOrder(invoiceId,option,page) {
 }
 function confirmCancelBombOrder(invoiceId,option,page) {
 
-    const popup = document.getElementById('cancelPopup' + invoiceId);
-    const reason = popup.querySelector('.cancel-reason').value.trim();
+    const popup = document.getElementById('cancelBombPopup' + invoiceId);
+    const reason = popup.querySelector('.cancel-reason-bomb'+invoiceId).value.trim();
 
     if (!reason) {
         alert("Vui lòng nhập lý do hủy đơn hàng!");

@@ -209,27 +209,36 @@
                                         </div>
                                     </div>
 
-                                    <div id="cancelPopup${oi.invoiceId}" class="cancel-popup" style="display: none;">
-                                        <div class="popup-content-cancel">
-                                            <div class="popup-header">Xác nhận hủy đơn hàng
-                                                ID: ${String.format("%06d", oi.invoiceId)}</div>
-                                            <textarea class="cancel-reason" placeholder="Lý do hủy..."></textarea>
-                                            <div class="popup-actions-cancel">
-                                                <button class="button-confirm-cancel"
-                                                        onclick="confirmCancelOrder(${oi.invoiceId},'${param.option}',${param.page})">
-                                                    Xác nhận
-                                                </button>
-                                                <button class="button-cancel-cancel"
-                                                        onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <c:if test="${oi.orderStatus == 3}">
-                                        <button class="button-cancel-order" onclick="showCancelBombPopup(${oi.invoiceId})">Hủy
+                                        <button class="button-cancel-order"
+                                                onclick="showCancelBombPopup(${oi.invoiceId})">Hủy
                                             với lí do khác
                                         </button>
+
+
+                                        <div id="cancelBombPopup${oi.invoiceId}" class="cancel-popup"
+                                             style="display: none;">
+                                            <div class="popup-content-cancel">
+                                                <div class="popup-header">Xác nhận hủy đơn hàng
+                                                    ID: ${String.format("%06d", oi.invoiceId)} sau khi liên hệ hoặc
+                                                    không
+                                                    liên hệ được với khách hàng
+                                                </div>
+                                                <textarea class="cancel-reason cancel-reason-bomb${oi.invoiceId}"
+                                                          placeholder="Lý do hủy..."></textarea>
+                                                <div class="popup-actions-cancel">
+                                                    <button class="button-confirm-cancel"
+                                                            onclick="confirmCancelBombOrder(${oi.invoiceId}, '${param.option}', ${param.page})">
+                                                        Xác nhận
+                                                    </button>
+
+                                                    <button class="button-cancel-cancel"
+                                                            onclick="closePopup('cancelBombPopup${oi.invoiceId}')">Đóng
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </c:if>
 
                                     <button class="button-cancel-order" onclick="showCancelPopup(${oi.invoiceId})">Hủy
@@ -240,23 +249,22 @@
                                         <div class="popup-content-cancel">
                                             <div class="popup-header">Xác nhận hủy đơn hàng
                                                 ID: ${String.format("%06d", oi.invoiceId)}</div>
-                                            <textarea class="cancel-reason" placeholder="Lý do hủy..."></textarea>
+                                            <textarea class="cancel-reason cancel-reason${oi.invoiceId}"
+                                                      placeholder="Lý do hủy..."></textarea>
                                             <div class="popup-actions-cancel">
-                                                <button id="confirm-cancel-${oi.invoiceId}" class="button-confirm-cancel" style="display:none"
+                                                <button class="button-confirm-cancel"
                                                         onclick="confirmCancelOrder(${oi.invoiceId}, '${param.option}', ${param.page})">
                                                     Xác nhận
                                                 </button>
 
-<%--                                                <button id="confirm-cancel-bomb-${oi.invoiceId}" class="button-confirm-cancel" style="display:none"--%>
-<%--                                                        onclick="confirmCancelBombOrder(${oi.invoiceId}, '${param.option}', ${param.page})">--%>
-<%--                                                    Xác nhận--%>
-<%--                                                </button>--%>
                                                 <button class="button-cancel-cancel"
                                                         onclick="closePopup('cancelPopup${oi.invoiceId}')">Đóng
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -266,7 +274,7 @@
                                 onclick="showPopup('detail${oi.invoiceId}');scrollToTop('detail${oi.invoiceId}')">Chi
                             tiết
                         </button>
-                        <a href="exportBillController?id=${oi.invoiceId}" >
+                        <a href="exportBillController?id=${oi.invoiceId}">
                             <button class="buttonDetailInvoice" type="button">Xuất PDF</button>
                         </a>
 
@@ -312,6 +320,9 @@
                                                          </c:when>
                                                          <c:when test="${oi.orderStatus == 5}">
                                                              Đã hủy vào lúc ${oi.completionTime}
+                                                         </c:when>
+                                                         <c:when test="${oi.orderStatus == 6}">
+                                                             Khách hàng không nhận đơn vào lúc ${oi.completionTime}
                                                          </c:when>
                                                      </c:choose>
                                                 </span>
