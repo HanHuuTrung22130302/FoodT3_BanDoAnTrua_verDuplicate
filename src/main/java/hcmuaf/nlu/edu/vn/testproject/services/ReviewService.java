@@ -49,4 +49,5 @@ public class ReviewService {
     public int getCountReview(int idFood, int option) {
         return reviewDAO.getTotalReviewCountByFoodId(idFood,option);
     }
+
 }
