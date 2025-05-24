@@ -1,9 +1,10 @@
-function cancelstatus(reason,invoiceId,option, page) {
+function cancelstatus(optionCancel,reason,invoiceId,option, page) {
 
     $.ajax({
         url: "sendcancelstatusajaxordermanagement",
         type: "post",
         data: {
+            optionCancel:optionCancel,
             reason: reason,
             invoiceId: invoiceId,
             option: option,
@@ -24,20 +25,29 @@ function cancelstatus(reason,invoiceId,option, page) {
 function confirmCancelOrder(invoiceId,option,page) {
     // Lấy lý do từ textarea
     const popup = document.getElementById('cancelPopup' + invoiceId);
-    const reason = popup.querySelector('.cancel-reason').value.trim();
+    const reason = popup.querySelector('.cancel-reason'+invoiceId).value.trim();
 
     if (!reason) {
         alert("Vui lòng nhập lý do hủy đơn hàng!");
         return;
     }
-
-    // Lấy option và page từ URL
-    // const urlParams = new URLSearchParams(window.location.search);
-    // const option = urlParams.get("option");
-    // const page = urlParams.get("page");
-
     // Gọi AJAX đã có sẵn
-    cancelstatus(reason, invoiceId, option, page);
+    cancelstatus('5',reason, invoiceId, option, page);
+
+    // Đóng popup
+    closePopup('cancelPopup' + invoiceId);
+}
+function confirmCancelBombOrder(invoiceId,option,page) {
+
+    const popup = document.getElementById('cancelBombPopup' + invoiceId);
+    const reason = popup.querySelector('.cancel-reason-bomb'+invoiceId).value.trim();
+
+    if (!reason) {
+        alert("Vui lòng nhập lý do hủy đơn hàng!");
+        return;
+    }
+    // Gọi AJAX đã có sẵn
+    cancelstatus('6',reason, invoiceId, option, page);
 
     // Đóng popup
     closePopup('cancelPopup' + invoiceId);

@@ -34,6 +34,13 @@ function showCancelPopup(invoiceId) {
     if (cancelPopup) {
         cancelPopup.style.display = "block";
     }
+
+}
+function showCancelBombPopup(invoiceId) {
+    const cancelPopup = document.getElementById("cancelBombPopup" + invoiceId);
+    if (cancelPopup) {
+        cancelPopup.style.display = "block";
+    }
 }
 
 function showSubmitStatusPopup(invoiceId) {
@@ -65,6 +72,16 @@ function showInfoPopup(invoiceId) {
 }
 function showInfoCancelPopup(invoiceId) {
     const popupElement = document.getElementById("showStatusCancelPopup"+ invoiceId);
+    if (!popupElement) {
+        console.error("Không tìm thấy popup có ID:", invoiceId);
+        return;
+    }
+    popupElement.style.display = "flex";
+
+    document.body.classList.add('no-scroll');
+}
+function showInfoBombPopup(invoiceId) {
+    const popupElement = document.getElementById("showStatusBombPopup"+ invoiceId);
     if (!popupElement) {
         console.error("Không tìm thấy popup có ID:", invoiceId);
         return;

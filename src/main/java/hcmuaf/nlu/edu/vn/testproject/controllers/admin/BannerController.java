@@ -1,7 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import com.google.gson.Gson;
-import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Banner;
 import hcmuaf.nlu.edu.vn.testproject.services.BannerService;
@@ -32,14 +31,14 @@ public class BannerController extends HttpServlet {
     private BannerService bannerService = new BannerService();
     private LogService logService = new LogService();
     private Gson gson = new Gson();
-    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             logService.logActivity(0, 0, "Xem danh sách banner", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;
@@ -56,13 +55,15 @@ public class BannerController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         Map<String, Object> jsonResponse = new HashMap<>();
         
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+        if (currentUser == null || currentUser.getRoleId() == 2) {
             logService.logActivity(0, 0, "Quản lý banner", "Thất bại", "Không có quyền truy cập");
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Không có quyền truy cập");

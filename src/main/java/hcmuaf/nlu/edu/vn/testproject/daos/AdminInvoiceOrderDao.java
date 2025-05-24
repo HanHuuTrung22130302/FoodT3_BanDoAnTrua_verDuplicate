@@ -26,10 +26,12 @@ public class AdminInvoiceOrderDao {
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id "
         );
 
-        if (option >= 1 && option <= 5) {
+        if (option >= 1 && option <= 4) {
             query.append("WHERE os.order_status = ? ");
-        } else if (option == 0) {
-            query.append("WHERE os.order_status BETWEEN 1 AND 5 ");
+        } else if (option == 5) {
+            query.append("WHERE os.order_status BETWEEN 5 AND 6 ");
+        }else if (option == 0) {
+            query.append("WHERE os.order_status BETWEEN 1 AND 6 ");
         }
 
         query.append("ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?");
@@ -58,8 +60,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
 
@@ -98,7 +99,7 @@ public class AdminInvoiceOrderDao {
         String query =
                 "SELECT * FROM invoice inv " +
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
-                        "WHERE DATE(inv.order_date) = CURDATE() AND os.order_status BETWEEN 1 AND 5 " +
+                        "WHERE DATE(inv.order_date) = CURDATE() AND os.order_status BETWEEN 1 AND 6 " +
                         "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
 
         try {
@@ -120,8 +121,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -143,7 +143,7 @@ public class AdminInvoiceOrderDao {
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
                         "WHERE MONTH(inv.order_date) = MONTH(CURDATE()) " +
                         "AND YEAR(inv.order_date) = YEAR(CURDATE()) " +
-                        "AND os.order_status BETWEEN 1 AND 5 " +
+                        "AND os.order_status BETWEEN 1 AND 6 " +
                         "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
 
         try {
@@ -165,8 +165,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -187,7 +186,7 @@ public class AdminInvoiceOrderDao {
                 "SELECT * FROM invoice inv " +
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
                         "WHERE YEAR(inv.order_date) = YEAR(CURDATE()) " +
-                        "AND os.order_status BETWEEN 1 AND 5 " +
+                        "AND os.order_status BETWEEN 1 AND 6 " +
                         "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
 
         try {
@@ -209,8 +208,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -269,8 +267,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 );
                 invoices.add(invoice);
             }
@@ -295,10 +292,12 @@ public class AdminInvoiceOrderDao {
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id "
         );
 
-        if (option >= 1 && option <= 5) {
-            query.append("WHERE os.order_status = ?");
-        } else if (option == 0) {
-            query.append("WHERE os.order_status BETWEEN 1 AND 5");
+        if (option >= 1 && option <= 4) {
+            query.append("WHERE os.order_status = ? ");
+        } else if (option == 5) {
+            query.append("WHERE os.order_status BETWEEN 5 AND 6 ");
+        }else if (option == 0) {
+            query.append("WHERE os.order_status BETWEEN 1 AND 6 ");
         }
 
         try {
@@ -525,6 +524,31 @@ public class AdminInvoiceOrderDao {
         return success;
     }
 
+
+    public boolean bombOrder(int invoiceId, String reason) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean success = false;
+
+        String query = "UPDATE order_status SET order_status = 6, reason = ? WHERE invoice_id = ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, reason);
+            ps.setInt(2, invoiceId);
+
+            int affectedRows = ps.executeUpdate();
+            success = affectedRows > 0;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi hủy đơn hàng: " + e.getMessage());
+        } finally {
+            closeResources(null, ps, con);
+        }
+
+        return success;
+    }
     public boolean cancelOrder(int invoiceId, String reason) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -558,7 +582,7 @@ public class AdminInvoiceOrderDao {
 
         String query = "SELECT * FROM invoice inv " +
                 "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
-                "WHERE inv.recipient_name LIKE ? AND os.order_status BETWEEN 1 AND 5 " +
+                "WHERE inv.recipient_name LIKE ? AND os.order_status BETWEEN 1 AND 6 " +
                 "ORDER BY inv.order_date DESC LIMIT 12 OFFSET ?";
 
         try {
@@ -581,8 +605,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -620,8 +643,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
 
@@ -658,8 +680,7 @@ public class AdminInvoiceOrderDao {
                         rs.getInt("discount_code_id"),
                         rs.getInt("payment_method"),
                         rs.getInt("is_paid"),
-                        rs.getInt("order_status"),
-                        InvoiceOrderDetailDao.getInvoiceOrderDetails(rs.getInt("invoice_id"))
+                        rs.getInt("order_status")
                 ));
             }
 
@@ -717,7 +738,7 @@ public class AdminInvoiceOrderDao {
 
     public String getCompletionTime(int invoiceId) {
         String sql = "SELECT DATE_FORMAT(updated_at, '%H:%i:%s %d/%m/%Y') AS updated_at " +
-                "FROM order_status WHERE invoice_id = ? AND order_status IN (4, 5)";
+                "FROM order_status WHERE invoice_id = ? AND order_status IN (4, 5, 6)";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, invoiceId);
@@ -731,7 +752,7 @@ public class AdminInvoiceOrderDao {
         return null;
     }
     public String getReason(int invoiceId) {
-        String sql = "SELECT reason FROM order_status WHERE invoice_id = ? AND order_status = 5";
+        String sql = "SELECT reason FROM order_status WHERE invoice_id = ? AND order_status IN ( 5, 6)";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, invoiceId);
@@ -754,12 +775,82 @@ public class AdminInvoiceOrderDao {
                 int roleId = rs.getInt("role_id");
                 int isLocked = rs.getInt("is_locked");
                 int isDeleted = rs.getInt("is_deleted");
-                return (roleId == 1 || roleId == 3) && isLocked == 0 && isDeleted == 0;
+                return roleId == 1 && isLocked == 0 && isDeleted == 0;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return false;
+    }
+    public OrderInvoice getInvoiceById(int invoiceId) {
+        OrderInvoice invoice = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM invoice inv " +
+                "JOIN order_status os ON inv.invoice_id = os.invoice_id " +
+                "WHERE inv.invoice_id = ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                List<OrderInvoiceDetail> details = InvoiceOrderDetailDao.getInvoiceOrderDetails(invoiceId);
+                invoice = new OrderInvoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("account_id"),
+                        rs.getString("recipient_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("delivery_address"),
+                        rs.getString("note"),
+                        rs.getString("order_date"),
+                        rs.getInt("total_amount"),
+                        rs.getInt("discount_code_id"),
+                        rs.getInt("payment_method"),
+                        rs.getInt("is_paid"),
+                        rs.getInt("order_status"),
+                        details
+                );
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi truy vấn hóa đơn theo ID: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return invoice;
+    }
+
+    public String getCancelReasonByInvoiceId(int invoiceId) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String reason = null;
+
+        String query = "SELECT reason FROM order_status WHERE invoice_id = ?";
+
+        try {
+            con = new DbContext().getConnection();
+            ps = con.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                reason = rs.getString("reason");
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi khi lấy lý do hủy đơn: " + e.getMessage());
+        } finally {
+            closeResources(rs, ps, con);
+        }
+
+        return reason;
     }
 
     public static void main(String[] args) {
