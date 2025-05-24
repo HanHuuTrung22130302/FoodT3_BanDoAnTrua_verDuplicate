@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DbContext {
     // Thông tin cấu hình database
-    private final String URL = "jdbc:mysql://localhost:3306/foodt3";
-    private final String USER = "root"; // Tên user, mặc định là 'root'
-    private final String PASSWORD = ""; // Mật khẩu, thường mặc định trống trên phpMyAdmin
+    private final String URL = "jdbc:mysql://160.187.229.8:3306/foodt3";
+    private final String USER = "admin";
+    private final String PASSWORD = "12345";
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         // Đăng ký MySQL Driver

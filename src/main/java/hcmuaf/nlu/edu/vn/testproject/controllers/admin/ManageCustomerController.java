@@ -2,10 +2,12 @@ package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccdetailDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.LogDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.services.AccdetailService;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -18,15 +20,16 @@ import java.util.List;
 
 @WebServlet(name = "ManageCustomerController", value = "/customersevice")
 public class ManageCustomerController extends HttpServlet {
+    private CheckUserDao checkUserDao = new CheckUserDao();
+    private LogService logService = new LogService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            // Chuyển hướng về trang home nếu người dùng chưa đăng nhập
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(0, 0, "Xem danh sách thành viên", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;
         }
@@ -62,7 +65,6 @@ public class ManageCustomerController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         JSONObject jsonResponse = new JSONObject();
         
@@ -70,7 +72,7 @@ public class ManageCustomerController extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             jsonResponse.put("success", false);
             jsonResponse.put("error", "Bạn không có quyền thực hiện thao tác này");
             out.print(jsonResponse.toString());
