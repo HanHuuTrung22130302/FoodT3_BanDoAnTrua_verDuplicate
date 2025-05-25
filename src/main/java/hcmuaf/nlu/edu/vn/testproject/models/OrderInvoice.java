@@ -39,6 +39,21 @@ public class OrderInvoice {
         this.orderInvoiceDetail = orderInvoiceDetail;
     }
 
+    public OrderInvoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int idCode, int paymentMethod, int isPaid, int orderStatus) {
+        this.invoiceId = invoiceId;
+        this.accountId = accountId;
+        this.recipientName = recipientName;
+        this.phoneNumber = phoneNumber;
+        this.deliveryAddress = deliveryAddress;
+        this.note = note;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.idCode = idCode;
+        this.paymentMethod = paymentMethod;
+        this.isPaid = isPaid;
+        this.orderStatus = orderStatus;
+    }
+
     public int getInvoiceId() {
         return invoiceId;
     }

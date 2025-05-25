@@ -38,9 +38,13 @@
                         <td><img src="${pageContext.request.contextPath}/${bann.url}"/></td>
 
                         <td>
-                            <button class="delete" onclick="deleteBanner('${bann.bannerId}')">
-                                <i class="fas fa-trash"></i> Xóa
-                            </button>
+                            <form action="banner" method="post" style="display: inline">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="${bann.bannerId}">
+                                <button class="delete" onclick="deleteBanner('${bann.bannerId}')">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                            </form>
                         </td>
                         <td>
                                 ${bann.date}
