@@ -85,7 +85,7 @@ public class AjaxSearchController extends HttpServlet {
                         "                        <div class=\"priceFood\">\n" + formattedPrice +
                         "                        </div>\n" +
                         "                        <div class=\"card_footer\">\n" +
-                        "                            <a class=\"btn\" onclick=\"event.stopPropagation()\" href=\"" + addToCartUrl + "\">\n" +
+                        "                            <a class=\"btn\" onclick=\"event.stopPropagation();getU("+food.getFoodId()+");\" href=\"" + addToCartUrl + "\">\n" +
                         "                                Thêm vào giỏ\n" +
                         "                            </a>\n" +
                         "                            <div class=\"reviewFood\">\n" +
@@ -149,7 +149,7 @@ public class AjaxSearchController extends HttpServlet {
                         "                        </div>\n" +
                         "                        <button class=\"scrollToTop\" onclick=\"scrollToTop(" + food.getFoodId() + ")\">^</button>\n" +
                         "                        <div class=\"popup-footer\">\n" +
-                        "                            <button class=\"button-cart\">\n" +
+                        "                            <button onclick=\"getU("+food.getFoodId()+");\" class=\"button-cart\">\n" +
                         "                                <a class=\"linktocart\" href=\"" + addToCartUrl + "\">\n" +
                         "                                    Thêm vào giỏ hàng\n" +
                         "                                </a>\n" +

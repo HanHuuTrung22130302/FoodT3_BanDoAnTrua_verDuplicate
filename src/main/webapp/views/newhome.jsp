@@ -176,7 +176,7 @@
     <div id="content_section lst4Sold" class="content_section">
         <c:forEach var="food" items="${lst4Sold}">
             <div class="card"
-                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -185,7 +185,7 @@
                     </div>
                     <div class="card_footer">
                         <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                        <a class="btn" onclick="event.stopPropagation();getU('${food.foodId}');" href="${addtoCart}">
                             Thêm vào giỏ
                         </a>
                         <div class="reviewFood">
@@ -286,7 +286,7 @@
                             class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
-                        <button class="button-cart">
+                        <button onclick="getU('${food.foodId}');" class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
                                 Thêm vào giỏ hàng
                             </a>
