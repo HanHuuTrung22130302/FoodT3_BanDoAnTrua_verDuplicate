@@ -20,7 +20,7 @@
             <div class="social-container">
                 <a href="#" class="social">
                     <i class="fab fa-facebook-f"></i></a>
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://foodt3.online/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
                     <i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
@@ -39,7 +39,7 @@
             <div class="social-container">
                 <a href="#" class="social">
                     <i class="fab fa-facebook-f"></i></a>
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/testProject/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://foodt3.online/testProject/loginGoogle&response_type=code&client_id=165264526065-d4b9oj72bq9dh82pmckda1gai0l0vede.apps.googleusercontent.com&approval_prompt=force" class="social">
                     <i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fa-brands fa-twitter"></i></a>
             </div>
@@ -69,31 +69,7 @@
 
 <script src="${pageContext.request.contextPath}/js/signin.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("form[action='login']").on("submit", function (event) {
-            event.preventDefault(); // Ngăn chặn hành động submit mặc định
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.status === "success") {
-                        window.location.href = "home"; // Chuyển hướng đến trang home
-                    } else if (response.status === "locked") {
-                        $("#login_messageContainer").css("color", "red").text(response.message);
-                    } else {
-                        $("#login_messageContainer").css("color", "red").text(response.message);
-                    }
-                },
-                error: function () {
-                    $("#login_messageContainer").css("color", "red").text("Có lỗi xảy ra. Vui lòng thử lại.");
-                }
-            });
-        });
-    });
-</script>
+<script src="${pageContext.request.contextPath}/js/loginAjax.js"></script>
 <script src="${pageContext.request.contextPath}/js/signUpAjax.js"></script>
 </body>
 </html>

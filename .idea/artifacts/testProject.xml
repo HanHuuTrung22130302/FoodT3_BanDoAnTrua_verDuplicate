@@ -7,6 +7,7 @@
           <element id="module-output" name="testProject" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: com.itextpdf:itextpdf:5.5.13.3" />
           <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:5.0.0-alpha.14" />
           <element id="library" level="project" name="Maven: com.squareup.okio:okio-jvm:3.9.0" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.9.23" />
@@ -45,7 +46,6 @@
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:5.2.1" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="testProject/web/Web2" />
       <element id="javaee-facet-resources" facet="testProject/web/Web" />
     </root>
   </artifact>

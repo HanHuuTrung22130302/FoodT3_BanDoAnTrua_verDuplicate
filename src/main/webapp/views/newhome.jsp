@@ -17,10 +17,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_home_n.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css">
     <script src="${pageContext.request.contextPath}/js/module_dangnhap.js"></script>
 </head>
-
 <body>
 
 <div id="header">
@@ -55,7 +54,7 @@
                                     <a href="AccDetail" id="user-link">Thông tin</a>
                                     <%--                                    <a href="user?idAcc=${sessionScope.currentUser.idAcc}" id="user-link">Thông tin</a>--%>
                                 </c:if>
-                                <a href="logout" id="logout">Đăng xuất</a>
+                                <a href="#" onclick="showLogoutPopup(); return false;" id="logout">Đăng xuất</a>
                             </div>
                         </div>
                     </c:if>
@@ -94,24 +93,40 @@
                     <ul class="menu-list">
 
                         <li class="menu-item">
-                            <a href="allmenu?option=tatca" class="tabbar"> <i class="fa-solid fa-bars"></i>Thực đơn</a>
+                            <a href="allmenu?option=tatca" class="tabbar">
+                                <i class="fa-solid fa-bars"></i>Thực đơn
+                            </a>
                             <ul class="submenu">
-                                <li><a href="allmenu?option=tatca"><i class="fa-solid fa-bowl-rice"></i>Tất cả</a>
+                                <li>
+                                    <a href="allmenu?option=tatca">
+                                        <i class="fa-solid fa-bowl-rice"></i>Tất cả
+                                    </a>
                                 </li>
-                                <li><a href="allmenu?option=1"><i class="fa-solid fa-bowl-rice"></i>Món cơm</a>
-                                </li>
-                                <li><a href="allmenu?option=2"><i class="fa-solid fa-bowl-food"></i>Món bún</a>
-                                </li>
-                                <li><a href="allmenu?option=3"><i class="fa-solid fa-bowl-food"></i>Món phở</a>
-                                </li>
-                                <li><a href="allmenu?option=4"><i class="fa-solid fa-glass-water"></i>Nước</a>
-                                </li>
+
+                                <c:forEach var="category" items="${listC}">
+                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice"/>
+
+                                    <c:choose>
+                                        <c:when test="${category.categoryName.contains('Bún') || category.categoryName.contains('Phở')}">
+                                            <c:set var="iconClass" value="fa-solid fa-bowl-food"/>
+                                        </c:when>
+                                        <c:when test="${category.categoryName.contains('Nước')}">
+                                            <c:set var="iconClass" value="fa-solid fa-glass-water"/>
+                                        </c:when>
+                                    </c:choose>
+
+                                    <li>
+                                        <a href="allmenu?option=${category.categoryId}">
+                                            <i class="${iconClass}"></i>${category.categoryName}
+                                        </a>
+                                    </li>
+                                </c:forEach>
                             </ul>
                         </li>
                         <li class="menu-item"><a href="home">Trang chủ</a></li>
 
                         <li class="menu-item"><a href="about">Giới thiệu</a></li>
-                        <li class="menu-item"><a href="contactcontrolle">Liên hệ</a></li>
+                        <li class="menu-item"><a href="contact">Liên hệ</a></li>
                     </ul>
                 </div>
                 <div class="search">
@@ -123,6 +138,17 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup đăng xuất -->
+<div class="logout-popup-overlay" id="logoutPopup">
+    <div class="logout-popup">
+        <h3>Bạn có chắc chắn muốn đăng xuất?</h3>
+        <div class="logout-popup-buttons">
+            <button class="logout-confirm" onclick="confirmLogout()">Đăng xuất</button>
+            <button class="logout-cancel" onclick="hideLogoutPopup()">Hủy</button>
         </div>
     </div>
 </div>
@@ -150,7 +176,7 @@
     <div id="content_section lst4Sold" class="content_section">
         <c:forEach var="food" items="${lst4Sold}">
             <div class="card"
-                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});getU('${food.foodId}');ajaxGetReviewFID(${food.foodId},0)">
+                 onclick="showPopup('${food.foodId}');scrollToTop(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
                 <img src="${food.image}" alt="${food.foodName}"/>
                 <div class="card_content">
                     <div class="nameFood">${food.foodName}</div>
@@ -159,7 +185,7 @@
                     </div>
                     <div class="card_footer">
                         <c:url value="addtoCart?foodID=${food.foodId}" var="addtoCart"/>
-                        <a class="btn" onclick="event.stopPropagation()" href="${addtoCart}">
+                        <a class="btn" onclick="event.stopPropagation();getU('${food.foodId}');" href="${addtoCart}">
                             Thêm vào giỏ
                         </a>
                         <div class="reviewFood">
@@ -251,13 +277,16 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
-                        <button class="button-cart">
+                        <button onclick="getU('${food.foodId}');" class="button-cart">
                             <a class="linktocart" href="${addtoCart}">
                                 Thêm vào giỏ hàng
                             </a>
@@ -382,10 +411,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -513,10 +545,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -644,10 +679,13 @@
 
                                 </div>
                             </div>
-                            <button id="loadMoreBtn${food.foodId}" class="next10cmt" onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm</button>
+                            <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                    onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                            </button>
                         </div>
                     </div>
-                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                            class="fa-solid fa-arrow-up"></i></button>
 
                     <div class="popup-footer">
                         <button class="button-cart">
@@ -725,6 +763,34 @@
 <script src="${pageContext.request.contextPath}/js/chatbox.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
+
+<script>
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    function hideLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout';
+    }
+
+    // Đóng popup khi click ra ngoài
+    document.getElementById('logoutPopup').addEventListener('click', function (e) {
+        if (e.target === this) {
+            hideLogoutPopup();
+        }
+    });
+
+    // Đóng popup khi nhấn phím ESC
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            hideLogoutPopup();
+        }
+    });
+</script>
 </body>
 
 </html>

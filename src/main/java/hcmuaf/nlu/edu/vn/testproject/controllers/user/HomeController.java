@@ -1,8 +1,10 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.models.Banner;
+import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.services.BannerService;
+import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.FoodServiceListFilter;
 import hcmuaf.nlu.edu.vn.testproject.services.ReviewService;
 import jakarta.servlet.ServletException;
@@ -45,10 +47,13 @@ public class HomeController extends HttpServlet {
         for (Food food : lst4Propose) food.setRating(reviewService.getRating(food.getFoodId()));
         request.setAttribute("lst4Propose", lst4Propose);
 
+        CategoryService cs = new CategoryService();
+        List<Category> categoryList = cs.getCategories();
         List<Food> lst4Rate = fslf.getTop4Rate();
+
         for (Food food : lst4Rate) food.setRating(reviewService.getRating(food.getFoodId()));
         request.setAttribute("lst4Rate", lst4Rate);
-
+        request.setAttribute("listC", categoryList);
         request.getRequestDispatcher("views/newhome.jsp").forward(request, response);
     }
 

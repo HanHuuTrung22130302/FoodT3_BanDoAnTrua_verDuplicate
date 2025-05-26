@@ -13,6 +13,10 @@
     a { text-decoration: none; color: white; }
     .form-group { margin-bottom: 15px; }
     .form-message { color: red; font-size: 12px; }
+    .errorMessage { color: white; margin-bottom: 10px; }
+    .calculate-shipping-btn { margin-top: 10px; padding: 10px 20px; background-color: #b5292f; color: white; border: none; cursor: pointer; border-radius: 10px; }
+    .calculate-shipping-btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+    .loading { display: none; margin-left: 10px; color: #b5292f; }
   </style>
 </head>
 <body>
@@ -27,12 +31,11 @@
     </div>
     <h2 class="checkout-title">Thanh toán</h2>
   </div>
-  <% if (request.getAttribute("errorMessage") != null) { %>
-  <div class="errorMessage">
-    <%= request.getAttribute("errorMessage") %>
-  </div>
-  <% } %>
-  <form action="checkout" method="post">
+  <c:if test="${not empty requestScope.errorMessage}">
+    <div class="errorMessage" style="display: block;">${requestScope.errorMessage}</div>
+    <c:remove var="errorMessage" scope="request" />
+  </c:if>
+  <form action="${pageContext.request.contextPath}/checkout" method="post" id="checkout-form">
     <main class="checkout-section container">
       <div class="checkout-col-left">
         <div class="checkout-row">
@@ -42,14 +45,14 @@
               <p class="checkout-content-label">Phương thức thanh toán</p>
               <div class="checkout-payment-type">
                 <div class="payment-btn active" id="tienmat">
-                  <input type="radio" id="nhanhang" name="paymentMethod" value="1" checked>
+                  <input type="radio" id="nhanhang" name="paymentMethod" value="1" <c:if test="${empty formData.paymentMethod || formData.paymentMethod == '1'}">checked</c:if>>
                   <label for="nhanhang">
                     <i class="fa-duotone fa-money-bill"></i>
                     Thanh toán khi nhận hàng
                   </label>
                 </div>
                 <div class="payment-btn" id="vidientu">
-                  <input type="radio" id="dientu" name="paymentMethod" value="3">
+                  <input type="radio" id="dientu" name="paymentMethod" value="3" <c:if test="${formData.paymentMethod == '3'}">checked</c:if>>
                   <label for="dientu">
                     <i class="fa-duotone fa-solid fa-wallet"></i>
                     Thanh toán bằng VNPay
@@ -59,7 +62,7 @@
             </div>
             <div class="content-group">
               <p class="checkout-content-label">Ghi chú đơn hàng</p>
-              <textarea type="text" class="note-order" name="note-order" placeholder="Nhập ghi chú"></textarea>
+              <textarea type="text" class="note-order" name="note-order" placeholder="Nhập ghi chú"><c:out value="${formData['note-order']}" /></textarea>
             </div>
           </div>
         </div>
@@ -68,25 +71,27 @@
           <div class="checkout-col-content">
             <div class="content-group">
               <div class="form-group">
-                <input id="tennguoinhan" name="tennguoinhan" type="text" placeholder="Tên người nhận" class="form-control" required />
+                <input id="tennguoinhan" name="tennguoinhan" type="text" placeholder="Tên người nhận" class="form-control" value="${formData.tennguoinhan}" required />
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="sdtnhan" name="sdtnhan" type="text" placeholder="Số điện thoại nhận hàng" class="form-control" required />
+                <input id="sdtnhan" name="sdtnhan" type="text" placeholder="Số điện thoại nhận hàng" class="form-control" value="${formData.sdtnhan}" required />
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="sonha" name="sonha" type="text" placeholder="Số nhà, tên đường" class="form-control" required />
+                <input id="sonha" name="sonha" type="text" placeholder="Số nhà, tên đường" class="form-control" value="${formData.sonha}" required />
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="quan" name="quan" type="text" placeholder="Quận/Huyện" class="form-control" required />
+                <input id="phuongxa" name="phuongxa" type="text" placeholder="Phường/Xã" class="form-control" value="${formData.phuongxa}" required />
                 <span class="form-message"></span>
               </div>
               <div class="form-group">
-                <input id="thanhpho" name="thanhpho" type="text" placeholder="Thành phố" class="form-control" required />
+                <input id="quan" name="quan" type="text" placeholder="Quận/Huyện" class="form-control" value="${formData.quan}" required />
                 <span class="form-message"></span>
               </div>
+              <button type="button" id="calculate-shipping-btn" class="calculate-shipping-btn">Kiểm tra phí ship</button>
+              <span class="loading" id="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...</span>
             </div>
           </div>
         </div>
@@ -107,25 +112,40 @@
           <div class="total-bill-order">
             <div class="priceFlx">
               <div class="text">
-                " Tiền hàng"
+                Tiền hàng
                 <span class="count">${order.items.size()} món</span>
               </div>
               <div class="price-detail">
-                <span id="checkout-cart-total">${totalAmount} đ</span>
+                <span id="checkout-cart-total">
+                  <c:choose>
+                    <c:when test="${not empty totalAmount}"><c:out value="${totalAmount}" /> đ</c:when>
+                    <c:otherwise>0 đ</c:otherwise>
+                  </c:choose>
+                </span>
               </div>
             </div>
             <div class="priceFlx chk-ship">
               <div class="text">Phí vận chuyển</div>
               <div class="price-detail chk-free-ship">
-                <span>
-                  <%
-                    Integer shippingFee = (Integer) request.getAttribute("shippingFee");
-                    if (shippingFee == null || shippingFee == 0) {
-                  %>Miễn phí<%
-                } else {
-                %><%= shippingFee %> đ<%
-                  }
-                %>
+                <span id="shipping-fee">
+                  <c:choose>
+                    <c:when test="${not empty shippingFee}">
+                      <c:out value="${shippingFee == 0 ? 'Miễn phí' : shippingFee}" />
+                      <c:if test="${shippingFee != 0}"> đ</c:if>
+                    </c:when>
+                    <c:otherwise>Chưa tính</c:otherwise>
+                  </c:choose>
+                </span>
+              </div>
+            </div>
+            <div class="priceFlx chk-delivery-time">
+              <div class="text">Dự kiến giao hàng</div>
+              <div class="price-detail">
+                <span id="estimated-delivery-time">
+                  <c:choose>
+                    <c:when test="${not empty estimatedDeliveryTime}"><c:out value="${estimatedDeliveryTime}" /></c:when>
+                    <c:otherwise>Chưa xác định</c:otherwise>
+                  </c:choose>
                 </span>
               </div>
             </div>
@@ -140,36 +160,28 @@
           <div class="text">Tổng tiền</div>
           <div class="price-bill" id="tongtiengiao">
             <div class="price-final" id="checkout-cart-price-final">
-              <%
-                Integer total = (Integer) request.getAttribute("totalAmount");
-                Integer fee = (Integer) request.getAttribute("shippingFee");
-                if (total != null && fee != null) {
-              %><%= (total + fee) %> đ<%
-            } else if (total != null) {
-            %><%= total %> đ<%
-            } else {
-            %>0 đ<%
-              }
-            %>
+              <c:choose>
+                <c:when test="${not empty totalAmount && not empty shippingFee}"><c:out value="${totalAmount + shippingFee}" /> đ</c:when>
+                <c:when test="${not empty totalAmount}"><c:out value="${totalAmount}" /> đ</c:when>
+                <c:otherwise>0 đ</c:otherwise>
+              </c:choose>
             </div>
           </div>
         </div>
-        <input type="hidden" name="totalAmount" value="${totalAmount}" />
-        <button class="complete-checkout-btn" type="submit">
-          Đặt hàng
-        </button>
+        <input type="hidden" name="totalAmount" id="total-amount" value="${totalAmount}" />
+        <button class="complete-checkout-btn" type="submit" disabled>Đặt hàng</button>
       </div>
     </main>
   </form>
 </div>
 
-<div id="order-success-modal" class="modal" style="display: <%= session.getAttribute("paymentSuccessMessage") != null ? "block" : "none" %>">
+<div id="order-success-modal" class="modal" style="display: ${not empty paymentSuccessMessage ? 'block' : 'none'}">
   <div class="modal-content">
     <div class="modal-check">
       <i class="fa-solid fa-check fa-2xl"></i>
     </div>
     <p>
-      <%= session.getAttribute("paymentSuccessMessage") != null ? session.getAttribute("paymentSuccessMessage") : "Đặt hàng thành công!" %><br />
+      <c:out value="${paymentSuccessMessage != null ? paymentSuccessMessage : 'Đặt hàng thành công!'}" /><br />
       Đơn hàng của bạn đang được xử lý
     </p>
     <form action="cart" method="get">
@@ -179,12 +191,146 @@
 </div>
 
 <script>
-  <% if (session.getAttribute("paymentSuccessMessage") != null) { %>
+  <c:if test="${not empty paymentSuccessMessage}">
   setTimeout(() => {
     document.getElementById("order-success-modal").style.display = "none";
-    <% session.removeAttribute("paymentSuccessMessage"); %>
+    <c:remove var="paymentSuccessMessage" scope="session" />
   }, 5000);
-  <% } %>
+  </c:if>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const calculateShippingBtn = document.getElementById('calculate-shipping-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const checkoutForm = document.getElementById('checkout-form');
+    const completeCheckoutBtn = document.querySelector('.complete-checkout-btn');
+    const errorMessageDiv = document.querySelector('.errorMessage') || document.createElement('div');
+
+    if (!errorMessageDiv.classList.contains('errorMessage')) {
+      errorMessageDiv.classList.add('errorMessage');
+      checkoutForm.prepend(errorMessageDiv);
+    }
+
+    // Ẩn errorMessageDiv mặc định nếu không có nội dung
+    if (!errorMessageDiv.textContent.trim()) {
+      errorMessageDiv.style.display = 'none';
+    }
+
+    // Validate form inputs
+    function validateInputs() {
+      const requiredFields = ['sonha', 'phuongxa', 'quan'];
+      let isValid = true;
+      errorMessageDiv.textContent = '';
+      errorMessageDiv.style.display = 'none'; // Ẩn khi bắt đầu validate
+
+      requiredFields.forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        const errorSpan = input.nextElementSibling;
+        if (!input.value.trim()) {
+          errorSpan.textContent = `Vui lòng nhập ${input.placeholder}`;
+          isValid = false;
+        } else {
+          errorSpan.textContent = '';
+        }
+      });
+
+      if (!isValid) {
+        errorMessageDiv.textContent = 'Vui lòng điền đầy đủ thông tin giao hàng.';
+        errorMessageDiv.style.display = 'block';
+      }
+
+      return isValid;
+    }
+
+    // Update UI with shipping data
+    function updateShippingUI(data) {
+      const shippingFeeSpan = document.getElementById('shipping-fee');
+      const deliveryTimeSpan = document.getElementById('estimated-delivery-time');
+      const totalPriceSpan = document.getElementById('checkout-cart-price-final');
+      const totalAmountInput = document.getElementById('total-amount');
+      const baseTotal = parseInt(totalAmountInput.value) || 0;
+
+      const shippingFee = Number(data.shippingFee);
+
+      if (!isNaN(shippingFee) && shippingFee >= 0) {
+        shippingFeeSpan.textContent = shippingFee === 0 ? 'Miễn phí' : (shippingFee + ' đ');
+        console.log('Setting shippingFeeSpan to:', shippingFeeSpan.textContent);
+        deliveryTimeSpan.textContent = data.estimatedDeliveryTime || 'Chưa xác định';
+        totalPriceSpan.textContent = (baseTotal + shippingFee) + ' đ';
+        completeCheckoutBtn.disabled = false;
+
+        // Buộc làm mới DOM
+        shippingFeeSpan.style.display = 'none';
+        shippingFeeSpan.offsetHeight;
+        shippingFeeSpan.style.display = '';
+      } else {
+        shippingFeeSpan.textContent = 'Chưa tính';
+        console.log('Setting shippingFeeSpan to: Chưa tính');
+        deliveryTimeSpan.textContent = 'Chưa xác định';
+        totalPriceSpan.textContent = baseTotal + ' đ';
+        completeCheckoutBtn.disabled = true;
+        errorMessageDiv.textContent = data.errorMessage || 'Không thể tính phí ship cho địa chỉ này.';
+        errorMessageDiv.style.display = 'block'; // Hiển thị khi có lỗi
+      }
+    }
+
+    // Handle AJAX request for shipping calculation
+    calculateShippingBtn.addEventListener('click', () => {
+      if (!validateInputs()) {
+        return;
+      }
+
+      calculateShippingBtn.disabled = true;
+      loadingSpinner.style.display = 'inline-block';
+      errorMessageDiv.textContent = '';
+      errorMessageDiv.style.display = 'none'; // Ẩn trước khi gửi AJAX
+
+      const formData = new FormData(checkoutForm);
+      const data = {
+        tennguoinhan: formData.get('tennguoinhan'),
+        sdtnhan: formData.get('sdtnhan'),
+        sonha: formData.get('sonha'),
+        phuongxa: formData.get('phuongxa'),
+        quan: formData.get('quan'),
+        'note-order': formData.get('note-order'),
+        paymentMethod: formData.get('paymentMethod')
+      };
+
+      fetch('${pageContext.request.contextPath}/calculate-shipping', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+              .then(response => response.json())
+              .then(data => {
+                console.log('AJAX Response:', data);
+                console.log('Type of shippingFee:', typeof data.shippingFee);
+                updateShippingUI(data);
+              })
+              .catch(error => {
+                errorMessageDiv.textContent = 'Lỗi khi tính phí ship. Vui lòng thử lại.';
+                errorMessageDiv.style.display = 'block'; // Hiển thị khi có lỗi AJAX
+                console.error('Error:', error);
+                updateShippingUI({ shippingFee: -1, estimatedDeliveryTime: 'Chưa xác định' });
+              })
+              .finally(() => {
+                calculateShippingBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+              });
+    });
+
+    // Prevent form submission if shipping fee is not calculated
+    checkoutForm.addEventListener('submit', (e) => {
+      const shippingFeesSpan = document.getElementById('shipping-fee').textContent;
+      const deliveryTimeSpan = document.getElementById('estimated-delivery-time').textContent;
+      if (shippingFeesSpan === 'Chưa tính' || deliveryTimeSpan === 'Chưa xác định') {
+        e.preventDefault();
+        errorMessageDiv.textContent = 'Vui lòng kiểm tra phí ship trước khi đặt hàng.';
+        errorMessageDiv.style.display = 'block'; // Hiển thị khi submit mà chưa tính phí
+      }
+    });
+  });
 </script>
 
 <script src="${pageContext.request.contextPath}/js/check-out.js"></script>

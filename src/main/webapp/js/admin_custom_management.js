@@ -175,17 +175,32 @@ function handleDeleteAccount(accountId) {
     .then((data) => {
       if (data.success) {
         showNotification(data.message, "success");
-        // Cập nhật trạng thái ngay lập tức
+        // Tìm đúng dòng qua button[data-account-id]
         const row = document
-          .querySelector(`[data-account-id="${accountId}"]`)
+          .querySelector(`button[data-account-id="${accountId}"]`)
           .closest("tr");
         const statusCell = row.querySelector("td:nth-child(6)");
         statusCell.innerHTML = '<span style="color: red;">Vô hiệu hóa</span>';
 
-        // Ẩn các nút chặn và vô hiệu hóa
+        // Thay thế toàn bộ action-buttons bằng nút kích hoạt
         const actionButtons = row.querySelector(".action-buttons");
         if (actionButtons) {
-          actionButtons.style.display = "none";
+          actionButtons.innerHTML = `
+            <button class="activate" data-account-id="${accountId}">
+              <i class="fas fa-check"></i> Kích hoạt
+            </button>
+          `;
+          // Gắn lại event listener cho nút kích hoạt mới
+          const activateButton = actionButtons.querySelector(".activate");
+          if (activateButton) {
+            activateButton.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (confirm("Bạn có chắc chắn muốn kích hoạt tài khoản này?")) {
+                handleActivateAccount(accountId);
+              }
+            });
+          }
         }
       } else {
         showNotification(
@@ -199,10 +214,120 @@ function handleDeleteAccount(accountId) {
     });
 }
 
+function handleActivateAccount(accountId) {
+  fetch("customersevice", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=activate&id=${accountId}`,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        showNotification(data.message, "success");
+        // Tìm đúng dòng qua button[data-account-id]
+        const row = document
+          .querySelector(`button[data-account-id="${accountId}"]`)
+          .closest("tr");
+        const statusCell = row.querySelector("td:nth-child(6)");
+        statusCell.innerHTML = '<span style="color: green;">Hoạt động</span>';
+
+        // Thay thế toàn bộ action-buttons bằng dropdown chặn + nút vô hiệu hóa
+        const actionButtons = row.querySelector(".action-buttons");
+        if (actionButtons) {
+          actionButtons.innerHTML = `
+            <div class="dropdown">
+              <button class="lock_btn" data-account-id="${accountId}">
+                <i class="fas fa-lock"></i> Chặn
+              </button>
+              <div class="dropdown-content">
+                <button class="lock-option" data-hours="24">
+                  <i class="fas fa-clock"></i> 24 giờ
+                </button>
+                <button class="lock-option" data-hours="36">
+                  <i class="fas fa-clock"></i> 36 giờ
+                </button>
+                <button class="lock-option" data-hours="48">
+                  <i class="fas fa-clock"></i> 48 giờ
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="unlock-btn" data-account-id="${accountId}">
+                  <i class="fas fa-unlock"></i> Hủy chặn
+                </button>
+              </div>
+            </div>
+            <button class="delete" data-account-id="${accountId}">
+              <i class="fas fa-trash"></i> Vô hiệu hóa
+            </button>
+          `;
+          // Gắn event cho các nút mới render ra (chỉ trong dòng này)
+          // Nút chặn
+          const lockBtn = actionButtons.querySelector(".lock_btn");
+          if (lockBtn) {
+            lockBtn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const dropdownContent = this.nextElementSibling;
+              dropdownContent.style.display =
+                dropdownContent.style.display === "block" ? "none" : "block";
+            });
+          }
+          // Các tùy chọn chặn
+          actionButtons.querySelectorAll(".lock-option").forEach((option) => {
+            option.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const hours = this.getAttribute("data-hours");
+              if (
+                confirm(
+                  `Bạn có chắc chắn muốn chặn tài khoản này trong ${hours} giờ?`
+                )
+              ) {
+                handleLockAccount(accountId, hours);
+              }
+            });
+          });
+          // Nút hủy chặn
+          const unlockBtn = actionButtons.querySelector(".unlock-btn");
+          if (unlockBtn) {
+            unlockBtn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (confirm("Bạn có chắc chắn muốn hủy chặn tài khoản này?")) {
+                handleUnlockAccount(accountId);
+              }
+            });
+          }
+          // Nút vô hiệu hóa
+          const deleteBtn = actionButtons.querySelector(".delete");
+          if (deleteBtn) {
+            deleteBtn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (confirm("Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?")) {
+                handleDeleteAccount(accountId);
+              }
+            });
+          }
+        }
+      } else {
+        showNotification(
+          data.error || "Có lỗi xảy ra khi kích hoạt tài khoản",
+          "error"
+        );
+      }
+    })
+    .catch((error) => {
+      showNotification("Có lỗi xảy ra khi kích hoạt tài khoản", "error");
+    });
+}
+
 // Hàm khởi tạo các event listener
 function initializeEventListeners() {
   // Xử lý nút chặn và dropdown
   document.querySelectorAll(".lock_btn").forEach((button) => {
+    button.onclick = null;
     button.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -214,6 +339,7 @@ function initializeEventListeners() {
 
   // Xử lý các tùy chọn chặn
   document.querySelectorAll(".lock-option").forEach((option) => {
+    option.onclick = null;
     option.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -231,6 +357,7 @@ function initializeEventListeners() {
 
   // Xử lý nút hủy chặn
   document.querySelectorAll(".unlock-btn").forEach((button) => {
+    button.onclick = null;
     button.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -243,12 +370,26 @@ function initializeEventListeners() {
 
   // Xử lý nút vô hiệu hóa
   document.querySelectorAll(".delete").forEach((button) => {
+    button.onclick = null;
     button.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
       const accountId = this.getAttribute("data-account-id");
       if (confirm("Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?")) {
         handleDeleteAccount(accountId);
+      }
+    });
+  });
+
+  // Xử lý nút kích hoạt
+  document.querySelectorAll(".activate").forEach((button) => {
+    button.onclick = null;
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const accountId = this.getAttribute("data-account-id");
+      if (confirm("Bạn có chắc chắn muốn kích hoạt tài khoản này?")) {
+        handleActivateAccount(accountId);
       }
     });
   });

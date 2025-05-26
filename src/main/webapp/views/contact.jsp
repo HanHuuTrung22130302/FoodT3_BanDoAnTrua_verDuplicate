@@ -11,12 +11,11 @@
 
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newhome.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/menu.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/contact.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/signinCssModule.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="../js/module_dangnhap.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
     <style>
         .input-field::placeholder {
             color: #ccc;
@@ -39,7 +38,7 @@
     <div class="form-section">
         <h2>Liên hệ với chúng tôi</h2>
 
-        <form id="contactForm" action="contactcontrolle" method="post">
+        <form id="contactForm" action="contact" method="post">
 
             <div class="form-group">
                 <label for="name">Họ và Tên *</label>
@@ -122,6 +121,17 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script src="${pageContext.request.contextPath}/js/home.js">
+</script>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#message'))
+        .then(editor => {
+            editor.ui.view.editable.element.style.height = '100px';
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 </body>
 

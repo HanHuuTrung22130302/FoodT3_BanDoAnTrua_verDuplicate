@@ -1,5 +1,6 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.InvoiceDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.AccountDetail;
@@ -21,14 +22,14 @@ import java.util.List;
 @WebServlet(name = "AdminController", value = "/admin")
 public class AdminController extends HttpServlet {
     private LogService logService = new LogService();
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 0, "Xem bảng quản trị", "Thất bại", "Không có quyền truy cập");
             response.sendRedirect("home");
             return;

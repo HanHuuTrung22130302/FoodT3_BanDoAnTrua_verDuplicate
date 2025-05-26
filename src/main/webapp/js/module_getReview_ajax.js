@@ -21,7 +21,7 @@ function ajaxGetReviewFID(fid, option = null) {
             text1: fid,
             text2: option,
             exits: amount,
-            countOption: optioncount
+            curOption: currentOption
         },
         success: function (data) {
             if (option !== currentOption) {

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Service</title>
     <link href="Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer_management.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer_manage.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -101,29 +101,36 @@
                     <td>
                         <div class="action-buttons">
                             <c:if test="${(currentUser.roleId == 3) || (currentUser.roleId == 1 && listAcc.roleId == 2)}">
-                                <div class="dropdown">
-                                    <button class="lock_btn" data-account-id="${listAcc.accountId}">
-                                        <i class="fas fa-lock"></i> Chặn
-                                    </button>
-                                    <div class="dropdown-content">
-                                        <button class="lock-option" data-hours="24">
-                                            <i class="fas fa-clock"></i> 24 giờ
+                                <c:if test="${!listAcc.deleted}">
+                                    <div class="dropdown">
+                                        <button class="lock_btn" data-account-id="${listAcc.accountId}">
+                                            <i class="fas fa-lock"></i> Chặn
                                         </button>
-                                        <button class="lock-option" data-hours="36">
-                                            <i class="fas fa-clock"></i> 36 giờ
-                                        </button>
-                                        <button class="lock-option" data-hours="48">
-                                            <i class="fas fa-clock"></i> 48 giờ
-                                        </button>
-                                        <div class="dropdown-divider"></div>
-                                        <button class="unlock-btn" data-account-id="${listAcc.accountId}">
-                                            <i class="fas fa-unlock"></i> Hủy chặn
-                                        </button>
+                                        <div class="dropdown-content">
+                                            <button class="lock-option" data-hours="24">
+                                                <i class="fas fa-clock"></i> 24 giờ
+                                            </button>
+                                            <button class="lock-option" data-hours="36">
+                                                <i class="fas fa-clock"></i> 36 giờ
+                                            </button>
+                                            <button class="lock-option" data-hours="48">
+                                                <i class="fas fa-clock"></i> 48 giờ
+                                            </button>
+                                            <div class="dropdown-divider"></div>
+                                            <button class="unlock-btn" data-account-id="${listAcc.accountId}">
+                                                <i class="fas fa-unlock"></i> Hủy chặn
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <button class="delete" data-account-id="${listAcc.accountId}">
-                                    <i class="fas fa-trash"></i> Vô hiệu hóa
-                                </button>
+                                    <button class="delete" data-account-id="${listAcc.accountId}">
+                                        <i class="fas fa-trash"></i> Vô hiệu hóa
+                                    </button>
+                                </c:if>
+                                <c:if test="${listAcc.deleted}">
+                                    <button class="activate" data-account-id="${listAcc.accountId}">
+                                        <i class="fas fa-check"></i> Kích hoạt
+                                    </button>
+                                </c:if>
                             </c:if>
                         </div>
                     </td>
@@ -134,6 +141,6 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/admin_custom_manager.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_custom_management.js"></script>
 </body>
 </html>

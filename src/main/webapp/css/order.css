@@ -80,25 +80,42 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    padding: 0 10px;
+    gap: 10px;
 }
 
-.header select, .header input {
+
+.header form {
+    display: flex;
+    flex: 1;
+    max-width: 1000px;
+}
+
+.header input {
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 10px;
+    min-width: 0;
 }
 
-.header input[type="text"] {
-    flex: 1;
-}
-
-.header .icons i {
-    margin-right: 10px;
+.header button {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
     cursor: pointer;
 }
 
-
+.icons .fas:hover {
+    transform: translateY(3px);
+}
+.icons .fas{
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: #B5292F;
+    color: White;
+    border-radius: 5px;
+}
 /* Xử lý table */
 table {
     width: 100%;
@@ -121,6 +138,9 @@ table th {
 
 table tr:nth-child(even) {
     background-color: #f9f9f9;
+}
+table tr:hover {
+    background-color: #e9e9e9;
 }
 
 .details-button {
@@ -158,7 +178,7 @@ table tr:nth-child(even) {
 /* Xử lý pagination */
 .pagi {
     position: fixed;
-    bottom: 0;
+    bottom: -1%;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -172,7 +192,7 @@ table tr:nth-child(even) {
 
 }
 
-.pagi a {
+.pagi .pagiOrder {
     padding: 8px 12px;
     border-radius: 5px;
     background: #f1f1f1;
@@ -181,14 +201,18 @@ table tr:nth-child(even) {
     border: 1px solid #ccc;
 }
 
-.pagi a.active {
-    background-color: #007bff;
+.pagi .pagiOrder.active {
+    background-color: #B5292F;
     color: white;
     font-weight: bold;
 }
 
+.pagi .pagiOrder:hover {
+    transform: translateY(-5px); /* Di chuyển lên trên 5px */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng cho nổi bật */
+}
 
-.pagi a:hover:not(.active) {
+.pagi .pagiOrder:hover:not(.active) {
     background-color: rgb(182, 179, 177);
     border-radius: 5px;
 }
@@ -306,7 +330,6 @@ body.no-scroll {
 }
 
 
-
 .buttonSubmitCheck:hover, .button-cancel-order:hover {
     background-color: #b5292f;
     color: white;
@@ -329,26 +352,30 @@ body.no-scroll {
     z-index: 9999;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 600px;
     height: 300px;
 }
-.popup-header{
+
+.popup-header {
     font-size: 16px;
     text-align: center;
     font-weight: bold;
     margin: 15px auto;
 }
-.cancel-reason{
+
+.cancel-reason {
     width: 100%;
     height: 150px;
 }
-.popup-actions-cancel{
+
+.popup-actions-cancel {
     display: flex;
     width: 100%;
     justify-content: center;
     gap: 10px;
 }
+
 .button-confirm-cancel, .button-cancel-cancel {
     margin-top: 10px;
     flex: 1;
@@ -360,7 +387,165 @@ body.no-scroll {
     border: 1px solid #ccc;
     font-size: 16px;
 }
+
 .button-confirm-cancel:hover, .button-cancel-cancel:hover {
+    background-color: #b5292f;
+    color: white;
+}
+
+/*infoButton*/
+
+.infoStatusOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-infoStatus{
+    width: 700px;
+    height: 100px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.popup-header-infoStatus {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-infoStatus{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-infoStatus {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+/*infocancel popup*/
+
+.infoStatusCancelOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-infoStatusCancel {
+    width: 700px;
+    height:220px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+
+}
+
+.popup-header-infoStatusCancel {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-infoStatusCancel {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-infoStatusCancel {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+.reason-text {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 18px;
+    color: #d32f2f; /* Màu đỏ cho nổi bật */
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    margin: 0 10px 10px 10px;
+}
+/*popup submit button*/
+.submitOrder-popup {
+    position: fixed;
+    z-index: 9999; /* Đảm bảo cao hơn mọi thứ */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: none; /* Ẩn mặc định */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content-submitOrder{
+    width: 600px;
+    height: 150px;
+    background-color: white;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.popup-header-submitOrder {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 15px auto;
+}
+.content-submitOrder{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.popup-actions-submitOrder {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-confirm-submitOrder, .button-cancel-submitOrder {
+    margin-top: 10px;
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.button-confirm-submitOrder:hover, .button-cancel-submitOrder:hover {
     background-color: #b5292f;
     color: white;
 }
@@ -492,6 +677,7 @@ body.no-scroll {
     background-color: #e8e8e8;
     margin: 10px auto;
 }
+
 .popup-order-top {
     display: flex;
     flex-direction: column;

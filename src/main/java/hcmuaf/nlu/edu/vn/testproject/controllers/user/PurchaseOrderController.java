@@ -17,6 +17,7 @@ import java.util.List;
 @WebServlet(name = "PurchaseOrderController", value = "/PurchaseOrder")
 public class PurchaseOrderController extends HttpServlet {
     private LogService logService = new LogService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -24,18 +25,21 @@ public class PurchaseOrderController extends HttpServlet {
         Account acc = (Account) session.getAttribute("currentUser");
         InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
 
+        if (acc == null)
+            response.sendRedirect("home");
+
         CategoryService cs = new CategoryService();
         List<Category> categoryList = cs.getCategories();
         request.setAttribute("listC", categoryList);
 
         String id = request.getParameter("id");
-        if(id!=null){
+        if (id != null) {
             invoiceOrderServices.cancelInvoice(id);
         }
 
-        String optionOrder="0";
-        if(optionOrder==null)
-            optionOrder= request.getParameter("optionOrder");
+        String optionOrder = "0";
+        if (optionOrder == null)
+            optionOrder = request.getParameter("optionOrder");
 
         List<OrderInvoice> ois = invoiceOrderServices.getOption(optionOrder);
         request.setAttribute("ois", ois);

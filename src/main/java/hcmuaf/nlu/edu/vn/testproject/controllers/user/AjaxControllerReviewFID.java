@@ -27,18 +27,27 @@ public class AjaxControllerReviewFID extends HttpServlet {
         int foodID = Integer.parseInt(request.getParameter("text1"));
         int option = Integer.parseInt(request.getParameter("text2"));
         int amount = Integer.parseInt(request.getParameter("exits"));
-        int countOption = Integer.parseInt(request.getParameter("countOption"));
+        int curentOption = Integer.parseInt(request.getParameter("curOption"));
         ReviewService reviewService = new ReviewService();
         List<ReviewFood> nextTen;
         PrintWriter out = response.getWriter();
 
-        int countReview = reviewService.getCountReview(foodID, option);
-        int countReviewFoodAll= reviewService.getCountReview(foodID, countOption);
 
-        if (countOption == 0)
-            nextTen = reviewService.get10IncrementReviewFood(foodID, option, countOption);
-        else
-            nextTen = reviewService.get10IncrementReviewFood(foodID, option, amount);
+        int countReview = reviewService.getCountReview(foodID, option);
+//        int countReviewFoodAll= reviewService.getCountReview(foodID, countOption);
+
+        if (option == curentOption && amount > countReview) {
+            return;
+        }
+
+        if (option != curentOption) {
+            amount = 0;
+        }
+
+        nextTen = reviewService.get10IncrementReviewFood(foodID, option, amount);
+
+
+        System.out.println(amount + " " + curentOption + " " + countReview + " " + nextTen.size());
 
         out.print("<div class=\" option" + option + "\">");
         if (countReview == 0) {
@@ -48,12 +57,9 @@ public class AjaxControllerReviewFID extends HttpServlet {
             out.println("<div class=\"endOfReviewFlag\" style=\"display:none\"></div>");
 
         } else if (nextTen.isEmpty() && amount > 0) {
-//            out.println("<div class=\"fragmentReview countFragmentReview" + foodID + "\">");
-//            out.println("<h3 style=\"max-width: 1200px; text-align: center;\">Đã hết đánh giá</h3>");
-//            out.println("</div>");
             out.println("<div class=\"endOfReviewFlag\" style=\"display:none\"></div>");
 
-        } else if (nextTen.size() < 10 || amount==countReviewFoodAll) {
+        } else if (nextTen.size() < 10 || (amount + nextTen.size()) >= countReview) {
             for (ReviewFood rf : nextTen) {
                 out.println("<div class=\"fragmentReview countFragmentReview" + foodID + "\">");
                 out.println("    <div class=\"nameAndDateRatingUser\">");
