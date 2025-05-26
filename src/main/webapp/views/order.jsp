@@ -38,16 +38,16 @@
                 <option value="month">Tháng</option>
             </select>
 
-            <div class="input-group" id="inputGroup">
+            <div class="input-group" onchange="" id="inputGroup">
                 <!-- Input sẽ thay đổi tại đây -->
             </div>
-            <form action="SearchInvoice" method="get">
-                <input style="display: flex; flex: 1;max-width: 1000px" name="text" type="text"
-                       placeholder="Tìm kiếm mã đơn hoặc khách hàng"/>
+            <form id="searchForm">
+                <input name="text" id="searchInput" type="text" placeholder="Tìm kiếm mã đơn hoặc khách hàng" />
                 <button type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>
             </form>
+
             <div class="icons">
                 <a href="ordermanagement"><i class="fas fa-sync-alt"> </i></a>
             </div>

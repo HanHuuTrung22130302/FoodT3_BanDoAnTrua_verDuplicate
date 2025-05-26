@@ -16,3 +16,10 @@ function tableOrder(option, page) {
         }
     });
 }
+$('#searchForm').on('submit', function (e) {
+    e.preventDefault(); // Chặn submit form
+
+    const searchValue = $('#searchInput').val().trim();
+    tableOrder(searchValue, 1); // Gọi hiển thị bảng
+    pagi(searchValue, 1);       // Gọi phân trang
+});

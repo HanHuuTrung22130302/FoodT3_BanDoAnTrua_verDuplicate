@@ -44,8 +44,6 @@ public class AjaxPagiOrderController extends HttpServlet {
             option = "all";
         }
 
-        List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
-
         int totalLs = adminInvoiceService.countInvoicesByOption(option);
         int totalPages = (int) Math.ceil((double) totalLs / pageSize);
 
