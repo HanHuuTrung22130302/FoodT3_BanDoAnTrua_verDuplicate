@@ -50,6 +50,9 @@ public class AdminInvoiceService {
                 case "canceled":
                     ois = dao.getAdminInvoiceOrder(5, offset);
                     break;
+                case "ghostBuy":
+                    ois = dao.getAdminInvoiceOrder(6, offset);
+                    break;
                 default:
                     ois = dao.getInvoicesByIdOrPrefix(option, offset);
                     if (ois.isEmpty())
@@ -89,6 +92,8 @@ public class AdminInvoiceService {
                     return dao.countAdminInvoiceOrder(5);
                 case "all":
                     return dao.countAdminInvoiceOrder(0);
+                case "ghostBuy":
+                    return dao.countAdminInvoiceOrder(6);
                 default:
                     int countResult = dao.countInvoiceByIdOrPrefix(option);
                     if (countResult == 0) {
@@ -163,6 +168,6 @@ public String getReasonForInvoices(int invoiceId) {
 
     public static void main(String[] args) {
         AdminInvoiceService as = new AdminInvoiceService();
-//        as.sendMoveStatusBombOrder(21);
+        System.out.println(as.countInvoicesByOption("canceled"));
     }
 }

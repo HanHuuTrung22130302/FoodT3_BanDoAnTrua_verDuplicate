@@ -51,7 +51,6 @@ public class AjaxPagiOrderController extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-
 // Nút < (previous)
         if (page > 1) {
             out.println("<div class='pagiOrder' onclick=\"tableOrder('" + option + "'," + (page - 1) + ");pagi('" + option + "'," + (page - 1) + ")\"><</div>");

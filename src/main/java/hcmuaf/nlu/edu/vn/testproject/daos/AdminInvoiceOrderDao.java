@@ -26,11 +26,11 @@ public class AdminInvoiceOrderDao {
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id "
         );
 
-        if (option >= 1 && option <= 4) {
+        if (option >= 1 && option <= 4 || option == 6) {
             query.append("WHERE os.order_status = ? ");
         } else if (option == 5) {
             query.append("WHERE os.order_status BETWEEN 5 AND 6 ");
-        }else if (option == 0) {
+        } else if (option == 0) {
             query.append("WHERE os.order_status BETWEEN 1 AND 6 ");
         }
 
@@ -41,7 +41,7 @@ public class AdminInvoiceOrderDao {
             ps = con.prepareStatement(query.toString());
 
             int paramIndex = 1;
-            if (option >= 1 && option <= 5) {
+            if ((option >= 1 && option <= 4) || option == 6) {
                 ps.setInt(paramIndex++, option);
             }
             ps.setInt(paramIndex, offset);
@@ -90,6 +90,7 @@ public class AdminInvoiceOrderDao {
             System.err.println("Lỗi khi đóng Connection: " + e.getMessage());
         }
     }
+
     public List<OrderInvoice> getInvoiceByToday(int offset) {
         List<OrderInvoice> invoices = new ArrayList<>();
         Connection con = null;
@@ -132,6 +133,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public List<OrderInvoice> getInvoiceByThisMonth(int offset) {
         List<OrderInvoice> invoices = new ArrayList<>();
         Connection con = null;
@@ -176,6 +178,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public List<OrderInvoice> getInvoiceByThisYear(int offset) {
         List<OrderInvoice> invoices = new ArrayList<>();
         Connection con = null;
@@ -219,6 +222,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public List<OrderInvoice> getInvoicesByIdOrPrefix(String invoiceId, int offset) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -292,18 +296,18 @@ public class AdminInvoiceOrderDao {
                         "JOIN order_status os ON inv.invoice_id = os.invoice_id "
         );
 
-        if (option >= 1 && option <= 4) {
+        if ((option >= 1 && option <= 4) || option == 6) {
             query.append("WHERE os.order_status = ? ");
         } else if (option == 5) {
             query.append("WHERE os.order_status BETWEEN 5 AND 6 ");
-        }else if (option == 0) {
+        } else if (option == 0) {
             query.append("WHERE os.order_status BETWEEN 1 AND 6 ");
         }
 
         try {
             con = new DbContext().getConnection();
             ps = con.prepareStatement(query.toString());
-            if (option >= 1 && option <= 5) {
+            if (option >= 1 && option <= 4 || option == 6) {
                 ps.setInt(1, option);
             }
 
@@ -319,6 +323,7 @@ public class AdminInvoiceOrderDao {
 
         return count;
     }
+
     public int countInvoiceToday() {
         int count = 0;
         Connection con = null;
@@ -345,6 +350,7 @@ public class AdminInvoiceOrderDao {
 
         return count;
     }
+
     public int countInvoiceThisMonth() {
         int count = 0;
         Connection con = null;
@@ -371,6 +377,7 @@ public class AdminInvoiceOrderDao {
 
         return count;
     }
+
     public int countInvoiceThisYear() {
         int count = 0;
         Connection con = null;
@@ -397,6 +404,7 @@ public class AdminInvoiceOrderDao {
 
         return count;
     }
+
     public int countInvoiceByIdOrPrefix(String invoiceId) {
         int count = 0;
         Connection con = null;
@@ -439,6 +447,7 @@ public class AdminInvoiceOrderDao {
 
         return count;
     }
+
     public static List<OrderInvoiceDetail> getInvoiceOrderDetails(int idInvoice) {
         List<OrderInvoiceDetail> data = new ArrayList<>();
         String query = "SELECT * FROM invoice_detail id join food f ON id.food_id = f.food_id where invoice_id=?";
@@ -475,6 +484,7 @@ public class AdminInvoiceOrderDao {
         }
         return data;
     }
+
     public boolean moveOrderStatusForward(int invoiceId) {
         Connection con = null;
         PreparedStatement psSelect = null;
@@ -549,6 +559,7 @@ public class AdminInvoiceOrderDao {
 
         return success;
     }
+
     public boolean cancelOrder(int invoiceId, String reason) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -616,6 +627,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public List<OrderInvoice> getInvoiceByDate(String date, int offset) {
         List<OrderInvoice> invoices = new ArrayList<>();
         String sql = "SELECT * FROM invoice inv " +
@@ -653,6 +665,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public List<OrderInvoice> getInvoiceByMonth(String monthYear, int offset) {
         List<OrderInvoice> invoices = new ArrayList<>();
         String sql = "SELECT * FROM invoice inv " +
@@ -690,6 +703,7 @@ public class AdminInvoiceOrderDao {
 
         return invoices;
     }
+
     public int countInvoiceByDate(String date) {
         String sql = "SELECT COUNT(*) FROM invoice WHERE DATE(order_date) = ?";
         try (Connection con = new DbContext().getConnection();
@@ -705,6 +719,7 @@ public class AdminInvoiceOrderDao {
         }
         return 0;
     }
+
     public int countInvoiceByMonth(String month) {
         String sql = "SELECT COUNT(*) FROM invoice WHERE DATE_FORMAT(order_date, '%Y-%m') = ?";
         try (Connection con = new DbContext().getConnection();
@@ -720,6 +735,7 @@ public class AdminInvoiceOrderDao {
         }
         return 0;
     }
+
     public int countInvoiceByRecipientName(String name) {
         String sql = "SELECT COUNT(*) FROM invoice WHERE recipient_name LIKE ?";
         try (Connection con = new DbContext().getConnection();
@@ -751,6 +767,7 @@ public class AdminInvoiceOrderDao {
         }
         return null;
     }
+
     public String getReason(int invoiceId) {
         String sql = "SELECT reason FROM order_status WHERE invoice_id = ? AND order_status IN ( 5, 6)";
         try (Connection conn = new DbContext().getConnection();
@@ -765,6 +782,7 @@ public class AdminInvoiceOrderDao {
         }
         return null;
     }
+
     public boolean isAdmin(int accountId) {
         String sql = "SELECT role_id, is_locked, is_deleted FROM account WHERE account_id = ?";
         try (Connection conn = new DbContext().getConnection();
@@ -782,6 +800,7 @@ public class AdminInvoiceOrderDao {
         }
         return false;
     }
+
     public OrderInvoice getInvoiceById(int invoiceId) {
         OrderInvoice invoice = null;
         Connection con = null;

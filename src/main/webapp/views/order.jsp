@@ -30,6 +30,7 @@
                 <option value="shipping|1" ${currentCategory == 'shipping' ? 'selected' : ''}>Đang giao hàng</option>
                 <option value="delivered|1" ${currentCategory == 'delivered' ? 'selected' : ''}>Đã hoàn thành</option>
                 <option value="canceled|1" ${currentCategory == 'canceled' ? 'selected' : ''}>Đã hủy</option>
+                <option value="ghostBuy|1" ${currentCategory == 'ghostBuy' ? 'selected' : ''}>KH không lấy</option>
 
             </select>
             <select id="typeSelect">
