@@ -47,6 +47,8 @@ public class AccDetailController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         Map<String, Object> result = new HashMap<>();
 
         try {
@@ -88,7 +90,13 @@ public class AccDetailController extends HttpServlet {
 
                 if (existingDetail == null) {
                     // Nếu chưa có AccDetail, thêm mới
-                    accdetailDAO.addAccDetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, gender);
+                    boolean addResult = accdetailDAO.addAccDetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, gender);
+                    if (!addResult) {
+                        result.put("success", false);
+                        result.put("message", "Không thể thêm thông tin chi tiết tài khoản!");
+                        response.getWriter().write(gson.toJson(result));
+                        return;
+                    }
                 } else {
                     // Nếu đã có AccDetail, thực hiện cập nhật
                     accdetailDAO.updateAccdetail(account.getAccountId(), fullName, address, phoneNumber, birthDate, gender);
