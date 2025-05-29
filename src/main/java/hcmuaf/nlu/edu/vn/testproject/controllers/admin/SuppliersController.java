@@ -18,36 +18,62 @@ public class SuppliersController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        supplierDAO = new SupplierDAO(); // Khởi tạo DAO
+        supplierDAO = new SupplierDAO();
         super.init();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy danh sách nhà cung cấp từ DAO
-        List<Supplier> supplierList = supplierDAO.getAllSuppliers(); // Giả sử SupplierDAO có phương thức này
-        request.setAttribute("supplierList", supplierList); // Đặt danh sách vào request attribute
-
-        // Chuyển tiếp đến suppliers.jsp
+        List<Supplier> supplierList = supplierDAO.getAllSuppliers();
+        request.setAttribute("supplierList", supplierList);
         request.getRequestDispatcher("/views/suppliers.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Xử lý tìm kiếm nếu có
+        String action = request.getParameter("action");
         String searchText = request.getParameter("text");
         List<Supplier> supplierList;
 
-        if (searchText != null && !searchText.trim().isEmpty()) {
-            // Tìm kiếm nhà cung cấp theo tên, số điện thoại hoặc email
-            supplierList = supplierDAO.searchSuppliers(searchText); // Giả sử SupplierDAO có phương thức này
-        } else {
-            // Nếu không có tìm kiếm, lấy toàn bộ danh sách
+        if ("add".equals(action)) {
+            // Add new supplier
+            String supplierName = request.getParameter("supplierName");
+            String address = request.getParameter("address");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
+            byte status = Byte.parseByte(request.getParameter("status"));
+
+            Supplier supplier = new Supplier(0, supplierName, address, phone, email, status);
+            supplierDAO.insertSupplier(supplier);
             supplierList = supplierDAO.getAllSuppliers();
+        } else if ("edit".equals(action)) {
+            // Edit existing supplier
+            int supplierId = Integer.parseInt(request.getParameter("supplierId"));
+            String supplierName = request.getParameter("supplierName");
+            String address = request.getParameter("address");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
+            byte status = Byte.parseByte(request.getParameter("status"));
+
+            Supplier supplier = new Supplier(supplierId, supplierName, address, phone, email, status);
+            supplierDAO.updateSupplier(supplier);
+            supplierList = supplierDAO.getAllSuppliers();
+        } else if ("delete".equals(action)) {
+            // Delete supplier (soft delete)
+            int supplierId = Integer.parseInt(request.getParameter("supplierId"));
+            supplierDAO.softDeleteSupplier(supplierId);
+            supplierList = supplierDAO.getAllSuppliers();
+        } else {
+            // Handle search
+            if (searchText != null && !searchText.trim().isEmpty()) {
+                supplierList = supplierDAO.searchSuppliers(searchText);
+            } else {
+                supplierList = supplierDAO.getAllSuppliers();
+            }
         }
 
         request.setAttribute("supplierList", supplierList);
-        request.setAttribute("search", searchText); // Giữ giá trị tìm kiếm để hiển thị lại trên form
+        request.setAttribute("search", searchText);
         request.getRequestDispatcher("/views/suppliers.jsp").forward(request, response);
     }
 }
