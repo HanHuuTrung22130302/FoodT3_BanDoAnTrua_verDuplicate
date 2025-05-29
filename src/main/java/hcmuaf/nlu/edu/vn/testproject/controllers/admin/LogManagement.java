@@ -42,6 +42,7 @@ public class LogManagement extends HttpServlet {
         String filterRoleId = request.getParameter("filterRoleId");
         String filterDate = request.getParameter("filterDate");
         String filterAction = request.getParameter("filterAction");
+        String showAll = request.getParameter("showAll");
 
         Date parsedDate = null;
         if (filterDate != null && !filterDate.isEmpty()) {
@@ -54,11 +55,17 @@ public class LogManagement extends HttpServlet {
             }
         }
 
-        List<LogEntry> logs = logService.getLogs(filterRoleId, parsedDate, filterAction);
+        List<LogEntry> logs;
+        if ("true".equals(showAll)) {
+            logs = logService.getLogs(filterRoleId, parsedDate, filterAction);
+        } else {
+            logs = logService.getLogsWithLimit(filterRoleId, parsedDate, filterAction, 20);
+        }
 
         request.setAttribute("selectedRoleId", filterRoleId != null ? filterRoleId : "all");
         request.setAttribute("selectedDate", filterDate);
         request.setAttribute("selectedAction", filterAction);
+        request.setAttribute("showAll", showAll);
         
         request.setAttribute("logs", logs);
         

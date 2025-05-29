@@ -17,6 +17,10 @@ public class LogService {
         return logDAO.getLogs(filterRoleId, filterDate, filterAction);
     }
 
+    public List<LogEntry> getLogsWithLimit(String filterRoleId, Date filterDate, String filterAction, int limit) {
+        return logDAO.getLogsWithLimit(filterRoleId, filterDate, filterAction, limit);
+    }
+
     public void logActivity(int accountId, int roleId, String action, String result, String details) {
         // Chỉ hiển thị log cho những hành động quan trọng
         if (action.contains("Thêm") || action.contains("Xóa") || action.contains("Cập nhật") || 
