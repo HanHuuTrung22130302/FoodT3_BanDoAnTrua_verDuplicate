@@ -155,15 +155,37 @@
   // Handle details button
   document.querySelectorAll('.detail_btn').forEach(button => {
     button.addEventListener('click', () => {
-      const supplier = JSON.parse(button.dataset.supplier);
+      const supplierData = button.dataset.supplier;
+      console.log('Raw supplier data:', supplierData); // Debug dữ liệu thô
+      let supplier;
+      try {
+        supplier = JSON.parse(supplierData);
+        console.log('Parsed supplier data:', supplier); // Debug dữ liệu sau khi parse
+      } catch (e) {
+        console.error('Error parsing JSON:', e);
+        supplier = {};
+      }
+
+      // Lấy giá trị từ supplier và kiểm tra trước khi hiển thị
+      const supplierName = supplier.supplierName || 'Không có dữ liệu';
+      const address = supplier.address || 'Không có dữ liệu';
+      const phone = supplier.phone || 'Không có dữ liệu';
+      const email = supplier.email || 'Không có dữ liệu';
+      const status = supplier.status === '1' ? 'Hoạt động' : supplier.status === '0' ? 'Ngừng hoạt động' : 'Không xác định';
+
+      console.log('Values before rendering:', { supplierName, address, phone, email, status }); // Debug giá trị trước khi render
+
+      // Tạo HTML string
+      const htmlContent = [
+        '<p><strong>Tên:</strong> ' + supplierName + '</p>',
+        '<p><strong>Địa chỉ:</strong> ' + address + '</p>',
+        '<p><strong>Số điện thoại:</strong> ' + phone + '</p>',
+        '<p><strong>Email:</strong> ' + email + '</p>',
+        '<p><strong>Trạng thái:</strong> ' + status + '</p>'
+      ].join('');
+
       const detailsDiv = document.getElementById('popup_details');
-      detailsDiv.innerHTML = `
-        <p><strong>Tên:</strong> ${supplier.supplierName}</p>
-        <p><strong>Địa chỉ:</strong> ${supplier.address}</p>
-        <p><strong>Số điện thoại:</strong> ${supplier.phone}</p>
-        <p><strong>Email:</strong> ${supplier.email}</p>
-        <p><strong>Trạng thái:</strong> ${supplier.status == 1 ? 'Hoạt động' : 'Ngừng hoạt động'}</p>
-      `;
+      detailsDiv.innerHTML = htmlContent;
       document.getElementById('detailsPopup').classList.remove('hidden');
     });
   });
@@ -172,12 +194,12 @@
   document.querySelectorAll('.edit_btn').forEach(button => {
     button.addEventListener('click', () => {
       const supplier = JSON.parse(button.dataset.supplier);
-      document.getElementById('editSupplierId').value = supplier.supplierId;
-      document.getElementById('editSupplierName').value = supplier.supplierName;
-      document.getElementById('editAddress').value = supplier.address;
-      document.getElementById('editPhone').value = supplier.phone;
-      document.getElementById('editEmail').value = supplier.email;
-      document.getElementById('editStatus').value = supplier.status;
+      document.getElementById('editSupplierId').value = supplier.supplierId || '';
+      document.getElementById('editSupplierName').value = supplier.supplierName || '';
+      document.getElementById('editAddress').value = supplier.address || '';
+      document.getElementById('editPhone').value = supplier.phone || '';
+      document.getElementById('editEmail').value = supplier.email || '';
+      document.getElementById('editStatus').value = supplier.status || '1';
       document.getElementById('editPopup').classList.remove('hidden');
     });
   });
@@ -186,8 +208,8 @@
   document.querySelectorAll('.delete_btn').forEach(button => {
     button.addEventListener('click', () => {
       const supplier = JSON.parse(button.dataset.supplier);
-      document.getElementById('deleteSupplierId').value = supplier.supplierId;
-      document.getElementById('deleteSupplierName').textContent = supplier.supplierName;
+      document.getElementById('deleteSupplierId').value = supplier.supplierId || '';
+      document.getElementById('deleteSupplierName').textContent = supplier.supplierName || 'Không xác định';
       document.getElementById('deletePopup').classList.remove('hidden');
     });
   });
