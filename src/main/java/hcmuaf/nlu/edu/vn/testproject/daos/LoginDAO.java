@@ -134,4 +134,51 @@ public class LoginDAO {
     private boolean isAccountDeleted(Account account) {
         return account.isDeleted();
     }
+
+    public Account loginByEmail(String email, String password) {
+        String query = "SELECT * FROM account WHERE email = ?";
+        String hashedPassword = MD5.getMD5(password);
+
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Account account = extractAccountFromResultSet(rs);
+                    if (isAccountDeleted(account)) {
+                        return null;
+                    }
+                    if (isAccountLocked(account)) {
+                        return null;
+                    }
+                    if (account.getPassword().equals(hashedPassword)) {
+                        resetFailedAttempts(account.getAccountId());
+                        return account;
+                    } else {
+                        handleFailedLogin(account);
+                        return null;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Account getAccountByEmail(String email) {
+        String query = "SELECT * FROM account WHERE email = ?";
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractAccountFromResultSet(rs);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
