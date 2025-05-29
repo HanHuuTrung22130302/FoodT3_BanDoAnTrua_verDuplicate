@@ -36,7 +36,6 @@ public class SuppliersController extends HttpServlet {
         List<Supplier> supplierList;
 
         if ("add".equals(action)) {
-            // Add new supplier
             String supplierName = request.getParameter("supplierName");
             String address = request.getParameter("address");
             String phone = request.getParameter("phone");
@@ -47,7 +46,6 @@ public class SuppliersController extends HttpServlet {
             supplierDAO.insertSupplier(supplier);
             supplierList = supplierDAO.getAllSuppliers();
         } else if ("edit".equals(action)) {
-            // Edit existing supplier
             int supplierId = Integer.parseInt(request.getParameter("supplierId"));
             String supplierName = request.getParameter("supplierName");
             String address = request.getParameter("address");
@@ -58,13 +56,7 @@ public class SuppliersController extends HttpServlet {
             Supplier supplier = new Supplier(supplierId, supplierName, address, phone, email, status);
             supplierDAO.updateSupplier(supplier);
             supplierList = supplierDAO.getAllSuppliers();
-        } else if ("delete".equals(action)) {
-            // Delete supplier (soft delete)
-            int supplierId = Integer.parseInt(request.getParameter("supplierId"));
-            supplierDAO.softDeleteSupplier(supplierId);
-            supplierList = supplierDAO.getAllSuppliers();
         } else {
-            // Handle search
             if (searchText != null && !searchText.trim().isEmpty()) {
                 supplierList = supplierDAO.searchSuppliers(searchText);
             } else {

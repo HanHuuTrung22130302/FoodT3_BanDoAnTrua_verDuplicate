@@ -79,8 +79,7 @@
         <span class="close_btn" onclick="closePopup('deletePopup')"><i class="fa-solid fa-xmark"></i></span>
         <h2>XÁC NHẬN XÓA</h2>
         <p>Bạn có chắc muốn xóa nhà cung cấp <span id="deleteSupplierName"></span>?</p>
-        <form action="suppliers" method="post">
-          <input type="hidden" name="action" value="delete"/>
+        <form id="deleteForm">
           <input type="hidden" name="supplierId" id="deleteSupplierId"/>
           <button type="submit" class="delete-btn">Xóa</button>
           <button type="button" onclick="closePopup('deletePopup')">Hủy</button>
@@ -111,7 +110,7 @@
       </thead>
       <tbody>
       <c:forEach var="supplier" items="${supplierList}" varStatus="status">
-        <tr>
+        <tr data-supplier-id="${supplier.supplierId}">
           <td>${status.index + 1}</td>
           <td>${supplier.supplierName}</td>
           <td>${supplier.address}</td>
@@ -191,6 +190,43 @@
       document.getElementById('deleteSupplierName').textContent = supplier.supplierName;
       document.getElementById('deletePopup').classList.remove('hidden');
     });
+  });
+
+  // Handle delete form submission with AJAX
+  document.getElementById('deleteForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const supplierId = document.getElementById('deleteSupplierId').value;
+    const contextPath = '${pageContext.request.contextPath}';
+    const deleteUrl = contextPath + '/suppliers_delete';
+
+    fetch(deleteUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'supplierId=' + encodeURIComponent(supplierId)
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('HTTP status ' + response.status);
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.success) {
+                const row = document.querySelector(`tr[data-supplier-id="${supplierId}"]`);
+                if (row) {
+                  row.style.display = 'none';
+                }
+                closePopup('deletePopup');
+              } else {
+                alert(data.error || 'Lỗi khi xóa nhà cung cấp');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Lỗi khi xóa nhà cung cấp: ' + error.message);
+            });
   });
 
   // Close popups when clicking X
