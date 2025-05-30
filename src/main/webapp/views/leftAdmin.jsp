@@ -86,7 +86,7 @@ prefix="c" %>
       </a>
     </li>
 
-    <li><a href="IngredientHistory"><i class="fa-solid fa-history"></i> Lịch sử nhập/xuất</a></li>
+    <li><a href="IngredientHistory"><i class="fa-solid fa-bars-progress"></i> Lịch sử nhập/xuất</a></li>
 
     <li>
       <a id="logout" href="logout">

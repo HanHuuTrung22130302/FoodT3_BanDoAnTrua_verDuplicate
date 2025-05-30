@@ -23,6 +23,7 @@ public class IngredientHistoryController extends HttpServlet {
 
     private IngredientDAO ingredientDAO;
     private CheckUserDao checkUserDao;
+    private static final int RECORDS_PER_PAGE = 10;
 
     @Override
     public void init() {
@@ -43,6 +44,8 @@ public class IngredientHistoryController extends HttpServlet {
 
         String type = request.getParameter("type");
         String searchTerm = request.getParameter("search");
+        String pageParam = request.getParameter("page");
+        int currentPage = pageParam != null ? Integer.parseInt(pageParam) : 1;
 
         List<Ingredients> historyList = new ArrayList<>();
         // Lấy danh sách nhập hàng
@@ -67,11 +70,17 @@ public class IngredientHistoryController extends HttpServlet {
                     .filter(i -> String.valueOf(i.getIngredientId()).contains(searchPattern) ||
                             i.getIngredientName().toLowerCase().contains(searchPattern) ||
                             i.getSupplierName().toLowerCase().contains(searchPattern))
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
+        // Phân trang
+        int totalRecords = historyList.size();
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+        int startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+        int endIndex = Math.min(startIndex + RECORDS_PER_PAGE, totalRecords);
+        List<Ingredients> paginatedList = historyList.subList(startIndex, endIndex);
+
         // Dữ liệu cho biểu đồ
-        // 1. Nguyên liệu sắp hết hạn
         LocalDate today = LocalDate.now();
         LocalDate expiryThreshold = today.plusDays(7);
         List<Ingredients> nearlyExpired = importList.stream()
@@ -79,7 +88,6 @@ public class IngredientHistoryController extends HttpServlet {
                         !i.getExpirationDate().toLocalDate().isAfter(expiryThreshold))
                 .collect(Collectors.toList());
 
-        // 2. Thống kê số lượng nhập/xuất theo ngày
         Map<String, Double> importByDate = importList.stream()
                 .filter(i -> i.getImportDate() != null)
                 .collect(Collectors.groupingBy(
@@ -93,7 +101,6 @@ public class IngredientHistoryController extends HttpServlet {
                         Collectors.summingDouble(Ingredients::getAmount)
                 ));
 
-        // 3. Thống kê giá trị nhập/xuất
         double totalImportValue = importList.stream()
                 .mapToDouble(i -> i.getAmount() * i.getPrice())
                 .sum();
@@ -101,7 +108,6 @@ public class IngredientHistoryController extends HttpServlet {
                 .mapToDouble(i -> i.getAmount() * i.getPrice())
                 .sum();
 
-        // 4. Tỷ lệ nhập/xuất
         double totalImportAmount = importList.stream().mapToDouble(Ingredients::getAmount).sum();
         double totalExportAmount = exportList.stream().mapToDouble(Ingredients::getAmount).sum();
 
@@ -115,7 +121,13 @@ public class IngredientHistoryController extends HttpServlet {
         request.setAttribute("totalImportAmount", totalImportAmount);
         request.setAttribute("totalExportAmount", totalExportAmount);
 
-        request.setAttribute("historyList", historyList);
+        // Dữ liệu phân trang
+        request.setAttribute("historyList", paginatedList);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("type", type);
+        request.setAttribute("search", searchTerm);
+
         request.getRequestDispatcher("/views/ingredient_history.jsp").forward(request, response);
 
     }

@@ -15,6 +15,7 @@ import java.util.List;
 public class SuppliersController extends HttpServlet {
 
     private SupplierDAO supplierDAO;
+    private static final int RECORDS_PER_PAGE = 5;
 
     @Override
     public void init() throws ServletException {
@@ -24,8 +25,18 @@ public class SuppliersController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Supplier> supplierList = supplierDAO.getAllSuppliers();
+        String pageParam = request.getParameter("page");
+        int currentPage = pageParam != null ? Integer.parseInt(pageParam) : 1;
+        String searchText = request.getParameter("text");
+
+        List<Supplier> supplierList = supplierDAO.getSuppliersPaginated(currentPage, RECORDS_PER_PAGE, searchText);
+        int totalRecords = supplierDAO.countSuppliers(searchText);
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+
         request.setAttribute("supplierList", supplierList);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("search", searchText);
         request.getRequestDispatcher("/views/suppliers.jsp").forward(request, response);
     }
 
@@ -33,6 +44,9 @@ public class SuppliersController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         String searchText = request.getParameter("text");
+        String pageParam = request.getParameter("page");
+        int currentPage = pageParam != null ? Integer.parseInt(pageParam) : 1;
+
         List<Supplier> supplierList;
 
         if ("add".equals(action)) {
@@ -44,7 +58,6 @@ public class SuppliersController extends HttpServlet {
 
             Supplier supplier = new Supplier(0, supplierName, address, phone, email, status);
             supplierDAO.insertSupplier(supplier);
-            supplierList = supplierDAO.getAllSuppliers();
         } else if ("edit".equals(action)) {
             int supplierId = Integer.parseInt(request.getParameter("supplierId"));
             String supplierName = request.getParameter("supplierName");
@@ -55,16 +68,15 @@ public class SuppliersController extends HttpServlet {
 
             Supplier supplier = new Supplier(supplierId, supplierName, address, phone, email, status);
             supplierDAO.updateSupplier(supplier);
-            supplierList = supplierDAO.getAllSuppliers();
-        } else {
-            if (searchText != null && !searchText.trim().isEmpty()) {
-                supplierList = supplierDAO.searchSuppliers(searchText);
-            } else {
-                supplierList = supplierDAO.getAllSuppliers();
-            }
         }
 
+        supplierList = supplierDAO.getSuppliersPaginated(currentPage, RECORDS_PER_PAGE, searchText);
+        int totalRecords = supplierDAO.countSuppliers(searchText);
+        int totalPages = (int) Math.ceil((double) totalRecords / RECORDS_PER_PAGE);
+
         request.setAttribute("supplierList", supplierList);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
         request.setAttribute("search", searchText);
         request.getRequestDispatcher("/views/suppliers.jsp").forward(request, response);
     }

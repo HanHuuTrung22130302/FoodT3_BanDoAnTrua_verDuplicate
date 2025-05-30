@@ -132,6 +132,11 @@ table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+#openImportPopup, #openExportPopup {
+    background-color: #b5292f;
+    color: white;
+}
+
 button {
     padding: 10px 15px;
     border: none;
@@ -254,6 +259,8 @@ table td:last-child {
     background-color: #ccc; /* Màu khác cho nút "Hủy" trong delete popup */
     margin-left: 10px;
 }
+
+
 
 /* Căn chỉnh nội dung trong detailsPopup */
 #popup_details {

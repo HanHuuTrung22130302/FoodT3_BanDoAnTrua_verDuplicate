@@ -6,9 +6,36 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quản lý nhà cung cấp</title>
-  <link href='${pageContext.request.contextPath}/Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
+  <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/suppliers.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <style>
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .pagination a {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #333;
+    }
+    .pagination a:hover {
+      background-color: #f2f2f2;
+    }
+    .pagination a.active {
+      background-color: #b5292f;
+      color: #fff;
+      border-color: #b5292f;
+    }
+    .pagination a.disabled {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -111,7 +138,7 @@
       <tbody>
       <c:forEach var="supplier" items="${supplierList}" varStatus="status">
         <tr data-supplier-id="${supplier.supplierId}">
-          <td>${status.index + 1}</td>
+          <td>${status.index + 1 + (currentPage - 1) * 10}</td>
           <td>${supplier.supplierName}</td>
           <td>${supplier.address}</td>
           <td>${supplier.phone}</td>
@@ -139,6 +166,32 @@
       </c:forEach>
       </tbody>
     </table>
+
+    <!-- Phân trang -->
+    <div class="pagination">
+      <c:if test="${currentPage > 1}">
+        <a href="${pageContext.request.contextPath}/suppliers?page=${currentPage - 1}&text=${search}">« Trước</a>
+      </c:if>
+      <c:if test="${currentPage <= 1}">
+        <a class="disabled">« Trước</a>
+      </c:if>
+      <c:forEach begin="1" end="${totalPages}" var="i">
+        <c:choose>
+          <c:when test="${currentPage == i}">
+            <a class="active">${i}</a>
+          </c:when>
+          <c:otherwise>
+            <a href="${pageContext.request.contextPath}/suppliers?page=${i}&text=${search}">${i}</a>
+          </c:otherwise>
+        </c:choose>
+      </c:forEach>
+      <c:if test="${currentPage < totalPages}">
+        <a href="${pageContext.request.contextPath}/suppliers?page=${currentPage + 1}&text=${search}">Sau »</a>
+      </c:if>
+      <c:if test="${currentPage >= totalPages}">
+        <a class="disabled">Sau »</a>
+      </c:if>
+    </div>
   </div>
 </div>
 <script>
@@ -156,26 +209,18 @@
   document.querySelectorAll('.detail_btn').forEach(button => {
     button.addEventListener('click', () => {
       const supplierData = button.dataset.supplier;
-      console.log('Raw supplier data:', supplierData); // Debug dữ liệu thô
       let supplier;
       try {
         supplier = JSON.parse(supplierData);
-        console.log('Parsed supplier data:', supplier); // Debug dữ liệu sau khi parse
       } catch (e) {
         console.error('Error parsing JSON:', e);
         supplier = {};
       }
-
-      // Lấy giá trị từ supplier và kiểm tra trước khi hiển thị
       const supplierName = supplier.supplierName || 'Không có dữ liệu';
       const address = supplier.address || 'Không có dữ liệu';
       const phone = supplier.phone || 'Không có dữ liệu';
       const email = supplier.email || 'Không có dữ liệu';
       const status = supplier.status === '1' ? 'Hoạt động' : supplier.status === '0' ? 'Ngừng hoạt động' : 'Không xác định';
-
-      console.log('Values before rendering:', { supplierName, address, phone, email, status }); // Debug giá trị trước khi render
-
-      // Tạo HTML string
       const htmlContent = [
         '<p><strong>Tên:</strong> ' + supplierName + '</p>',
         '<p><strong>Địa chỉ:</strong> ' + address + '</p>',
@@ -183,9 +228,7 @@
         '<p><strong>Email:</strong> ' + email + '</p>',
         '<p><strong>Trạng thái:</strong> ' + status + '</p>'
       ].join('');
-
-      const detailsDiv = document.getElementById('popup_details');
-      detailsDiv.innerHTML = htmlContent;
+      document.getElementById('popup_details').innerHTML = htmlContent;
       document.getElementById('detailsPopup').classList.remove('hidden');
     });
   });
@@ -220,7 +263,6 @@
     const supplierId = document.getElementById('deleteSupplierId').value;
     const contextPath = '${pageContext.request.contextPath}';
     const deleteUrl = contextPath + '/suppliers_delete';
-
     fetch(deleteUrl, {
       method: 'POST',
       headers: {

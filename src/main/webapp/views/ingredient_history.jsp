@@ -86,6 +86,31 @@
         canvas {
             max-width: 100%;
         }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination a:hover {
+            background-color: #f2f2f2;
+        }
+        .pagination a.active {
+            background-color: #b5292f;
+            color: #fff;
+            border-color: #b5292f;
+        }
+        .pagination a.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +176,34 @@
             </c:forEach>
             </tbody>
         </table>
+
+        <!-- Phân trang -->
+        <div class="pagination">
+            <c:if test="${currentPage > 1}">
+                <a href="${pageContext.request.contextPath}/IngredientHistory?page=${currentPage - 1}&type=${type}&search=${search}">&laquo; Trước</a>
+            </c:if>
+            <c:if test="${currentPage <= 1}">
+                <a class="disabled">&laquo; Trước</a>
+            </c:if>
+
+            <c:forEach begin="1" end="${totalPages}" var="i">
+                <c:choose>
+                    <c:when test="${currentPage == i}">
+                        <a class="active">${i}</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/IngredientHistory?page=${i}&type=${type}&search=${search}">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+
+            <c:if test="${currentPage < totalPages}">
+                <a href="${pageContext.request.contextPath}/IngredientHistory?page=${currentPage + 1}&type=${type}&search=${search}">Sau &raquo;</a>
+            </c:if>
+            <c:if test="${currentPage >= totalPages}">
+                <a class="disabled">Sau &raquo;</a>
+            </c:if>
+        </div>
     </div>
 </div>
 
