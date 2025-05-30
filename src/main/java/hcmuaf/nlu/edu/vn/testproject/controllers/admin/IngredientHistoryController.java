@@ -10,11 +10,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "IngredientHistoryController", value = "/IngredientHistory")
 public class IngredientHistoryController extends HttpServlet {
@@ -67,6 +69,51 @@ public class IngredientHistoryController extends HttpServlet {
                             i.getSupplierName().toLowerCase().contains(searchPattern))
                     .toList();
         }
+
+        // Dữ liệu cho biểu đồ
+        // 1. Nguyên liệu sắp hết hạn
+        LocalDate today = LocalDate.now();
+        LocalDate expiryThreshold = today.plusDays(7);
+        List<Ingredients> nearlyExpired = importList.stream()
+                .filter(i -> i.getExpirationDate() != null &&
+                        !i.getExpirationDate().toLocalDate().isAfter(expiryThreshold))
+                .collect(Collectors.toList());
+
+        // 2. Thống kê số lượng nhập/xuất theo ngày
+        Map<String, Double> importByDate = importList.stream()
+                .filter(i -> i.getImportDate() != null)
+                .collect(Collectors.groupingBy(
+                        i -> i.getImportDate().toLocalDate().toString(),
+                        Collectors.summingDouble(Ingredients::getAmount)
+                ));
+        Map<String, Double> exportByDate = exportList.stream()
+                .filter(i -> i.getExpirationDate() != null)
+                .collect(Collectors.groupingBy(
+                        i -> i.getExpirationDate().toLocalDate().toString(),
+                        Collectors.summingDouble(Ingredients::getAmount)
+                ));
+
+        // 3. Thống kê giá trị nhập/xuất
+        double totalImportValue = importList.stream()
+                .mapToDouble(i -> i.getAmount() * i.getPrice())
+                .sum();
+        double totalExportValue = exportList.stream()
+                .mapToDouble(i -> i.getAmount() * i.getPrice())
+                .sum();
+
+        // 4. Tỷ lệ nhập/xuất
+        double totalImportAmount = importList.stream().mapToDouble(Ingredients::getAmount).sum();
+        double totalExportAmount = exportList.stream().mapToDouble(Ingredients::getAmount).sum();
+
+        // Chuyển dữ liệu sang JSON
+        Gson gson = new Gson();
+        request.setAttribute("nearlyExpiredJson", gson.toJson(nearlyExpired));
+        request.setAttribute("importByDateJson", gson.toJson(importByDate));
+        request.setAttribute("exportByDateJson", gson.toJson(exportByDate));
+        request.setAttribute("totalImportValue", totalImportValue);
+        request.setAttribute("totalExportValue", totalExportValue);
+        request.setAttribute("totalImportAmount", totalImportAmount);
+        request.setAttribute("totalExportAmount", totalExportAmount);
 
         request.setAttribute("historyList", historyList);
         request.getRequestDispatcher("/views/ingredient_history.jsp").forward(request, response);
