@@ -43,7 +43,33 @@
                 <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm theo id hàng, tên nhà cung cấp, tên hàng nhập..."/>
                 <button type="submit"><i class="fa-solid fa-search"></i></button>
                 <button type="button" id="openImportPopup">Nhập hàng</button>
+                <button type="button" id="openExportPopup">Xuất hàng</button>
             </form>
+        </div>
+
+        <!-- Popup xuất hàng -->
+        <div id="exportPopup" class="popup hidden">
+            <div class="popup_content">
+                <span class="close_export_btn"><i class="fa-solid fa-xmark"></i></span>
+                <h2>Xuất Nguyên Liệu</h2>
+                <form id="exportForm" method="post" action="${pageContext.request.contextPath}/ExportIngredientController">
+                    <label>Chọn nguyên liệu:</label>
+                    <select id="ingredientSelectExport" name="ingredientId" required>
+                        <option value="">Chọn nguyên liệu</option>
+                        <c:forEach var="ingredient" items="${ingredientsList}">
+                            <option value="${ingredient.ingredientId}">${ingredient.ingredientName} (Còn: ${ingredient.amount} kg)</option>
+                        </c:forEach>
+                    </select>
+
+                    <label>Số lượng xuất (kg):</label>
+                    <input type="number" name="usedAmount" min="0.01" step="0.01" required/>
+
+                    <label>Ngày xuất:</label>
+                    <input type="date" name="usedDate" required/>
+
+                    <button type="submit">Xác nhận xuất hàng</button>
+                </form>
+            </div>
         </div>
 
         <!-- Popup nhập hàng -->
@@ -126,6 +152,8 @@
         }, 3000);
     }
 
+
+
     function updateIngredients() {
         const supplierId = document.getElementById("supplierSelect").value;
         const select = document.getElementById("ingredientSelect");
@@ -151,6 +179,14 @@
 
     document.querySelector(".close_import_btn").addEventListener("click", () => {
         document.getElementById("importPopup").classList.add("hidden");
+    });
+
+    document.getElementById("openExportPopup").addEventListener("click", () => {
+        document.getElementById("exportPopup").classList.remove("hidden");
+    });
+
+    document.querySelector(".close_export_btn").addEventListener("click", () => {
+        document.getElementById("exportPopup").classList.add("hidden");
     });
 
     window.onload = function () {
