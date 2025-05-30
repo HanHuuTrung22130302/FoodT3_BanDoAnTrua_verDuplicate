@@ -13,15 +13,34 @@ public class SupplierDAO {
 
     // Lấy tất cả nhà cung cấp
     public List<Supplier> getAllSuppliers() {
+        return getSuppliersPaginated(1, Integer.MAX_VALUE, null);
+    }
+
+    // Lấy nhà cung cấp theo phân trang và tìm kiếm
+    public List<Supplier> getSuppliersPaginated(int page, int pageSize, String searchText) {
         List<Supplier> suppliers = new ArrayList<>();
-        String query = "SELECT * FROM suppliers";
+        StringBuilder query = new StringBuilder("SELECT * FROM suppliers");
+        if (searchText != null && !searchText.trim().isEmpty()) {
+            query.append(" WHERE supplier_name LIKE ? OR phone LIKE ? OR email LIKE ?");
+        }
+        query.append(" ORDER BY supplier_id LIMIT ? OFFSET ?");
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
             conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
+            ps = conn.prepareStatement(query.toString());
+            int paramIndex = 1;
+            if (searchText != null && !searchText.trim().isEmpty()) {
+                String searchPattern = "%" + searchText.trim() + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            ps.setInt(paramIndex++, pageSize);
+            ps.setInt(paramIndex, (page - 1) * pageSize);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Supplier supplier = new Supplier(
@@ -48,32 +67,30 @@ public class SupplierDAO {
         return suppliers;
     }
 
-    // Tìm kiếm nhà cung cấp theo tên, số điện thoại hoặc email
-    public List<Supplier> searchSuppliers(String searchText) {
-        List<Supplier> suppliers = new ArrayList<>();
-        String query = "SELECT * FROM suppliers WHERE supplier_name LIKE ? OR phone LIKE ? OR email LIKE ?";
+    // Đếm tổng số nhà cung cấp
+    public int countSuppliers(String searchText) {
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM suppliers");
+        if (searchText != null && !searchText.trim().isEmpty()) {
+            query.append(" WHERE supplier_name LIKE ? OR phone LIKE ? OR email LIKE ?");
+        }
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        int count = 0;
 
         try {
             conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
-            String searchPattern = "%" + searchText + "%";
-            ps.setString(1, searchPattern);
-            ps.setString(2, searchPattern);
-            ps.setString(3, searchPattern);
+            ps = conn.prepareStatement(query.toString());
+            if (searchText != null && !searchText.trim().isEmpty()) {
+                String searchPattern = "%" + searchText.trim() + "%";
+                ps.setString(1, searchPattern);
+                ps.setString(2, searchPattern);
+                ps.setString(3, searchPattern);
+            }
             rs = ps.executeQuery();
-            while (rs.next()) {
-                Supplier supplier = new Supplier(
-                        rs.getInt("supplier_id"),
-                        rs.getString("supplier_name"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getString("email"),
-                        rs.getByte("status")
-                );
-                suppliers.add(supplier);
+            if (rs.next()) {
+                count = rs.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +103,12 @@ public class SupplierDAO {
                 e.printStackTrace();
             }
         }
-        return suppliers;
+        return count;
+    }
+
+    // Tìm kiếm nhà cung cấp theo tên, số điện thoại hoặc email
+    public List<Supplier> searchSuppliers(String searchText) {
+        return getSuppliersPaginated(1, Integer.MAX_VALUE, searchText);
     }
 
     // Lấy nhà cung cấp theo ID
@@ -101,7 +123,7 @@ public class SupplierDAO {
             ps = conn.prepareStatement(query);
             ps.setInt(1, supplierId);
             rs = ps.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 return new Supplier(
                         rs.getInt("supplier_id"),
                         rs.getString("supplier_name"),

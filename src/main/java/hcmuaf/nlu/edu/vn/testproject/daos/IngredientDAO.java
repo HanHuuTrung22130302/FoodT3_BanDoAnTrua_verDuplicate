@@ -164,30 +164,6 @@ public class IngredientDAO {
         return list;
     }
 
-    public List<Ingredients> getMostUsedIngredients() throws SQLException {
-        List<Ingredients> list = new ArrayList<>();
-        Connection connection = null;
-        String sql = "SELECT i.*, SUM(u.used_amount) AS total_used " +
-                "FROM Ingredients i JOIN UsedIngredients u ON i.id = u.ingredient_id " +
-                "GROUP BY i.id ORDER BY total_used DESC LIMIT 5";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Ingredients ing = new Ingredients(
-                    rs.getInt("ingredient_id"),
-                    rs.getString("ingredient_name"),
-                    rs.getDouble("amount"),
-                    rs.getDouble("price"),
-                    rs.getInt("supplier_id"),
-                    rs.getString("supplier_name"),
-                    rs.getDate("import_date"),
-                    rs.getDate("expiration_date")
-            );
-            list.add(ing);
-        }
-        return list;
-    }
-
     public Map<Integer, List<Ingredients>> getIngredientsGroupedBySupplier() {
         Map<Integer, List<Ingredients>> result = new HashMap<>();
         String query = "SELECT * FROM ingredients ORDER BY supplier_id";
@@ -369,6 +345,91 @@ public class IngredientDAO {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Thêm lịch sử sử dụng nguyên liệu
+    public void insertUsedIngredient(int ingredientId, double usedAmount, String usedDate) throws SQLException {
+        String query = "INSERT INTO used_ingredients (ingredient_id, used_amount, used_date) VALUES (?, ?, ?)";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, ingredientId);
+            ps.setDouble(2, usedAmount);
+            ps.setString(3, usedDate);
+            ps.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Cập nhật số lượng nguyên liệu trong kho
+    public boolean updateIngredientAmount(int ingredientId, double usedAmount) throws SQLException {
+        String query = "UPDATE ingredients SET amount = amount - ? WHERE ingredient_id = ? AND amount >= ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setDouble(1, usedAmount);
+            ps.setInt(2, ingredientId);
+            ps.setDouble(3, usedAmount);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Lấy lịch sử sử dụng nguyên liệu
+    public List<Ingredients> getUsedIngredients() {
+        List<Ingredients> usedIngredients = new ArrayList<>();
+        String query = "SELECT ui.id, ui.ingredient_id, i.ingredient_name, ui.used_amount, i.supplier_id, i.supplier_name, i.price, ui.used_date " +
+                "FROM used_ingredients ui JOIN ingredients i ON ui.ingredient_id = i.ingredient_id";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Ingredients ingredient = new Ingredients(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("used_amount"),
+                        rs.getDouble("price"),
+                        rs.getInt("supplier_id"),
+                        rs.getString("supplier_name"),
+                        null, // import_date không cần trong lịch sử sử dụng
+                        rs.getDate("used_date")
+                );
+                usedIngredients.add(ingredient);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return usedIngredients;
+    }
+
+    // Cập nhật phương thức getMostUsedIngredients
+    public List<Ingredients> getMostUsedIngredients() throws SQLException {
+        List<Ingredients> list = new ArrayList<>();
+        String query = "SELECT i.ingredient_id, i.ingredient_name, i.amount, i.price, i.supplier_id, i.supplier_name, i.import_date, i.expiration_date, SUM(ui.used_amount) AS total_used " +
+                "FROM ingredients i JOIN used_ingredients ui ON i.ingredient_id = ui.ingredient_id " +
+                "GROUP BY i.ingredient_id, i.ingredient_name, i.amount, i.price, i.supplier_id, i.supplier_name, i.import_date, i.expiration_date " +
+                "ORDER BY total_used DESC LIMIT 5";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Ingredients ing = new Ingredients(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("amount"),
+                        rs.getDouble("price"),
+                        rs.getInt("supplier_id"),
+                        rs.getString("supplier_name"),
+                        rs.getDate("import_date"),
+                        rs.getDate("expiration_date")
+                );
+                list.add(ing);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
     }
 
     public List<Ingredients> searchIngredients(String searchTerm) {
