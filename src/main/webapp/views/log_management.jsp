@@ -84,6 +84,11 @@ prefix="c" %>
               </c:forEach>
             </tbody>
           </table>
+          <c:if test="${not empty logs and logs.size() >= 20 and showAll != 'true'}">
+            <div style="text-align: center; margin-top: 20px;">
+              <button id="loadMoreBtn" class="load-more-btn">Xem thêm</button>
+            </div>
+          </c:if>
         </div>
       </div>
     </div>

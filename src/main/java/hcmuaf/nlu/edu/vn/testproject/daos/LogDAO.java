@@ -13,6 +13,10 @@ import java.util.List;
 
 public class LogDAO {
     public List<LogEntry> getLogs(String filterRoleId, Date filterDate, String filterAction) {
+        return getLogsWithLimit(filterRoleId, filterDate, filterAction, -1);
+    }
+
+    public List<LogEntry> getLogsWithLimit(String filterRoleId, Date filterDate, String filterAction, int limit) {
         List<LogEntry> logs = new ArrayList<>();
         StringBuilder query = new StringBuilder();
         query.append("SELECT al.log_id, al.timestamp, al.account_id, al.role_id, r.role_name, al.action, al.result, al.details ");
@@ -30,6 +34,10 @@ public class LogDAO {
             query.append("AND al.action LIKE ? ");
         }
         query.append("ORDER BY al.timestamp DESC");
+        
+        if (limit > 0) {
+            query.append(" LIMIT ?");
+        }
 
         try (Connection con = new DbContext().getConnection();
              PreparedStatement ps = con.prepareStatement(query.toString())) {
@@ -44,6 +52,9 @@ public class LogDAO {
             }
             if (filterAction != null && !filterAction.isEmpty()) {
                 ps.setString(paramIndex++, "%" + filterAction + "%");
+            }
+            if (limit > 0) {
+                ps.setInt(paramIndex, limit);
             }
 
             ResultSet rs = ps.executeQuery();

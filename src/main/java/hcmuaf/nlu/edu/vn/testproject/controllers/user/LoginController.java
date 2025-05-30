@@ -40,16 +40,23 @@ public class LoginController extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String name = request.getParameter("user");
+        String username = request.getParameter("user");
         String password = request.getParameter("pass");
 
-        if (name == null || password == null || name.trim().isEmpty() || password.trim().isEmpty()) {
-            sendErrorResponse(out, request, response, "Tên người dùng và mật khẩu không được để trống");
+        if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+            sendErrorResponse(out, request, response, "Tên đăng nhập/Email và mật khẩu không được để trống");
             return;
         }
 
         LoginDAO dao = new LoginDAO();
-        Account account = dao.getAccountByName(name);
+        Account account = null;
+        boolean isEmail = username.contains("@");
+
+        if (isEmail) {
+            account = dao.getAccountByEmail(username);
+        } else {
+            account = dao.getAccountByName(username);
+        }
 
         if (account == null) {
             sendErrorResponse(out, request, response, "Tài khoản không tồn tại");
@@ -73,10 +80,14 @@ public class LoginController extends HttpServlet {
             }
         }
 
-        account = dao.login(name, password);
+        if (isEmail) {
+            account = dao.loginByEmail(username, password);
+        } else {
+            account = dao.login(username, password);
+        }
+
         if (account != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("currentUser", account);
             session.setAttribute("currentUser", account);
 
             // Lấy dữ liệu giỏ hàng và tính totalItems
@@ -90,18 +101,15 @@ public class LoginController extends HttpServlet {
 
             out.print("{\"status\": \"success\", \"message\": \"Đăng nhập thành công\"}");
         } else {
-            Account failedAccount = dao.getAccountByName(name);
+            Account failedAccount = isEmail ? dao.getAccountByEmail(username) : dao.getAccountByName(username);
             if (failedAccount != null) {
                 int attempts = failedAccount.getFailedAttempts();
                 if (attempts >= MAX_FAILED_ATTEMPTS) {
-
                     out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
                 } else {
-
                     out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
                 }
             } else {
-
                 out.print("{\"status\": \"error\", \"message\": \"Tài khoản không tồn tại\"}");
             }
         }

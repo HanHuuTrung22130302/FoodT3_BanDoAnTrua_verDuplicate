@@ -417,9 +417,9 @@ function initializeEventListeners() {
           listAcc.fullName || "Chưa cập nhật Họ và Tên"
         }</p>
         <p><strong>Giới tính:</strong> ${
-          listAcc.gender == 1
+          listAcc.gender == 0
             ? "Nam"
-            : listAcc.gender == 0
+            : listAcc.gender == 1
             ? "Nữ"
             : "Chưa xác định"
         }</p>
