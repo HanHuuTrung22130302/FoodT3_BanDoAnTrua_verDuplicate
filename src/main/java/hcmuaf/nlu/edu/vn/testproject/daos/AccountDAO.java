@@ -247,7 +247,7 @@ public class AccountDAO {
     }
 
     public boolean unlockAccount(int accountId) {
-        String query = "UPDATE account SET is_locked = 0, lock_time = NULL WHERE account_id = ?";
+        String query = "UPDATE account SET is_locked = 0, lock_time = NULL WHERE account_id = ? and is_locked = 1";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
