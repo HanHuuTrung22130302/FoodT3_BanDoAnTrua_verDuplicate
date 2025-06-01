@@ -71,6 +71,6 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/j.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_popup_banner.js"></script>
 </body>
 </html>
