@@ -261,65 +261,20 @@ function handleActivateAccount(accountId) {
               <i class="fas fa-trash"></i> Vô hiệu hóa
             </button>
           `;
-          // Gắn event cho các nút mới render ra (chỉ trong dòng này)
-          // Nút chặn
-          const lockBtn = actionButtons.querySelector(".lock_btn");
-          if (lockBtn) {
-            lockBtn.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              const dropdownContent = this.nextElementSibling;
-              dropdownContent.style.display =
-                dropdownContent.style.display === "block" ? "none" : "block";
-            });
-          }
-          // Các tùy chọn chặn
-          actionButtons.querySelectorAll(".lock-option").forEach((option) => {
-            option.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              const hours = this.getAttribute("data-hours");
-              if (
-                confirm(
-                  `Bạn có chắc chắn muốn chặn tài khoản này trong ${hours} giờ?`
-                )
-              ) {
-                handleLockAccount(accountId, hours);
-              }
-            });
-          });
-          // Nút hủy chặn
-          const unlockBtn = actionButtons.querySelector(".unlock-btn");
-          if (unlockBtn) {
-            unlockBtn.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              if (confirm("Bạn có chắc chắn muốn hủy chặn tài khoản này?")) {
-                handleUnlockAccount(accountId);
-              }
-            });
-          }
-          // Nút vô hiệu hóa
-          const deleteBtn = actionButtons.querySelector(".delete");
-          if (deleteBtn) {
-            deleteBtn.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              if (confirm("Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?")) {
-                handleDeleteAccount(accountId);
-              }
-            });
-          }
+          // Gắn lại event listeners cho các nút mới
+          initializeEventListeners();
         }
       } else {
         showNotification(
           data.error || "Có lỗi xảy ra khi kích hoạt tài khoản",
           "error"
         );
+        console.error("Lỗi kích hoạt tài khoản:", data.error);
       }
     })
     .catch((error) => {
       showNotification("Có lỗi xảy ra khi kích hoạt tài khoản", "error");
+      console.error("Lỗi kích hoạt tài khoản:", error);
     });
 }
 
