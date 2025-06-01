@@ -1,23 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<div class="priceFood">
-    <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>
-</div>
+<%--<div class="priceFood">--%>
+<%--    <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true"/>--%>
+<%--</div>--%>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Food T^3</title>
-    <link href='Images/LOGO_V2.png' rel='icon' type='image/x-icon'/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newhome.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_home_n.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css">
+    <link href="${pageContext.request.contextPath}/Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newhome.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/module_home_n.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css"/>
     <script src="${pageContext.request.contextPath}/js/module_dangnhap.js"></script>
 </head>
 <body>
