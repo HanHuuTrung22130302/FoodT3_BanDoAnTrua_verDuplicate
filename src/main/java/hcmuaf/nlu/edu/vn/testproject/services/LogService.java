@@ -1,34 +1,31 @@
 package hcmuaf.nlu.edu.vn.testproject.services;
 
-import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
+import hcmuaf.nlu.edu.vn.testproject.daos.LogDAO;
+import hcmuaf.nlu.edu.vn.testproject.models.LogEntry;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.List;
 
 public class LogService {
+    private LogDAO logDAO;
+
+    public LogService() {
+        this.logDAO = new LogDAO();
+    }
+
+    public List<LogEntry> getLogs(String filterRoleId, Date filterDate, String filterAction) {
+        return logDAO.getLogs(filterRoleId, filterDate, filterAction);
+    }
+
+    public List<LogEntry> getLogsWithLimit(String filterRoleId, Date filterDate, String filterAction, int limit) {
+        return logDAO.getLogsWithLimit(filterRoleId, filterDate, filterAction, limit);
+    }
 
     public void logActivity(int accountId, int roleId, String action, String result, String details) {
-        String query = "INSERT INTO activity_logs (timestamp, account_id, role_id, action, result, details) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection con = new DbContext().getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-            ps.setInt(2, accountId);
-            ps.setInt(3, roleId); // Sử dụng role_id (int) thay vì role (String)
-            ps.setString(4, action);
-            ps.setString(5, result);
-            ps.setString(6, details);
-            
-            System.out.println("Logging activity: " + new String(action.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(result.getBytes("UTF-8"), "UTF-8") + 
-                             " - " + new String(details.getBytes("UTF-8"), "UTF-8"));
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
-        } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-            System.err.println("Lỗi khi ghi log: " + e.getMessage());
-            e.printStackTrace();
+        // Chỉ hiển thị log cho những hành động quan trọng
+        if (action.contains("Thêm") || action.contains("Xóa") || action.contains("Cập nhật") || 
+            action.contains("Đăng nhập") || action.contains("Đăng xuất")) {
+            logDAO.insertLog(accountId, roleId, action, result, details);
         }
     }
 }

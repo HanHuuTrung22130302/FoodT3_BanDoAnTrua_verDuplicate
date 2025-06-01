@@ -1,15 +1,19 @@
 package hcmuaf.nlu.edu.vn.testproject.daos;
 
+import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import hcmuaf.nlu.edu.vn.testproject.context.DbContext;
 import hcmuaf.nlu.edu.vn.testproject.models.Category;
-import hcmuaf.nlu.edu.vn.testproject.models.Food;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FoodDAO {
 
     private Map<Integer, Food> data;
+    private Connection conn;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
     public FoodDAO() {
         this.data = new HashMap<>();
@@ -19,8 +23,7 @@ public class FoodDAO {
 
     // Hàm lấy tất cả các món ăn từ cơ sở dữ liệu
     public void getAllFood() {
-
-        String query = "SELECT * FROM food";
+        String query = "SELECT * FROM food WHERE is_deleted = 0";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -28,45 +31,39 @@ public class FoodDAO {
         try {
             // Tạo kết nối cơ sở dữ liệu
             con = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = con.prepareStatement(query);
             // Thực thi câu lệnh
             rs = ps.executeQuery();
 
+            // Xóa cache cũ
+            data.clear();
+
             // Duyệt qua kết quả trả về và tạo danh sách món ăn
             while (rs.next()) {
-                data.put(rs.getInt("food_id"),
-                        new Food(
-                                rs.getInt("food_id"),
-                                rs.getString("food_name"),
-                                rs.getInt("price"),
-                                rs.getInt("discount_price"),
-                                rs.getInt("quantity"),
-                                rs.getString("image"),
-                                rs.getString("description"),
-                                rs.getString("ingredients"),
-                                rs.getInt("category_id"),
-                                rs.getInt("sold"),
-                                rs.getInt("views"),
-                                rs.getTimestamp("created_at"),
-                                rs.getTimestamp("updated_at")
-                        ));
+                Food food = new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                );
+                data.put(food.getFoodId(), food);
             }
-
         } catch (SQLException e) {
             System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
-            // Đảm bảo rằng kết nối, câu lệnh và result set được đóng đúng cách
             closeResources(rs, ps, con);
         }
     }
@@ -74,7 +71,7 @@ public class FoodDAO {
     // Thêm phương thức lấy món ăn theo danh sách thành phần
     public List<Food> getFoodsByIngredients(List<String> ingredients) {
         List<Food> foodList = new ArrayList<>();
-        String query = "SELECT * FROM food WHERE " +
+        String query = "SELECT * FROM food WHERE is_deleted = 0 AND " +
                 String.join(" AND ", Collections.nCopies(ingredients.size(), "LOWER(ingredients) LIKE ?"));
 
         Connection con = null;
@@ -83,12 +80,6 @@ public class FoodDAO {
 
         try {
             con = new DbContext().getConnection();
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                return foodList;
-            }
 
             ps = con.prepareStatement(query);
             for (int i = 0; i < ingredients.size(); i++) {
@@ -126,7 +117,7 @@ public class FoodDAO {
 
     public List<Food> getFoodsByCategory(int idCategory) {
 
-        String query = "SELECT * FROM food WHERE category_id = ?";
+        String query = "SELECT * FROM food WHERE is_deleted = 0 AND category_id = ?";
         List<Food> foodList = new ArrayList<>();
 
         Connection con = null;
@@ -136,13 +127,6 @@ public class FoodDAO {
         try {
             // Tạo kết nối cơ sở dữ liệu
             con = new DbContext().getConnection();
-            // Kiểm tra kết nối
-            if (con != null) {
-                System.out.println("Kết nối cơ sở dữ liệu thành công!");
-            } else {
-                System.out.println("Kết nối cơ sở dữ liệu thất bại!");
-                // Trả về danh sách rỗng nếu không kết nối được
-            }
 
             // Chuẩn bị câu lệnh SQL
             ps = con.prepareStatement(query);
@@ -220,25 +204,99 @@ public class FoodDAO {
         return data.size();
     }
 
-    public List<Food> getTop4Sold() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getSold(), f1.getSold()));
-        List<Food> top4Sold = foodList.subList(0, 4);
-        return top4Sold;
-    }
+
 
     public List<Food> getTop4View() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
-        List<Food> top4View = foodList.subList(0, 4);
-        return top4View;
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY views DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return foodList;
+    }
+
+    public List<Food> getTop4Sold() {
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY sold DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return foodList;
     }
 
     public List<Food> getTop4Propose() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
-        List<Food> top4Propose = foodList.subList(0, 4);
-        return top4Propose;
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY created_at DESC LIMIT 4";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return foodList;
     }
 
     public Food getById(int id) {
@@ -246,46 +304,129 @@ public class FoodDAO {
         return data.get(id);
     }
 
-
     public List<Food> getAll() {
         return new ArrayList<>(data.values());
     }
 
     public List<Food> getTopSold() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getSold(), f1.getSold()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY sold DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
     public List<Food> getTopView() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> Integer.compare(f2.getViews(), f1.getViews()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY views DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
     public List<Food> getTopPropose() {
-        List<Food> foodList = new ArrayList<>(data.values());
-        foodList.sort((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()));
+        String query = "SELECT * FROM food WHERE is_deleted = 0 ORDER BY created_at DESC";
+        List<Food> foodList = new ArrayList<>();
+        
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                foodList.add(new Food(
+                    rs.getInt("food_id"),
+                    rs.getString("food_name"),
+                    rs.getInt("price"),
+                    rs.getInt("discount_price"),
+                    rs.getInt("quantity"),
+                    rs.getString("image"),
+                    rs.getString("description"),
+                    rs.getString("ingredients"),
+                    rs.getInt("category_id"),
+                    rs.getInt("sold"),
+                    rs.getInt("views"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foodList;
     }
 
     // Phương thức xóa món ăn
-    public void deleteFood(int idFood) {
-        String query = "DELETE FROM food WHERE food_id = ?";
+    public boolean deleteFood(int idFood) {
+        String query = "UPDATE food SET is_deleted = 1, updated_at = ? WHERE food_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, idFood);
-            ps.executeUpdate();
+            ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(2, idFood);
 
-            data.remove(idFood); // Xóa món ăn khỏi danh sách trong bộ nhớ
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                // Cập nhật lại toàn bộ danh sách thay vì chỉ xóa khỏi cache
+                getAllFood();
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
-            System.err.println("Lỗi khi truy vấn dữ liệu: " + e.getMessage());
+            System.err.println("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
+            return false;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeResources(null, ps, conn);
         }
     }
 
@@ -315,7 +456,18 @@ public class FoodDAO {
             ps.setInt(12, food.getViews());
 
             int rowInserted = ps.executeUpdate();
-            return rowInserted > 0;
+            if (rowInserted > 0) {
+                // Lấy ID của món vừa thêm
+                int newFoodId = getLastInsertedFoodId();
+                // Cập nhật ID cho food
+                food.setFoodId(newFoodId);
+                // Cập nhật cache
+                data.put(newFoodId, food);
+                // Cập nhật lại toàn bộ danh sách
+                getAllFood();
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -356,5 +508,70 @@ public class FoodDAO {
         } finally {
             closeResources(null, ps, conn);
         }
+    }
+
+    public Food getFoodById(int id) {
+        // Kiểm tra trong cache trước
+        if (data.containsKey(id)) {
+            return data.get(id);
+        }
+
+        String sql = "SELECT * FROM food WHERE food_id = ?";
+        try (Connection conn = new DbContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Food food = new Food(
+                        rs.getInt("food_id"),
+                        rs.getString("food_name"),
+                        rs.getInt("price"),
+                        rs.getInt("discount_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image"),
+                        rs.getString("description"),
+                        rs.getString("ingredients"),
+                        rs.getInt("category_id"),
+                        rs.getInt("sold"),
+                        rs.getInt("views"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                    );
+                    // Cập nhật cache
+                    data.put(id, food);
+                    return food;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getLastInsertedFoodId() {
+        String query = "SELECT LAST_INSERT_ID() as id";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        FoodDAO foodDAO = new FoodDAO();
+        Food food = foodDAO.getFoodById(1);
+        System.out.println(food);
     }
 }

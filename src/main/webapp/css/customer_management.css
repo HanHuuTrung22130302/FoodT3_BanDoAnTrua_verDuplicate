@@ -45,7 +45,7 @@ body {
 }
 
 .sidebar ul li {
-  margin-bottom: 30px;
+  margin-bottom: 5px;
 }
 
 .sidebar ul li a {
@@ -72,12 +72,14 @@ body {
   width: 100%;
   padding: 20px;
 }
+
 .content .header {
   display: flex;
   justify-content: left;
   align-items: center;
   margin-bottom: 20px;
 }
+
 .content .header select,
 .content .header input,
 .content .header button {
@@ -87,6 +89,7 @@ body {
   margin-right: 10px;
   cursor: pointer;
 }
+
 .content .header button {
   background-color: #b5292f;
   color: #fff;
@@ -112,6 +115,7 @@ table td {
 table th {
   background-color: #f1f1f1;
 }
+
 table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
@@ -265,6 +269,29 @@ button {
   box-shadow: 0 4px 8px rgba(181, 41, 47, 0.2);
 }
 
+/* CSS cho nút kích hoạt */
+.activate {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.activate:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
 /* CSS cho dropdown */
 .dropdown {
   position: static;
@@ -310,8 +337,8 @@ button {
   background-color: #f1f1f1;
 }
 
-/* Hiển thị dropdown khi có class show */
-.dropdown.show .dropdown-content {
+/* Hiển thị dropdown khi hover */
+.dropdown:hover .dropdown-content {
   display: block;
   opacity: 1;
   visibility: visible;
@@ -331,4 +358,70 @@ button {
 
 .unlock-btn:hover {
   background-color: #e8f5e9 !important;
+}
+
+/* Animation cho popup */
+.popup_content {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Notification styles */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification.success {
+  background-color: #28a745;
+}
+
+.notification.error {
+  background-color: #dc3545;
+}
+
+/* Animation cho notification */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }

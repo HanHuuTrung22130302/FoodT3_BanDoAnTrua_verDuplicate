@@ -1,7 +1,9 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.models.OrderInvoice;
+import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.InvoiceOrderServices;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -23,7 +25,9 @@ public class PurchaseOrderDetail extends HttpServlet {
         InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
         OrderInvoice oi = invoiceOrderServices.getOrder(id);
         request.setAttribute("order", oi);
-
+        CategoryService cs = new CategoryService();
+        List<Category> categoryList = cs.getCategories();
+        request.setAttribute("listC", categoryList);
 
         request.getRequestDispatcher("/views/details.jsp").forward(request, response);
     }

@@ -14,6 +14,8 @@ public class ReviewService {
         reviewDAO = new ReviewDAO();
     }
 
+
+
     public Double getRating(int idFood) {
         List<ReviewFood> rvf = reviewDAO.getAll();
         int count = 0;
@@ -36,6 +38,16 @@ public class ReviewService {
                 rvf.add(rf);
         }
         return rvf;
+    }
+
+
+    public List<ReviewFood> get10IncrementReviewFood(int foodId, int option, int offset) {
+        return reviewDAO.getReviewByFood(foodId, option, offset);
+    }
+
+
+    public int getCountReview(int idFood, int option) {
+        return reviewDAO.getTotalReviewCountByFoodId(idFood,option);
     }
 
 }

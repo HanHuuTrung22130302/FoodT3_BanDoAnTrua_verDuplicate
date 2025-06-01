@@ -24,38 +24,34 @@ public class OrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
+        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
-            logService.logActivity(0, 0, "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
+
+        if (!adminInvoiceService.isAdmin(currentUser.getAccountId()) || currentUser == null) {
+            logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thất bại", "Không có quyền truy cập");
+            session.invalidate();
             response.sendRedirect("home");
             return;
         }
+        logService.logActivity(currentUser.getAccountId(), currentUser.getRoleId(), "Xem danh sách đơn hàng", "Thành công", "");
 
         int page = 1;
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
         }
 
-        int pageSize = 10;
+        int pageSize = 12; // DAO đã giới hạn 12 bản ghi rồi
         int offset = (page - 1) * pageSize;
-        List<OrderInvoice> ois = new ArrayList<>();
-        int totalLs = 0;
 
         String option = request.getParameter("option");
         if (option == null || option.isEmpty()) {
             option = "all";
         }
 
-        AdminInvoiceService adminInvoiceService = new AdminInvoiceService();
-        ois = adminInvoiceService.getOption(option);
-        totalLs = ois.size();
 
-        if (offset < totalLs) {
-            ois = ois.subList(Math.min(offset, totalLs), Math.min(offset + pageSize, totalLs));
-        } else {
-            ois = new ArrayList<>();
-        }
+        List<OrderInvoice> ois = adminInvoiceService.getOption(option, offset);
 
+        int totalLs = adminInvoiceService.countInvoicesByOption(option);
         int totalPages = (int) Math.ceil((double) totalLs / pageSize);
 
         request.setAttribute("ois", ois);
@@ -63,8 +59,8 @@ public class OrderController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentCategory", option);
 
-
         request.getRequestDispatcher("views/order.jsp").forward(request, response);
+
     }
 
     @Override

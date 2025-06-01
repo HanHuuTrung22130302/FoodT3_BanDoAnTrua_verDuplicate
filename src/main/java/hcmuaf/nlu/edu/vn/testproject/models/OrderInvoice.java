@@ -16,6 +16,8 @@ public class OrderInvoice {
     private int paymentMethod;
     private int isPaid;
     private int orderStatus;
+    private String completionTime;
+    private String reason;
     private List<OrderInvoiceDetail> orderInvoiceDetail;
 
     public OrderInvoice() {
@@ -35,6 +37,21 @@ public class OrderInvoice {
         this.isPaid = isPaid;
         this.orderStatus = orderStatus;
         this.orderInvoiceDetail = orderInvoiceDetail;
+    }
+
+    public OrderInvoice(int invoiceId, int accountId, String recipientName, String phoneNumber, String deliveryAddress, String note, String orderDate, int totalAmount, int idCode, int paymentMethod, int isPaid, int orderStatus) {
+        this.invoiceId = invoiceId;
+        this.accountId = accountId;
+        this.recipientName = recipientName;
+        this.phoneNumber = phoneNumber;
+        this.deliveryAddress = deliveryAddress;
+        this.note = note;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.idCode = idCode;
+        this.paymentMethod = paymentMethod;
+        this.isPaid = isPaid;
+        this.orderStatus = orderStatus;
     }
 
     public int getInvoiceId() {
@@ -139,5 +156,29 @@ public class OrderInvoice {
 
     public void setOrderInvoiceDetail(List<OrderInvoiceDetail> orderInvoiceDetail) {
         this.orderInvoiceDetail = orderInvoiceDetail;
+    }
+
+    public String getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(String completionTime) {
+        this.completionTime = completionTime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderInvoice{" +
+                "invoiceId=" + invoiceId +
+                ", completionTime='" + completionTime + '\'' +
+                '}';
     }
 }

@@ -1,19 +1,25 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.models.Category;
+import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
 import hcmuaf.nlu.edu.vn.testproject.services.ContactService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "ContactControlle", value = "/contactcontrolle")
+@WebServlet(name = "ContactController", value = "/contact")
 public class ContactController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        CategoryService cs = new CategoryService();
+        List<Category> categoryList = cs.getCategories();
+        request.setAttribute("listC", categoryList);
         request.getRequestDispatcher("views/contact.jsp").forward(request, response);
     }
 
@@ -36,7 +42,7 @@ public class ContactController extends HttpServlet {
         if(message == null || message.isEmpty())message="";
         ContactService cs = new ContactService();
         cs.sendContactSV(id, name, email, title, message);
-        response.sendRedirect("contactcontrolle");
+        response.sendRedirect("contact");
 
     }
 }

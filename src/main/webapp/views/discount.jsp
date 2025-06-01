@@ -50,8 +50,7 @@
                             <form action="discount" method="post" style="display: inline">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${discount.discountCodeId}">
-                                <button class="delete"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa discount này?')">
+                                <button class="delete" type="button">
                                     <i class="fas fa-trash"
                                     ></i>
                                 </button>
@@ -101,6 +100,6 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/admin_popup.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_popup_discount.js"></script>
 </body>
 </html>

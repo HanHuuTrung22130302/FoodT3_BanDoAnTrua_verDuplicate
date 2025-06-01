@@ -145,13 +145,11 @@ public class AccountDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
-            System.out.println("Đang thực hiện vô hiệu hóa tài khoản ID: " + accountId);
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, accountId);
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Kết quả vô hiệu hóa tài khoản ID " + accountId + ": " + (rowsAffected > 0 ? "Thành công" : "Thất bại"));
-            
+
             // Kiểm tra trạng thái sau khi cập nhật
             if (rowsAffected > 0) {
                 String checkQuery = "SELECT is_deleted FROM account WHERE account_id = ?";
@@ -160,7 +158,6 @@ public class AccountDAO {
                 ResultSet rs = checkPs.executeQuery();
                 if (rs.next()) {
                     boolean isDeleted = rs.getBoolean("is_deleted");
-                    System.out.println("Trạng thái is_deleted của tài khoản ID " + accountId + " sau khi cập nhật: " + isDeleted);
                 }
                 checkPs.close();
             }
@@ -192,7 +189,6 @@ public class AccountDAO {
             rs = ps.executeQuery();
             if (rs.next()) {
                 boolean isDeleted = rs.getBoolean("is_deleted");
-                System.out.println("Trạng thái is_deleted của tài khoản ID " + accountId + ": " + isDeleted);
                 return isDeleted;
             }
             return false;
@@ -216,14 +212,12 @@ public class AccountDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
-            System.out.println("Đang thực hiện chặn tài khoản ID: " + accountId + " trong " + hours + " giờ");
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, hours);
             ps.setInt(2, accountId);
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Kết quả chặn tài khoản ID " + accountId + ": " + (rowsAffected > 0 ? "Thành công" : "Thất bại"));
-            
+
             // Kiểm tra trạng thái sau khi cập nhật
             if (rowsAffected > 0) {
                 String checkQuery = "SELECT is_locked, lock_time FROM account WHERE account_id = ?";
@@ -233,8 +227,6 @@ public class AccountDAO {
                 if (rs.next()) {
                     boolean isLocked = rs.getBoolean("is_locked");
                     java.sql.Timestamp lockTime = rs.getTimestamp("lock_time");
-                    System.out.println("Trạng thái is_locked của tài khoản ID " + accountId + " sau khi cập nhật: " + isLocked);
-                    System.out.println("Thời gian chặn của tài khoản ID " + accountId + ": " + lockTime);
                 }
                 checkPs.close();
             }
@@ -259,13 +251,11 @@ public class AccountDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
-            System.out.println("Đang thực hiện hủy chặn tài khoản ID: " + accountId);
             conn = new DbContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, accountId);
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Kết quả hủy chặn tài khoản ID " + accountId + ": " + (rowsAffected > 0 ? "Thành công" : "Thất bại"));
-            
+
             // Kiểm tra trạng thái sau khi cập nhật
             if (rowsAffected > 0) {
                 String checkQuery = "SELECT is_locked FROM account WHERE account_id = ?";
@@ -274,7 +264,6 @@ public class AccountDAO {
                 ResultSet rs = checkPs.executeQuery();
                 if (rs.next()) {
                     boolean isLocked = rs.getBoolean("is_locked");
-                    System.out.println("Trạng thái is_locked của tài khoản ID " + accountId + " sau khi cập nhật: " + isLocked);
                 }
                 checkPs.close();
             }
@@ -282,6 +271,31 @@ public class AccountDAO {
             return rowsAffected > 0;
         } catch (Exception e) {
             System.err.println("Lỗi trong unlockAccount: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean activateAccount(int accountId) {
+        String query = "UPDATE account SET is_deleted = 0 WHERE account_id = ? AND is_deleted = 1";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = new DbContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            int rowsAffected = ps.executeUpdate();
+            
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.err.println("Lỗi trong activateAccount: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {

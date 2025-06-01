@@ -2,23 +2,49 @@ $(document).ready(function () {
     $("form[action='signup']").on("submit", function (event) {
         event.preventDefault(); // Ngăn chặn hành động submit mặc định
 
+        // Xóa thông báo cũ nếu có
+        $("#messageContainer").text("").removeClass("error success");
+
         $.ajax({
             type: "POST",
-            url: $(this).attr('action'),
+            url: $(this).attr("action"),
             data: $(this).serialize(),
+            dataType: "json", // Chỉ định kiểu dữ liệu trả về là JSON
             success: function (response) {
-                // Nếu đăng ký thành công, chuyển hướng đến trang đăng nhập
                 if (response.status === "success") {
-                    window.location.href = "login"; // Chuyển hướng đến trang login
+                    // Hiển thị thông báo thành công
+                    $("#messageContainer")
+                        .css("color", "red")
+                        .addClass("success")
+                        .text(
+                            "Yêu cầu của bạn đã được tiếp nhận. Vui lòng kiểm tra email để tiếp tục quá trình đăng ký!"
+                        );
+                    // Xóa form sau khi đăng ký thành công
+                    $("form[action='signup']")[0].reset();
                 } else {
-                    // Hiển thị thông báo lỗi nếu đăng ký thất bại
-                    $("#messageContainer").css("color", "red").text(response.message);
+                    // Hiển thị thông báo lỗi
+                    $("#messageContainer")
+                        .css("color", "red")
+                        .addClass("error")
+                        .text(response.message);
                 }
             },
-            error: function () {
-                // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-                $("#messageContainer").css("color", "red").text("Có lỗi xảy ra. Vui lòng thử lại.");
-            }
+            error: function (xhr, status, error) {
+                // Hiển thị thông báo lỗi chi tiết hơn
+                let errorMessage = "Có lỗi xảy ra. Vui lòng thử lại.";
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        errorMessage = response.message;
+                    }
+                } catch (e) {
+                    console.error("Lỗi parse JSON:", e);
+                }
+                $("#messageContainer")
+                    .css("color", "red")
+                    .addClass("error")
+                    .text(errorMessage);
+            },
         });
     });
 });

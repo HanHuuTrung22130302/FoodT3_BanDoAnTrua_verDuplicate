@@ -18,6 +18,7 @@ public class Food {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private double rating;
+    private int isDeleted;
 
     public Food() {
     }
@@ -179,5 +180,13 @@ public class Food {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

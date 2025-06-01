@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
 import com.google.gson.Gson;
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.Category;
 import hcmuaf.nlu.edu.vn.testproject.services.CategoryService;
@@ -20,16 +21,16 @@ public class CategoryController extends HttpServlet {
     private CategoryService categoryService = new CategoryService();
     private LogService logService = new LogService();
     private Gson gson = new Gson();
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        
-        Account currentUser = (Account) request.getSession().getAttribute("currentUser");
-        if (currentUser == null || currentUser.getRoleId() != 1) {
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
+
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 1, "Truy cập trang quản lý danh mục", "Thất bại", "Không có quyền truy cập");
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect("home");
             return;
         }
 
@@ -44,23 +45,17 @@ public class CategoryController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("currentUser");
         Map<String, Object> jsonResponse = new HashMap<>();
 
-        if (currentUser == null || currentUser.getRoleId() == 2) {
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
             logService.logActivity(0, 1, "Quản lý danh mục", "Thất bại", "Không có quyền truy cập");
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Không có quyền truy cập");
             sendJsonResponse(response, jsonResponse);
             return;
         }
-
-        System.out.println("Current User ID: " + currentUser.getAccountId());
-        System.out.println("Current User Role: " + currentUser.getRoleId());
 
         String action = request.getParameter("action");
         if ("add".equals(action)) {

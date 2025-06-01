@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin</title>
     <link href="Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/banner_management.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/banner_manage.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -32,19 +32,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="bann" items="${bans}">
-                    <tr>
-                        <td>${bann.bannerId}</td>
+                <c:forEach var="bann" items="${bans}" varStatus="loop">
+                    <tr data-banner-id="${bann.bannerId}">
+                        <td>${loop.index + 1}</td>
                         <td><img src="${pageContext.request.contextPath}/${bann.url}"/></td>
 
                         <td>
                             <form action="banner" method="post" style="display: inline">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${bann.bannerId}">
-                                <button class="delete"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa banner này?')"><i
-                                        class="fas fa-trash"></i>
-                                    Xóa
+                                <button class="delete" onclick="deleteBanner('${bann.bannerId}')">
+                                    <i class="fas fa-trash"></i> Xóa
                                 </button>
                             </form>
                         </td>
@@ -77,6 +75,6 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/admin_popup.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_popup_banner.js"></script>
 </body>
 </html>

@@ -21,6 +21,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/logout-popup.css">
     <script src="${pageContext.request.contextPath}/js/module_dangnhap.js" defer></script>
 </head>
 <body>
@@ -55,7 +56,7 @@
                                 <c:if test="${sessionScope.currentUser.roleId == 2}">
                                     <a href="user" id="user-link">Thông tin</a>
                                 </c:if>
-                                <a href="logout" id="logout">Đăng xuất</a>
+                                <a href="#" onclick="showLogoutPopup(); return false;" id="logout">Đăng xuất</a>
                             </div>
                         </div>
                     </c:if>
@@ -95,24 +96,41 @@
                     <ul class="menu-list">
 
                         <li class="menu-item">
-                            <a href="allmenu?option=tatca" class="tabbar"> <i class="fa-solid fa-bars"></i>Thực đơn</a>
+                            <a href="allmenu?option=tatca" class="tabbar">
+                                <i class="fa-solid fa-bars"></i>Thực đơn
+                            </a>
                             <ul class="submenu">
-                                <li><a href="allmenu?option=tatca"><i class="fa-solid fa-bowl-rice"></i>Tất cả</a>
+                                <li>
+                                    <a href="allmenu?option=tatca">
+                                        <i class="fa-solid fa-bowl-rice"></i>Tất cả
+                                    </a>
                                 </li>
-                                <li><a href="allmenu?option=1"><i class="fa-solid fa-bowl-rice"></i>Món cơm</a>
-                                </li>
-                                <li><a href="allmenu?option=2"><i class="fa-solid fa-bowl-food"></i>Món bún</a>
-                                </li>
-                                <li><a href="allmenu?option=3"><i class="fa-solid fa-bowl-food"></i>Món phở</a>
-                                </li>
-                                <li><a href="allmenu?option=4"><i class="fa-solid fa-glass-water"></i>Nước</a>
-                                </li>
+
+                                <c:forEach var="category" items="${listC}">
+                                    <c:set var="iconClass" value="fa-solid fa-bowl-rice"/>
+
+                                    <c:choose>
+                                        <c:when test="${category.categoryName.contains('Bún') || category.categoryName.contains('Phở')}">
+                                            <c:set var="iconClass" value="fa-solid fa-bowl-food"/>
+                                        </c:when>
+                                        <c:when test="${category.categoryName.contains('Nước')}">
+                                            <c:set var="iconClass" value="fa-solid fa-glass-water"/>
+                                        </c:when>
+                                    </c:choose>
+
+                                    <li>
+                                        <a href="allmenu?option=${category.categoryId}">
+                                            <i class="${iconClass}"></i>${category.categoryName}
+                                        </a>
+                                    </li>
+                                </c:forEach>
                             </ul>
                         </li>
+
                         <li class="menu-item"><a href="home">Trang chủ</a></li>
 
                         <li class="menu-item"><a href="about">Giới thiệu</a></li>
-                        <li class="menu-item"><a href="contactcontrolle">Liên hệ</a></li>
+                        <li class="menu-item"><a href="contact">Liên hệ</a></li>
                     </ul>
                 </div>
                 <div class="search">
@@ -129,50 +147,69 @@
     </div>
 </div>
 
+<!-- Popup đăng xuất -->
+<div class="logout-popup-overlay" id="logoutPopup">
+    <div class="logout-popup">
+        <h3>Bạn có chắc chắn muốn đăng xuất?</h3>
+        <div class="logout-popup-buttons">
+            <button class="logout-confirm" onclick="confirmLogout()">Đăng xuất</button>
+            <button class="logout-cancel" onclick="hideLogoutPopup()">Hủy</button>
+        </div>
+    </div>
+</div>
+
 <div id="container">
     <div class="intro">
         <h2>Khám Phá Thực Đơn Của Chúng Tôi</h2>
-<%--        <div class="category-container">--%>
-<%--            <a href="allmenu?option=tatca">--%>
-<%--                <div class="category-item status-button active">Tất cả</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=danhgiacao">--%>
-<%--                <div class="category-item status-button">Món được đánh giá cao</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=dexuat">--%>
-<%--                <div class="category-item status-button">Món được đề xuất</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=quantam">--%>
-<%--                <div class="category-item status-button">Món được quan tâm nhiều</div>--%>
-<%--            </a>--%>
-<%--            <a href="allmenu?option=banchay">--%>
-<%--                <div class="category-item status-button">Món bán chạy</div>--%>
-<%--            </a>--%>
+        <%--        <div class="category-container">--%>
+        <%--            <a href="allmenu?option=tatca">--%>
+        <%--                <div class="category-item status-button active">Tất cả</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=danhgiacao">--%>
+        <%--                <div class="category-item status-button">Món được đánh giá cao</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=dexuat">--%>
+        <%--                <div class="category-item status-button">Món được đề xuất</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=quantam">--%>
+        <%--                <div class="category-item status-button">Món được quan tâm nhiều</div>--%>
+        <%--            </a>--%>
+        <%--            <a href="allmenu?option=banchay">--%>
+        <%--                <div class="category-item status-button">Món bán chạy</div>--%>
+        <%--            </a>--%>
 
-<%--            <c:forEach var="category" items="${listC}">--%>
-<%--                <a href="allmenu?option=${category.categoryId}">--%>
-<%--                    <div class="category-item status-button">${category.categoryName}</div>--%>
-<%--                </a>--%>
-<%--            </c:forEach>--%>
-<%--        </div>--%>
+        <%--            <c:forEach var="category" items="${listC}">--%>
+        <%--                <a href="allmenu?option=${category.categoryId}">--%>
+        <%--                    <div class="category-item status-button">${category.categoryName}</div>--%>
+        <%--                </a>--%>
+        <%--            </c:forEach>--%>
+        <%--        </div>--%>
 
-        <c:set var="currentOption" value="${param.option}" />
+        <c:set var="currentOption" value="${param.option}"/>
 
         <div class="category-container">
             <div onclick="findCategory('tatca','1')">
-                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">Tất cả</div>
+                <div class="category-item status-button ${currentOption == 'tatca' || currentOption == null ? 'active' : ''}">
+                    Tất cả
+                </div>
             </div>
             <div onclick="findCategory('danhgiacao','1')">
-                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh giá cao</div>
+                <div class="category-item status-button ${currentOption == 'danhgiacao' ? 'active' : ''}">Món được đánh
+                    giá cao
+                </div>
             </div>
             <div onclick="findCategory('dexuat','1')">
-                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất</div>
+                <div class="category-item status-button ${currentOption == 'dexuat' ? 'active' : ''}">Món được đề xuất
+                </div>
             </div>
             <div onclick="findCategory('quantam','1')">
-                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm nhiều</div>
+                <div class="category-item status-button ${currentOption == 'quantam' ? 'active' : ''}">Món được quan tâm
+                    nhiều
+                </div>
             </div>
             <div onclick="findCategory('banchay','1')">
-                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy</div>
+                <div class="category-item status-button ${currentOption == 'banchay' ? 'active' : ''}">Món bán chạy
+                </div>
             </div>
 
             <c:forEach var="category" items="${listC}">
@@ -230,7 +267,8 @@
                 <div id="${food.foodId}" class="popup">
 
                     <div class="popup-content">
-                        <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;</div>
+                        <div class="close" onclick="scrollToTop(${food.foodId});closePopup('${food.foodId}');">&times;
+                        </div>
 
                         <div class="popup-body">
                             <img src="${food.image}" alt="${food.foodName}"/>
@@ -266,21 +304,38 @@
 
                                 <div id="scrollbody${food.foodId}" class="danhgiasanpham">Đánh giá sản phẩm</div>
                                 <div class="rating-filter">
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">Tất cả</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">5⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">4⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">3⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">2⭐</button>
-                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">1⭐</button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},0)">
+                                        Tất cả
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},5)">
+                                        5⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},4)">
+                                        4⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},3)">
+                                        3⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},2)">
+                                        2⭐
+                                    </button>
+                                    <button onclick="scrollToReviewList(${food.foodId});ajaxGetReviewFID(${food.foodId},1)">
+                                        1⭐
+                                    </button>
                                 </div>
                                 <div class="user-reviews">
-                                    <div id="review-list${food.foodId}">
+                                    <div id="review-list${food.foodId}" data-option="0">
 
                                     </div>
                                 </div>
+                                <button id="loadMoreBtn${food.foodId}" class="next10cmt"
+                                        onclick="ajaxGetReviewFID(${food.foodId})">Xem thêm
+                                </button>
                             </div>
                         </div>
-                        <button class="scrollToTop" onclick="scrollToTop(${food.foodId})">^</button>
+                        <button class="scrollToTop" onclick="scrollToTop(${food.foodId})"><i
+                                class="fa-solid fa-arrow-up"></i></button>
+
                         <div class="popup-footer">
                             <button class="button-cart">
                                 <a class="linktocart" href="${addtoCart}">
@@ -320,5 +375,32 @@
 <script src="${pageContext.request.contextPath}/js/module_getReview_ajax.js"></script>
 <script src="${pageContext.request.contextPath}/js/jsButtonActiveCategory.js"></script>
 <script src="${pageContext.request.contextPath}/js/module_category_ajax.js"></script>
+<script>
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    function hideLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'logout';
+    }
+
+    // Đóng popup khi click ra ngoài
+    document.getElementById('logoutPopup').addEventListener('click', function (e) {
+        if (e.target === this) {
+            hideLogoutPopup();
+        }
+    });
+
+    // Đóng popup khi nhấn phím ESC
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            hideLogoutPopup();
+        }
+    });
+</script>
 </body>
 </html>

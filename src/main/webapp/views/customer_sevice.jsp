@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Service</title>
     <link href="Images/LOGO_V2.png" rel="icon" type="image/x-icon"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer_manage.css"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -21,7 +21,7 @@
     <div class="content">
         <div class="header">
             <form action="customersevice" method="get" id="searchForm">
-                <select name="filterRole" onchange="this.form.submit()">
+                <select name="filterRole" id="filterRole">
                     <option value="user" ${selectedRole == 'user' ? 'selected' : ''}>Người dùng</option>
                     <option value="admin" ${selectedRole == 'admin' ? 'selected' : ''}>Admin</option>
                 </select>
@@ -101,52 +101,36 @@
                     <td>
                         <div class="action-buttons">
                             <c:if test="${(currentUser.roleId == 3) || (currentUser.roleId == 1 && listAcc.roleId == 2)}">
-                                <div class="dropdown">
-                                    <button class="lock_btn">
-                                        <i class="fas fa-lock"></i> Chặn
-                                    </button>
-                                    <div class="dropdown-content">
-                                        <form action="customersevice" method="post">
-                                            <input type="hidden" name="action" value="lock">
-                                            <input type="hidden" name="id" value="${listAcc.accountId}">
-                                            <input type="hidden" name="hours" value="24">
-                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 24 giờ?')">
+                                <c:if test="${!listAcc.deleted}">
+                                    <div class="dropdown">
+                                        <button class="lock_btn" data-account-id="${listAcc.accountId}">
+                                            <i class="fas fa-lock"></i> Chặn
+                                        </button>
+                                        <div class="dropdown-content">
+                                            <button class="lock-option" data-hours="24">
                                                 <i class="fas fa-clock"></i> 24 giờ
                                             </button>
-                                        </form>
-                                        <form action="customersevice" method="post">
-                                            <input type="hidden" name="action" value="lock">
-                                            <input type="hidden" name="id" value="${listAcc.accountId}">
-                                            <input type="hidden" name="hours" value="36">
-                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 36 giờ?')">
+                                            <button class="lock-option" data-hours="36">
                                                 <i class="fas fa-clock"></i> 36 giờ
                                             </button>
-                                        </form>
-                                        <form action="customersevice" method="post">
-                                            <input type="hidden" name="action" value="lock">
-                                            <input type="hidden" name="id" value="${listAcc.accountId}">
-                                            <input type="hidden" name="hours" value="48">
-                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn chặn tài khoản này trong 48 giờ?')">
+                                            <button class="lock-option" data-hours="48">
                                                 <i class="fas fa-clock"></i> 48 giờ
                                             </button>
-                                        </form>
-                                        <div class="dropdown-divider"></div>
-                                        <form action="customersevice" method="post">
-                                            <input type="hidden" name="action" value="unlock">
-                                            <input type="hidden" name="id" value="${listAcc.accountId}">
-                                            <button type="submit" class="unlock-btn" onclick="return confirm('Bạn có chắc chắn muốn hủy chặn tài khoản này?')">
+                                            <div class="dropdown-divider"></div>
+                                            <button class="unlock-btn" data-account-id="${listAcc.accountId}">
                                                 <i class="fas fa-unlock"></i> Hủy chặn
                                             </button>
-                                        </form>
+                                        </div>
                                     </div>
-                                </div>
-                                <form action="customersevice" method="post">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="${listAcc.accountId}">
-                                    <button class="delete" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')">
+                                    <button class="delete" data-account-id="${listAcc.accountId}">
                                         <i class="fas fa-trash"></i> Vô hiệu hóa
                                     </button>
-                                </form>
+                                </c:if>
+                                <c:if test="${listAcc.deleted}">
+                                    <button class="activate" data-account-id="${listAcc.accountId}">
+                                        <i class="fas fa-check"></i> Kích hoạt
+                                    </button>
+                                </c:if>
                             </c:if>
                         </div>
                     </td>
@@ -157,19 +141,6 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/cus_service.js"></script>
-<script src="${pageContext.request.contextPath}/js/ban.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý khi nhấn Enter trong ô tìm kiếm
-    const searchInput = document.querySelector('input[name="text"]');
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('searchForm').submit();
-        }
-    });
-});
-</script>
+<script src="${pageContext.request.contextPath}/js/admin_custom_management.js"></script>
 </body>
 </html>

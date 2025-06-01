@@ -31,7 +31,10 @@ public class FoodServiceListFilter {
     public List<Food> getTop4Rate() {
         List<Food> lsIdFood = new ArrayList<>();
         for (int i : reviewDAO.getTop4FoodRate()) {
-            lsIdFood.add(foodDAO.getById(i));
+            Food food = foodDAO.getById(i);
+            if (food != null && food.getIsDeleted() == 0) {
+                lsIdFood.add(foodDAO.getById(i));
+            }
         }
         return lsIdFood;
     }
@@ -39,7 +42,10 @@ public class FoodServiceListFilter {
     public List<Food> getTopRate() {
         List<Food> lsIdFood = new ArrayList<>();
         for (int i : reviewDAO.getTopFoodRate()) {
-            lsIdFood.add(foodDAO.getById(i));
+            Food food = foodDAO.getById(i);
+            if (food != null && food.getIsDeleted() == 0) {
+                lsIdFood.add(foodDAO.getById(i));
+            }
         }
         return lsIdFood;
     }
@@ -82,15 +88,27 @@ public class FoodServiceListFilter {
     }
 
     public boolean deleteFood(int idFood) {
-        foodDAO.deleteFood(idFood);
-        foodDAO.getAllFood();
-        return false;
+        try {
+            foodDAO.deleteFood(idFood);
+            foodDAO.getAllFood();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean addFood(Food food) {
-        boolean isAdded = foodDAO.addFood(food);
-        foodDAO.getAllFood();
-        return isAdded;
+        try {
+            boolean result = foodDAO.addFood(food);
+            if (result) {
+                foodDAO.getAllFood();
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean updateFood(Food food) {
