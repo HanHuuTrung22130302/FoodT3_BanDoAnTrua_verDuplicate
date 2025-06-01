@@ -189,9 +189,9 @@ public class ManageCustomerController extends HttpServlet {
                 } else {
                     logAction = "Kích hoạt tài khoản";
                     logResult = "Thất bại";
-                    logDetails = "Không thể kích hoạt tài khoản ID: " + accountId;
+                    logDetails = "Không thể kích hoạt tài khoản ID: " + accountId + ". Có thể tài khoản không tồn tại hoặc không bị vô hiệu hóa.";
                     jsonResponse.put("success", false);
-                    jsonResponse.put("error", "Không thể kích hoạt tài khoản");
+                    jsonResponse.put("error", "Không thể kích hoạt tài khoản. Vui lòng kiểm tra lại trạng thái tài khoản.");
                 }
             } else {
                 jsonResponse.put("success", false);
