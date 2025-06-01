@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodCartDAO;
 import hcmuaf.nlu.edu.vn.testproject.daos.FoodDAO;
-import hcmuaf.nlu.edu.vn.testproject.daos.ReviewDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Food;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,13 +21,11 @@ import java.util.stream.Collectors;
 public class ChatbotWebhook extends HttpServlet {
     private FoodCartDAO foodCartDAO;
     private FoodDAO foodDAO;
-    private ReviewDAO reviewDAO;
 
     @Override
     public void init() throws ServletException {
         foodCartDAO = new FoodCartDAO();
         foodDAO = new FoodDAO();
-        reviewDAO = new ReviewDAO();
     }
 
     @Override
@@ -51,8 +48,6 @@ public class ChatbotWebhook extends HttpServlet {
         String category = parameters.has("category") && !parameters.get("category").isJsonNull() ? parameters.get("category").getAsString() : null;
         String product = parameters.has("product") && !parameters.get("product").isJsonNull() ? parameters.get("product").getAsString() : null;
         JsonArray ingredientsArray = parameters.has("ingredients") && !parameters.get("ingredients").isJsonNull() ? parameters.getAsJsonArray("ingredients") : new JsonArray();
-        String salesQuery = parameters.has("salesQuery") && !parameters.get("salesQuery").isJsonNull() ? parameters.get("salesQuery").getAsString() : null;
-        String reviewQuery = parameters.has("reviewQuery") && !parameters.get("reviewQuery").isJsonNull() ? parameters.get("reviewQuery").getAsString() : null;
 
         List<String> restrictions = restrictionsArray.size() > 0 ?
                 restrictionsArray.asList().stream().map(element -> element.getAsString()).collect(Collectors.toList()) :
@@ -85,27 +80,7 @@ public class ChatbotWebhook extends HttpServlet {
             }
         }
 
-        if (salesQuery != null && (queryText.contains("bán nhiều nhất") || queryText.contains("bán chạy nhất"))) {
-            Food topSoldFood = foodCartDAO.getTopSoldFood();
-            if (topSoldFood != null) {
-                responseJson.addProperty("fulfillmentText", String.format("Món ăn bán nhiều nhất là %s với tổng số lượng bán là %d. Giá: %dđ, Thành phần: %s.",
-                        topSoldFood.getFoodName(), foodCartDAO.getTotalQuantitySold(topSoldFood.getFoodId()), topSoldFood.getPrice(), topSoldFood.getIngredients()));
-            } else {
-                responseJson.addProperty("fulfillmentText", "Hiện tại không có dữ liệu về món ăn bán nhiều nhất.");
-            }
-        } else if (reviewQuery != null && (queryText.contains("đánh giá nhiều nhất") || queryText.contains("nhiều đánh giá nhất"))) {
-            // Lấy món ăn có nhiều lượt đánh giá nhất từ ReviewDAO
-            Food topReviewedFood = reviewDAO.getTopReviewedFood();
-            if (topReviewedFood != null) {
-                // Lấy tổng số lượt đánh giá của món ăn
-                int reviewCount = reviewDAO.getTotalReviewCountByFoodId(topReviewedFood.getFoodId());
-                responseJson.addProperty("fulfillmentText", String.format("Món ăn có nhiều đánh giá nhất là %s với %d lượt đánh giá. Giá: %dđ, Thành phần: %s.",
-                        topReviewedFood.getFoodName(), reviewCount, topReviewedFood.getPrice(), topReviewedFood.getIngredients()));
-            } else {
-                responseJson.addProperty("fulfillmentText", "Hiện tại không có dữ liệu về món ăn được đánh giá nhiều nhất.");
-            }
-        }
-        else if (product != null) {
+        if (product != null) {
             String finalProduct = product.toLowerCase().trim();
             Food matchedFood = foods.stream()
                     .filter(food -> {
@@ -159,7 +134,7 @@ public class ChatbotWebhook extends HttpServlet {
             }
             foods = foods.stream().limit(3).collect(Collectors.toList());
             responseJson.addProperty("fulfillmentText", "Bạn muốn ăn " + taste + "? Tôi gợi ý:");
-            responseJson.add("foods", gson.toJsonTree(foods));
+            responseJson.add("foods", gson.toJsonTree(foods)); // Trả về danh sách món ăn dưới dạng JSON
         } else if (!restrictions.isEmpty()) {
             for (String restriction : restrictions) {
                 switch (restriction) {

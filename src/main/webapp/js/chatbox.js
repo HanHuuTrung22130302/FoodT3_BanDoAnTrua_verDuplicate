@@ -1,3 +1,4 @@
+// Danh sách lưu trữ tất cả các hạn chế trong phiên trò chuyện
 let restrictionsList = [];
 
 // Hiển thị/Ẩn chatbox
@@ -39,9 +40,7 @@ function sendMessage() {
                     restrictions: restrictionsList,
                     category: extractCategory(message),
                     product: extractProduct(message),
-                    ingredients: extractIngredients(message),
-                    salesQuery: extractSalesQuery(message),
-                    reviewQuery: extractReviewQuery(message)
+                    ingredients: extractIngredients(message)
                 }
             }
         })
@@ -67,14 +66,15 @@ function sendMessage() {
                     foodItem.innerHTML = `
                         <img src="${food.image}" alt="${food.foodName}" class="food-image">
                         <h3>${food.foodName}</h3>
-                        <button onclick="addToCart(${food.foodId})">Thêm vào giỏ hàng</button>
+                        <button onclick="addToCart()">Thêm vào giỏ hàng</button>
                         <p>${food.price}đ</p>
+                      
                     `;
                     foodContainer.appendChild(foodItem);
                 });
                 botMessage.appendChild(foodContainer);
             } else {
-                // Nếu không có danh sách món, hiển thị text
+                // Nếu không có danh sách món (ví dụ: hỏi thành phần), hiển thị text bình thường
                 botMessage.innerHTML = formatResponse(data.fulfillmentText);
             }
 
@@ -101,6 +101,7 @@ function addToCart(foodId) {
                 throw new Error('Failed to add to cart');
             }
             alert('Đã thêm vào giỏ hàng!');
+            // Cập nhật số lượng giỏ hàng nếu cần
             updateCartCount();
         })
         .catch(error => {
@@ -109,7 +110,7 @@ function addToCart(foodId) {
         });
 }
 
-// Cập nhật số lượng giỏ hàng
+// Cập nhật số lượng giỏ hàng (giả định có sẵn hàm này trong hệ thống của bạn)
 function updateCartCount() {
     fetch(`${contextPath}/cart`, { method: 'GET' })
         .then(response => response.text())
@@ -174,9 +175,9 @@ function extractCategory(message) {
     return categories.find(category => message.includes(category.keyword))?.value || null;
 }
 
-// Trích xuất sản phẩm (product)
+// Trích xuất sản phẩm (product) để hỏi chi tiết
 function extractProduct(message) {
-    const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này', 'thành phần', 'nguyên liệu', 'món nào', 'món gì'];
+    const keywords = ['thông tin', 'chi tiết', 'có gì', 'giá', 'là bao nhiêu', 'món này', 'thành phần', 'nguyên liệu'];
     if (keywords.some(keyword => message.includes(keyword))) {
         let normalizedMessage = message.toLowerCase()
             .replace("có những thành phần gì", "")
@@ -195,26 +196,6 @@ function extractProduct(message) {
     return null;
 }
 
-// Trích xuất câu hỏi về món ăn bán nhiều nhất
-function extractSalesQuery(message) {
-    const salesKeywords = ['bán nhiều nhất', 'bán chạy nhất', 'được mua nhiều nhất'];
-    return salesKeywords.some(keyword => message.includes(keyword)) ? "top_sales" : null;
-}
-
-// Trích xuất câu hỏi về món ăn có nhiều đánh giá nhất
-function extractReviewQuery(message) {
-    const reviewPatterns = [
-        /được đánh giá nhiều/i,
-        /nhiều đánh giá nhất/i,
-        /đánh giá nhiều nhất/i,
-        /món.*đánh giá.*nhiều/i,
-        /món nào.*đánh giá/i,
-        /món ăn nào.*được đánh giá/i
-    ];
-    return reviewPatterns.some(pattern => pattern.test(message)) ? "top_reviews" : null;
-}
-
-
 // Trích xuất thành phần (ingredients)
 function extractIngredients(message) {
     const ingredients = [
@@ -232,7 +213,7 @@ function extractIngredients(message) {
     return foundIngredients.length > 0 ? foundIngredients : null;
 }
 
-// Định dạng phản hồi với link sản phẩm
+// Định dạng phản hồi với link sản phẩm (giữ lại cho trường hợp không có danh sách món)
 function formatResponse(text) {
     const foodNames = text.match(/([A-ZĐÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ][a-zàáảãạâầấẩẫậăắằẳẵặèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ\s]+)(?=\s*\()/g);
     if (foodNames) {
