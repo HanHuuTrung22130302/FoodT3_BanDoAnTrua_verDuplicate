@@ -177,36 +177,6 @@ public class AccountDAO {
         }
     }
 
-    public boolean checkAccountDeletedStatus(int accountId) {
-        String query = "SELECT is_deleted FROM account WHERE account_id = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, accountId);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                boolean isDeleted = rs.getBoolean("is_deleted");
-                return isDeleted;
-            }
-            return false;
-        } catch (Exception e) {
-            System.err.println("Lỗi trong checkAccountDeletedStatus: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public boolean lockAccount(int accountId, int hours) {
         String query = "UPDATE account SET is_locked = 1, lock_time = DATE_ADD(NOW(), INTERVAL ? HOUR) WHERE account_id = ? AND is_deleted = 0";
         Connection conn = null;
