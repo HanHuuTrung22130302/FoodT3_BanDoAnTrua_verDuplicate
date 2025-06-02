@@ -19,7 +19,7 @@ public class InvoiceDAO {
             "FROM food f " +
             "LEFT JOIN invoice_detail id ON f.food_id = id.food_id " +
             "LEFT JOIN invoice i ON id.invoice_id = i.invoice_id " +
-            "WHERE (i.is_paid = 1 OR i.is_paid IS NULL) ";
+            "WHERE (i.is_paid = 2 OR i.is_paid IS NULL) ";
 
     // Phương thức thêm hóa đơn và chi tiết hóa đơn
     public void addInvoice(Invoice invoice) {
@@ -91,13 +91,13 @@ public class InvoiceDAO {
 
     // Phương thức lấy số liệu thống kê
     public int getRevenueBySpecificMonth(int year, int month) {
-        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 1 " +
+        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 2 " +
                 "AND YEAR(order_date) = ? AND MONTH(order_date) = ?";
         return executeSumQuery(query, year, month);
     }
 
     public int getOrderCountBySpecificMonth(int year, int month) {
-        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 1 " +
+        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 2 " +
                 "AND YEAR(order_date) = ? AND MONTH(order_date) = ?";
         return executeCountQuery(query, year, month);
     }
@@ -178,7 +178,7 @@ public class InvoiceDAO {
     }
 
     public int getRevenueByDay() {
-        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 1 AND DATE(order_date) = CURDATE()";
+        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 2 AND DATE(order_date) = CURDATE()";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -193,7 +193,7 @@ public class InvoiceDAO {
     }
 
     public int getRevenueByWeek() {
-        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 1 AND YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
+        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 2 AND YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -208,7 +208,7 @@ public class InvoiceDAO {
     }
 
     public int getRevenueByMonth() {
-        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 1 AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+        String query = "SELECT SUM(total_amount) FROM invoice WHERE is_paid = 2 AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
@@ -223,17 +223,17 @@ public class InvoiceDAO {
     }
 
     public int getOrderCountByDay() {
-        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 1 AND DATE(order_date) = CURDATE()";
+        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 2 AND DATE(order_date) = CURDATE()";
         return getOrderCount(query);
     }
 
     public int getOrderCountByWeek() {
-        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 1 AND YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
+        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 2 AND YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
         return getOrderCount(query);
     }
 
     public int getOrderCountByMonth() {
-        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 1 AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
+        String query = "SELECT COUNT(*) FROM invoice WHERE is_paid = 2 AND MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())";
         return getOrderCount(query);
     }
 
@@ -241,7 +241,7 @@ public class InvoiceDAO {
         String query = "SELECT COUNT(DISTINCT i.invoice_id) FROM invoice i " +
                       "JOIN invoice_detail id ON i.invoice_id = id.invoice_id " +
                       "JOIN food f ON id.food_id = f.food_id " +
-                      "WHERE i.is_paid = 1 " +
+                      "WHERE i.is_paid = 2 " +
                       "AND f.food_name LIKE ? " +
                       getTimeFilterCondition(timeFilter);
         
@@ -282,7 +282,7 @@ public class InvoiceDAO {
                       "JOIN food f ON id.food_id = f.food_id " +
                       "JOIN invoice i ON id.invoice_id = i.invoice_id " +
                       "WHERE DATE(i.order_date) = CURDATE() " +
-                      "AND i.is_paid = 1 " +
+                      "AND i.is_paid = 2 " +
                       "GROUP BY id.food_id, f.food_name, f.image, f.price";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
@@ -314,7 +314,7 @@ public class InvoiceDAO {
                       "JOIN invoice i ON id.invoice_id = i.invoice_id " +
                       "WHERE i.order_date >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) " +
                       "AND i.order_date <= CURDATE() " +
-                      "AND i.is_paid = 1 " +
+                      "AND i.is_paid = 2 " +
                       "GROUP BY id.food_id, f.food_name, f.image, f.price";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
@@ -346,7 +346,7 @@ public class InvoiceDAO {
                       "JOIN invoice i ON id.invoice_id = i.invoice_id " +
                       "WHERE MONTH(i.order_date) = MONTH(CURDATE()) " +
                       "AND YEAR(i.order_date) = YEAR(CURDATE()) " +
-                      "AND i.is_paid = 1 " +
+                      "AND i.is_paid = 2 " +
                       "GROUP BY id.food_id, f.food_name, f.image, f.price";
         try (Connection conn = new DbContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
@@ -404,7 +404,7 @@ public class InvoiceDAO {
                       "FROM food f " +
                       "LEFT JOIN invoice_detail id ON f.food_id = id.food_id " +
                       "LEFT JOIN invoice i ON id.invoice_id = i.invoice_id " +
-                      "WHERE i.is_paid = 1 " +
+                      "WHERE i.is_paid = 2 " +
                       getTimeFilterCondition(timeFilter) +
                       "GROUP BY f.food_id, f.food_name, f.image, f.price " +
                       "HAVING total_quantity > 0 " +
