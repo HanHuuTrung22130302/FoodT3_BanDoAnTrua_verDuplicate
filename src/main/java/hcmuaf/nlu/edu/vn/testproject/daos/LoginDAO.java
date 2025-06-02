@@ -28,7 +28,9 @@ public class LoginDAO {
                         return null;
                     }
                     if (account.getPassword().equals(hashedPassword)) {
-                        resetFailedAttempts(account.getAccountId());
+                        if (!account.isLocked()) {
+                            resetFailedAttempts(account.getAccountId());
+                        }
                         return account;
                     } else {
                         handleFailedLogin(account);
@@ -63,13 +65,12 @@ public class LoginDAO {
     private boolean isAccountLocked(Account account) {
         if (account.isLocked()) {
             if (account.getLockTime() != null) {
-                // Kiểm tra nếu thời gian khóa đã hết
-                if (LocalDateTime.now().isAfter(account.getLockTime())) {
-                    // Tự động mở khóa tài khoản
-                    String query = "UPDATE account SET is_locked = FALSE, lock_time = NULL WHERE account_id = ?";
+                if (LocalDateTime.now().isAfter(account.getLockTime().plusMinutes(LOCK_DURATION_MINUTES))) {
+                    String query = "UPDATE account SET is_locked = FALSE, lock_time = NULL, failed_attempts = 0 WHERE account_id = ?";
                     executeUpdate(query, account.getAccountId());
                     account.setLocked(false);
                     account.setLockTime(null);
+                    account.setFailedAttempts(0);
                     return false;
                 }
                 return true;
@@ -80,12 +81,44 @@ public class LoginDAO {
     }
 
     private void handleFailedLogin(Account account) {
-        incrementFailedAttempts(account.getAccountId());
-        account.setFailedAttempts(account.getFailedAttempts() + 1);
-        if (account.getFailedAttempts() >= MAX_FAILED_ATTEMPTS) {
-            lockAccount(account.getAccountId());
-            account.setLocked(true);
-            account.setLockTime(LocalDateTime.now());
+        try (Connection con = new DbContext().getConnection()) {
+            String updateQuery = "UPDATE account SET failed_attempts = failed_attempts + 1 WHERE account_id = ?";
+            try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
+                ps.setInt(1, account.getAccountId());
+                ps.executeUpdate();
+            }
+
+            String selectQuery = "SELECT failed_attempts FROM account WHERE account_id = ?";
+            try (PreparedStatement ps = con.prepareStatement(selectQuery)) {
+                ps.setInt(1, account.getAccountId());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int newFailedAttempts = rs.getInt("failed_attempts");
+                        account.setFailedAttempts(newFailedAttempts);
+                        
+                        if (newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
+                            lockAccount(account.getAccountId());
+                            account.setLocked(true);
+                            account.setLockTime(LocalDateTime.now());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void lockAccount(int accountId) {
+        String query = "UPDATE account SET is_locked = TRUE, lock_time = ?, failed_attempts = ? WHERE account_id = ?";
+        try (Connection con = new DbContext().getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(2, MAX_FAILED_ATTEMPTS);
+            ps.setInt(3, accountId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -113,18 +146,6 @@ public class LoginDAO {
     public void resetFailedAttempts(int accountId) {
         String query = "UPDATE account SET failed_attempts = 0, is_locked = FALSE, lock_time = NULL WHERE account_id = ?";
         executeUpdate(query, accountId);
-    }
-
-    private void lockAccount(int accountId) {
-        String query = "UPDATE account SET is_locked = TRUE, lock_time = ? WHERE account_id = ?";
-        try (Connection con = new DbContext().getConnection();
-             PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setInt(2, accountId);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void executeUpdate(String query, int param) {
@@ -158,7 +179,9 @@ public class LoginDAO {
                         return null;
                     }
                     if (account.getPassword().equals(hashedPassword)) {
-                        resetFailedAttempts(account.getAccountId());
+                        if (!account.isLocked()) {
+                            resetFailedAttempts(account.getAccountId());
+                        }
                         return account;
                     } else {
                         handleFailedLogin(account);

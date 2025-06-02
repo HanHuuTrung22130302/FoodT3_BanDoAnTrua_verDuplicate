@@ -70,15 +70,22 @@ public class LoginController extends HttpServlet {
 
         if (account.isLocked()) {
             if (account.getLockTime() != null) {
-                if (LocalDateTime.now().isAfter(account.getLockTime())) {
-                    dao.resetFailedAttempts(account.getAccountId());
-                    account.setLocked(false);
-                    account.setLockTime(null);
+                LocalDateTime unlockTime = account.getLockTime().plusMinutes(LOCK_DURATION_MINUTES);
+                if (LocalDateTime.now().isAfter(unlockTime)) {
+                    // Tài khoản đã hết thời gian khóa, cho phép đăng nhập
+                    if (isEmail) {
+                        account = dao.loginByEmail(username, password);
+                    } else {
+                        account = dao.login(username, password);
+                    }
                 } else {
-                    long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), account.getLockTime());
+                    long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), unlockTime);
                     out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa. Vui lòng thử lại sau " + minutesLeft + " phút.\"}");
                     return;
                 }
+            } else {
+                out.print("{\"status\": \"locked\", \"message\": \"Tài khoản đang bị khóa. Vui lòng liên hệ admin để được hỗ trợ.\"}");
+                return;
             }
         }
 
@@ -103,13 +110,20 @@ public class LoginController extends HttpServlet {
 
             out.print("{\"status\": \"success\", \"message\": \"Đăng nhập thành công\"}");
         } else {
+            // Lấy lại thông tin tài khoản từ database để có số lần đăng nhập sai mới nhất
             Account failedAccount = isEmail ? dao.getAccountByEmail(username) : dao.getAccountByName(username);
             if (failedAccount != null) {
-                int attempts = failedAccount.getFailedAttempts();
-                if (attempts >= MAX_FAILED_ATTEMPTS) {
-                    out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
+                if (failedAccount.isLocked()) {
+                    LocalDateTime unlockTime = failedAccount.getLockTime().plusMinutes(LOCK_DURATION_MINUTES);
+                    long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), unlockTime);
+                    out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa. Vui lòng thử lại sau " + minutesLeft + " phút.\"}");
                 } else {
-                    out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
+                    int attempts = failedAccount.getFailedAttempts();
+                    if (attempts >= MAX_FAILED_ATTEMPTS) {
+                        out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa 15 phút do đăng nhập sai quá 5 lần.\"}");
+                    } else {
+                        out.print("{\"status\": \"error\", \"message\": \"Sai mật khẩu. Còn " + (MAX_FAILED_ATTEMPTS - attempts) + " lần thử.\"}");
+                    }
                 }
             } else {
                 out.print("{\"status\": \"error\", \"message\": \"Tài khoản không tồn tại\"}");
