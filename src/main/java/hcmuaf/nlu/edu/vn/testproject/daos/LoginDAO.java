@@ -62,11 +62,17 @@ public class LoginDAO {
 
     private boolean isAccountLocked(Account account) {
         if (account.isLocked()) {
-            if (LocalDateTime.now().isAfter(account.getLockTime().plusMinutes(LOCK_DURATION_MINUTES))) {
-                resetFailedAttempts(account.getAccountId());
-                account.setLocked(false);
-                account.setLockTime(null);
-                return false;
+            if (account.getLockTime() != null) {
+                // Kiểm tra nếu thời gian khóa đã hết
+                if (LocalDateTime.now().isAfter(account.getLockTime())) {
+                    // Tự động mở khóa tài khoản
+                    String query = "UPDATE account SET is_locked = FALSE, lock_time = NULL WHERE account_id = ?";
+                    executeUpdate(query, account.getAccountId());
+                    account.setLocked(false);
+                    account.setLockTime(null);
+                    return false;
+                }
+                return true;
             }
             return true;
         }

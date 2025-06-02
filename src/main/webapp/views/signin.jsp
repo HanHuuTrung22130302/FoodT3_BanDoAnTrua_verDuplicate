@@ -77,7 +77,11 @@ prefix="c" %>
           <div
             id="login_messageContainer"
             style="color: red; margin-top: 10px; text-align: center"
-          ></div>
+          >
+            <c:if test="${param.error == 'account_locked'}">
+              <span>Tài khoản của bạn đang bị khóa. Vui lòng thử lại sau.</span>
+            </c:if>
+          </div>
           <a href="forgotpass">Bạn quên mật khẩu?</a>
           <button type="submit">Đăng nhập</button>
         </form>

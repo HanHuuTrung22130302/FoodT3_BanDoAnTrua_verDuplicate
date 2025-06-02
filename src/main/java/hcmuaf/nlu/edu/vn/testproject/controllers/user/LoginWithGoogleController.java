@@ -56,6 +56,11 @@ public class LoginWithGoogleController extends HttpServlet {
 
             HttpSession session = request.getSession();
             if (existingAccount != null) {
+                // Kiểm tra trạng thái khóa
+                if (existingAccount.isLocked()) {
+                    response.sendRedirect("login?error=account_locked");
+                    return;
+                }
                 // Nếu tài khoản đã tồn tại, đăng nhập
                 session.setAttribute("currentUser", existingAccount);
             } else {

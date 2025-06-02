@@ -69,14 +69,16 @@ public class LoginController extends HttpServlet {
         }
 
         if (account.isLocked()) {
-            long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), account.getLockTime().plusMinutes(LOCK_DURATION_MINUTES));
-            if (minutesLeft > 0) {
-                out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa. Vui lòng thử lại sau " + minutesLeft + " phút.\"}");
-                return;
-            } else {
-                dao.resetFailedAttempts(account.getAccountId());
-                account.setLocked(false);
-                account.setLockTime(null);
+            if (account.getLockTime() != null) {
+                if (LocalDateTime.now().isAfter(account.getLockTime())) {
+                    dao.resetFailedAttempts(account.getAccountId());
+                    account.setLocked(false);
+                    account.setLockTime(null);
+                } else {
+                    long minutesLeft = ChronoUnit.MINUTES.between(LocalDateTime.now(), account.getLockTime());
+                    out.print("{\"status\": \"locked\", \"message\": \"Tài khoản bị khóa. Vui lòng thử lại sau " + minutesLeft + " phút.\"}");
+                    return;
+                }
             }
         }
 
