@@ -1,6 +1,9 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.admin;
 
+import hcmuaf.nlu.edu.vn.testproject.daos.CheckUserDao;
 import hcmuaf.nlu.edu.vn.testproject.daos.IngredientDAO;
+import hcmuaf.nlu.edu.vn.testproject.models.Account;
+import hcmuaf.nlu.edu.vn.testproject.services.LogService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -12,10 +15,13 @@ import java.sql.SQLException;
 public class ImportIngredientController extends HttpServlet {
 
     private IngredientDAO ingredientDAO;
+    private LogService logService;
+    private CheckUserDao checkUserDao = new CheckUserDao();
 
     @Override
     public void init() throws ServletException {
         this.ingredientDAO = new IngredientDAO();
+        this.logService = new LogService();
     }
 
     @Override
@@ -30,6 +36,14 @@ public class ImportIngredientController extends HttpServlet {
 
         String errorMessage = null;
         String successMessage = null;
+        HttpSession session = request.getSession();
+        Account currentUser = (Account) session.getAttribute("currentUser");
+
+        if (!checkUserDao.isAdmin(currentUser.getAccountId())) {
+            logService.logActivity(0, 1, "Truy cập trang quản lý danh mục", "Thất bại", "Không có quyền truy cập");
+            response.sendRedirect("home");
+            return;
+        }
 
         try {
             // Chuyển đổi dữ liệu
@@ -51,12 +65,37 @@ public class ImportIngredientController extends HttpServlet {
             // Thêm nguyên liệu mới
             ingredientDAO.addIngredient(supplierId, supplierName, ingredientName, amount, price, importDate, expirationDate);
 
+            // Ghi log nhập nguyên liệu thành công
+            logService.logActivity(
+                currentUser.getAccountId(),
+                currentUser.getRoleId(),
+                "Nhập nguyên liệu",
+                "Thành công",
+                "Nhập " + amount + "kg " + ingredientName + " từ " + supplierName
+            );
+
             // Thiết lập thông báo thành công
             successMessage = "Thêm nguyên liệu thành công!";
         } catch (NumberFormatException e) {
             errorMessage = "Giá trị nhập không hợp lệ!";
+            // Ghi log lỗi nhập nguyên liệu
+            logService.logActivity(
+                currentUser.getAccountId(),
+                currentUser.getRoleId(),
+                "Nhập nguyên liệu",
+                "Thất bại",
+                "Lỗi: Giá trị nhập không hợp lệ"
+            );
         } catch (SQLException e) {
             errorMessage = e.getMessage();
+            // Ghi log lỗi nhập nguyên liệu
+            logService.logActivity(
+                currentUser.getAccountId(),
+                currentUser.getRoleId(),
+                "Nhập nguyên liệu",
+                "Thất bại",
+                "Lỗi: " + e.getMessage()
+            );
         }
 
         // Thêm thông báo vào request

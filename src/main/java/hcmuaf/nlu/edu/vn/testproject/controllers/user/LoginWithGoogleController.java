@@ -1,6 +1,7 @@
 package hcmuaf.nlu.edu.vn.testproject.controllers.user;
 
 import hcmuaf.nlu.edu.vn.testproject.daos.AccountDAO;
+import hcmuaf.nlu.edu.vn.testproject.daos.AccdetailDAO;
 import hcmuaf.nlu.edu.vn.testproject.models.Account;
 import hcmuaf.nlu.edu.vn.testproject.models.GoogleAccount;
 import hcmuaf.nlu.edu.vn.testproject.services.GoogleLogin;
@@ -55,13 +56,32 @@ public class LoginWithGoogleController extends HttpServlet {
 
             HttpSession session = request.getSession();
             if (existingAccount != null) {
+                // Kiểm tra trạng thái khóa
+                if (existingAccount.isLocked()) {
+                    response.sendRedirect("login?error=account_locked");
+                    return;
+                }
                 // Nếu tài khoản đã tồn tại, đăng nhập
                 session.setAttribute("currentUser", existingAccount);
             } else {
                 Account newAccount = new Account(0, 2, "", googleAccount.getName(), googleAccount.getEmail());
                 newAccount.setLoginType("google"); // Đánh dấu là tài khoản Google
                 accountDAO.insertAccount(newAccount);
-                session.setAttribute("currentUser", newAccount);
+                
+                // Lấy account_id vừa tạo
+                Account createdAccount = accountDAO.getUserByEmail(googleAccount.getEmail());
+                if (createdAccount != null) {
+                    AccdetailDAO accdetailDAO = new AccdetailDAO();
+                    accdetailDAO.addAccDetail(
+                        createdAccount.getAccountId(),
+                        googleAccount.getName(), // Sử dụng tên từ Google làm fullName
+                        "",
+                        "",
+                        "",
+                        0
+                    );
+                    session.setAttribute("currentUser", createdAccount);
+                }
             }
 
             // Chuyển hướng đến trang chính
