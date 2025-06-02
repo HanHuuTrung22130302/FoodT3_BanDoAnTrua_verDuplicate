@@ -38,8 +38,14 @@ public class LogoutController extends HttpServlet {
 
 
         if (currentUser != null) {
-
-
+            // Ghi log đăng xuất
+            logService.logActivity(
+                currentUser.getAccountId(),
+                currentUser.getRoleId(),
+                "Đăng xuất",
+                "Thành công",
+                "Đăng xuất khỏi hệ thống"
+            );
         }
 
 
