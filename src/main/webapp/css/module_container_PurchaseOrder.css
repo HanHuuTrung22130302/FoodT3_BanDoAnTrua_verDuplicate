@@ -479,3 +479,8 @@ textarea {
 .footerMain .loadmoreorder:hover{
     transform: translateY(-5px);
 }
+
+.status-button.disabled {
+    pointer-events: none; /* Ngăn click */
+    cursor: not-allowed; /* Con trỏ không cho phép */
+}
