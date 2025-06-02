@@ -30,27 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            // Thêm banner mới vào bảng
-            const tbody = document.querySelector("table tbody");
-            const newRow = document.createElement("tr");
-            newRow.setAttribute("data-banner-id", data.bannerId);
-            newRow.innerHTML = `
-                            <td>${tbody.children.length + 1}</td>
-                            <td><img src="${data.url}"/></td>
-                            <td>
-                                <button class="delete" onclick="deleteBanner(${
-                                  data.bannerId
-                                })">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </button>
-                            </td>
-                            <td>${data.date}</td>
-                        `;
-            tbody.appendChild(newRow);
-
-            // Đóng popup và hiển thị thông báo
             popup.classList.add("hidden");
             showNotification("Thêm banner thành công!", "success");
+            fetchAndRenderBanners();
           } else {
             showNotification("Thêm banner thất bại!", "error");
           }
@@ -76,17 +58,8 @@ function deleteBanner(id) {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          // Xóa dòng khỏi bảng
-          const row = document.querySelector(`tr[data-banner-id="${id}"]`);
-          if (row) {
-            row.remove();
-            // Cập nhật lại số thứ tự
-            const rows = document.querySelectorAll("table tbody tr");
-            rows.forEach((row, index) => {
-              row.cells[0].textContent = index + 1;
-            });
-          }
           showNotification("Xóa banner thành công!", "success");
+          fetchAndRenderBanners();
         } else {
           showNotification("Xóa banner thất bại!", "error");
         }
@@ -117,4 +90,40 @@ function showNotification(message, type) {
       notification.remove();
     }, 300);
   }, 3000);
+}
+
+function renderBannerTable(banners) {
+  const tbody = document.querySelector("table tbody");
+  tbody.innerHTML = "";
+  banners.forEach((bann, index) => {
+    const row = document.createElement("tr");
+    row.setAttribute("data-banner-id", bann.bannerId);
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td><img src="${bann.url}"/></td>
+      <td>
+        <button class="delete" onclick="deleteBanner(${bann.bannerId})">
+          <i class="fas fa-trash"></i> Xóa
+        </button>
+      </td>
+      <td>${bann.date}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function fetchAndRenderBanners() {
+  fetch("banner", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "action=list",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        renderBannerTable(data.banners);
+      }
+    });
 }

@@ -177,36 +177,6 @@ public class AccountDAO {
         }
     }
 
-    public boolean checkAccountDeletedStatus(int accountId) {
-        String query = "SELECT is_deleted FROM account WHERE account_id = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, accountId);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                boolean isDeleted = rs.getBoolean("is_deleted");
-                return isDeleted;
-            }
-            return false;
-        } catch (Exception e) {
-            System.err.println("Lỗi trong checkAccountDeletedStatus: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public boolean lockAccount(int accountId, int hours) {
         String query = "UPDATE account SET is_locked = 1, lock_time = DATE_ADD(NOW(), INTERVAL ? HOUR) WHERE account_id = ? AND is_deleted = 0";
         Connection conn = null;
@@ -247,7 +217,7 @@ public class AccountDAO {
     }
 
     public boolean unlockAccount(int accountId) {
-        String query = "UPDATE account SET is_locked = 0, lock_time = NULL WHERE account_id = ?";
+        String query = "UPDATE account SET is_locked = 0, lock_time = NULL WHERE account_id = ? and is_locked = 1";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -284,22 +254,54 @@ public class AccountDAO {
     }
 
     public boolean activateAccount(int accountId) {
-        String query = "UPDATE account SET is_deleted = 0 WHERE account_id = ? AND is_deleted = 1";
+        // Đầu tiên kiểm tra trạng thái chặn của tài khoản
+        String checkQuery = "SELECT is_locked FROM account WHERE account_id = ? AND is_deleted = 1";
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean isLocked = false;
+        boolean accountExists = false;
+        
         try {
             conn = new DbContext().getConnection();
-            ps = conn.prepareStatement(query);
+            ps = conn.prepareStatement(checkQuery);
+            ps.setInt(1, accountId);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                accountExists = true;
+                isLocked = rs.getBoolean("is_locked");
+            }
+            
+            // Nếu tài khoản không tồn tại hoặc không bị vô hiệu hóa
+            if (!accountExists) {
+                return false;
+            }
+            
+            // Xây dựng câu query dựa trên trạng thái chặn
+            String updateQuery;
+            if (isLocked) {
+                updateQuery = "UPDATE account SET is_deleted = 0, is_locked = 0, lock_time = NULL WHERE account_id = ? AND is_deleted = 1";
+            } else {
+                updateQuery = "UPDATE account SET is_deleted = 0 WHERE account_id = ? AND is_deleted = 1";
+            }
+            
+            ps = conn.prepareStatement(updateQuery);
             ps.setInt(1, accountId);
             int rowsAffected = ps.executeUpdate();
             
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             System.err.println("Lỗi trong activateAccount: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
             try {
+                if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (conn != null) conn.close();
             } catch (Exception e) {

@@ -113,6 +113,11 @@ public class BannerController extends HttpServlet {
                 jsonResponse.put("message", "Thêm banner thất bại");
             }
             out.print(gson.toJson(jsonResponse));
+        } else if ("list".equals(action)) {
+            List<Banner> banners = bannerService.getBanners();
+            jsonResponse.put("success", true);
+            jsonResponse.put("banners", banners);
+            out.print(gson.toJson(jsonResponse));
         }
     }
 }
