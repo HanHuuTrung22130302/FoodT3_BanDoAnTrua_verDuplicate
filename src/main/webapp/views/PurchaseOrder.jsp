@@ -31,13 +31,13 @@
     <div class="order-status-container">
         <button class="status-button active" onclick="ajaxOrder(0)">Tất cả</button>
         <button class="status-button" onclick="ajaxOrder(1)">Đang xác nhận</button>
-        <button class="status-button" onclick="ajaxOrder(1)">Chờ giao hàng</button>
-        <button class="status-button" onclick="ajaxOrder(2)"> Hoàn thành</button>
-        <button class="status-button" onclick="ajaxOrder(3)">Đã hủy</button>
+        <button class="status-button" onclick="ajaxOrder(2)">Chờ giao hàng</button>
+        <button class="status-button" onclick="ajaxOrder(4)"> Hoàn thành</button>
+        <button class="status-button" onclick="ajaxOrder(5)">Đã hủy</button>
     </div>
     <div class="search-box-container">
         <input
-                oninput="searchByNameInvoice(this)" value="${txtS}" name="text" type="text"
+                oninput="searchInvoice(this)" value="${txtS}" name="text" type="text"
                 placeholder="Tìm kiếm đơn hàng..."
                 class="search-input"
         />
@@ -46,7 +46,7 @@
 
     <div id="content_section">
         <c:forEach var="iorder" items="${ois}">
-            <div class="order-container">
+            <div class="order-container countOrder currentOption0">
                 <div class="order-card">
                     <div class="toporder">
                         <div class="idDonHang">
@@ -67,7 +67,7 @@
                                 <c:when test="${iorder.orderStatus == 4}">
                                     Đã hoàn thành
                                 </c:when>
-                                <c:when test="${iorder.orderStatus == 5}">
+                                <c:when test="${iorder.orderStatus == 5||iorder.orderStatus == 6}">
                                     Đơn hàng đã hủy
                                 </c:when>
 
@@ -92,35 +92,47 @@
 
                     <div class="line_end"></div>
                     <div class="order-total">
-                        <strong>Thành tiền:</strong>
-                        <span class="total-money" id="totalAmount" style="font-size: 22px">${iorder.totalAmount}&nbsp;đ</span>
+                        <span style="font-weight: 700;font-size: 17px">Thành tiền:</span>
+                        <span class="total-money" id="totalAmount"
+                              style="font-size: 22px">${iorder.totalAmount}&nbsp;đ</span>
                     </div>
                     <div class="order-footer">
-
-                        <c:if test="${iorder.orderStatus == 4 }">
-                            <div class="info-order-button" href=""
-                               style="text-decoration: none">Đánh giá</div>
-                        </c:if>
-
-                        <c:if test="${iorder.orderStatus == 1 || iorder.orderStatus == 2 || iorder.orderStatus == 3 }">
-                            <!-- Hiển thị cả thẻ <a> và <button> khi order.orderStatus là 1 -->
-                            <div class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
-                               style="text-decoration: none">Chi tiết</div>
+                        <c:if test="${iorder.orderStatus == 1}">
                             <div class="cancel-order-button" href="javascript:void(0);"
-                               onclick="confirmCancel(${iorder.invoiceId})" style="text-decoration: none">Hủy đơn
-                                hàng</div>
+                                 onclick="showPopup('cancelPopup${iorder.invoiceId}')" style="text-decoration: none">Hủy đơn
+                                hàng
+                            </div>
+<%--                            confirmCancel(${iorder.invoiceId})--%>
+                            <div id="popupWrapper${iorder.invoiceId}" style="display: none;">
+                                <div class="overlay" onclick="closePopup('cancelPopup${iorder.invoiceId}')"></div>
+
+                                <div id="cancelPopup${iorder.invoiceId}" class="cancel-popup">
+                                    <div class="popup-content-cancel">
+                                        <div class="popup-header">Xác nhận hủy đơn hàng ID: ${String.format("%06d", iorder.invoiceId)}</div>
+                                        <textarea class="cancel-reason cancel-reason${iorder.invoiceId}" placeholder="Lý do hủy..."></textarea>
+                                        <div class="popup-actions-cancel">
+                                            <button class="button-confirm-cancel" onclick="confirmCancel(${iorder.invoiceId})">
+                                                Xác nhận
+                                            </button>
+                                            <button class="button-cancel-cancel" onclick="closePopup('cancelPopup${iorder.invoiceId}')">
+                                                Đóng
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </c:if>
-
-                        <c:if test="${iorder.orderStatus == 4 || iorder.orderStatus == 5}">
-                            <div class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
-                               style="text-decoration: none">Chi tiết</div>
-                        </c:if>
-
-
+                        <a class="info-order-button" href="PurchaseOrderDetail?id=${iorder.invoiceId}"
+                           style="text-decoration: none">Chi tiết
+                        </a>
                     </div>
                 </div>
             </div>
         </c:forEach>
+    </div>
+    <div class="footerMain">
+        <button class="loadmoreorder" onclick="ajaxOrderLoadMore(${param})">Xem tiếp</button>
     </div>
 </div>
 

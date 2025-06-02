@@ -15,18 +15,20 @@ public class CancelBtnController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
-        String id = request.getParameter("id");
-        if(id!=null){
-            invoiceOrderServices.cancelInvoice(id);
-        }
-       response.sendRedirect("PurchaseOrder");
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("currentUser");
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
+        String id = request.getParameter("invoiceId");
+        String reason = request.getParameter("reason");
+        if(id!=null){
+            invoiceOrderServices.cancelInvoice(id,reason);
+        }
+        response.sendRedirect("PurchaseOrder");
     }
 }

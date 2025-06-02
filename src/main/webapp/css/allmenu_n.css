@@ -419,3 +419,6 @@ transform: translateY(-5px);
   margin-right: auto;
   height: auto;
 }
+.user-reviews{
+  min-height: 800px;
+}
