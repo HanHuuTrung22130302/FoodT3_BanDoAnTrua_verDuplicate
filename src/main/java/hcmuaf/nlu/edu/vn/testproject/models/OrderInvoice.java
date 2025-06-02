@@ -19,6 +19,7 @@ public class OrderInvoice {
     private String completionTime;
     private String reason;
     private List<OrderInvoiceDetail> orderInvoiceDetail;
+    private int isReview;
 
     public OrderInvoice() {
     }
@@ -52,6 +53,14 @@ public class OrderInvoice {
         this.paymentMethod = paymentMethod;
         this.isPaid = isPaid;
         this.orderStatus = orderStatus;
+    }
+
+    public int getIsReview() {
+        return isReview;
+    }
+
+    public void setIsReview(int isReview) {
+        this.isReview = isReview;
     }
 
     public int getInvoiceId() {
