@@ -1,17 +1,48 @@
-function searchByNameInvoice(param){
-    var txtSearch= param.value;
+function searchInvoice(option) {
+    let searchText = '';
+    let statusOption = '0'; // Mặc định là "Tất cả"
+    const currentOption = getCurrentOption();
+    const currentCount = document.querySelectorAll('.countOrder').length || 0;
+    const loadmoreButton = document.querySelector('.loadmoreorder');
+
+    // Bật nút loadmore
+    if (loadmoreButton) {
+        loadmoreButton.style.removeProperty('display');
+        console.log("Showing loadmore button before AJAX (using default CSS)");
+    } else {
+        console.error("Loadmore button not found");
+    }
+
+    // Xử lý tham số option
+    if (option && option.tagName === 'INPUT') {
+        searchText = option.value.trim() || ''; // Lấy giá trị tìm kiếm
+    } else if (typeof option === 'number' || typeof option === 'string') {
+        statusOption = option.toString(); // Lấy trạng thái đơn hàng
+    }
+
+    console.log("ajaxOrder - searchText:", searchText, "statusOption:", statusOption, "currentOption:", currentOption, "currentCount:", currentCount);
     $.ajax({
-        url: "AjaxSearchInvoceController",
-        type:"get",
+        url: "PurchaseOrderAjaxControler",
+        type: "get",
         data: {
-            text: txtSearch
+            text: searchText || statusOption, // Ưu tiên searchText nếu có
+            offset: currentCount,
+            currentOption: currentOption
         },
-        success: function (data){
+        success: function(data) {
             var row = document.getElementById("content_section");
-            row.innerHTML = data;
+            if (statusOption === currentOption && !searchText) {
+                row.innerHTML += data;
+            } else {
+                row.innerHTML = data;
+            }
             formatCurrency();
+            checkEndOfFlag();
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", status, error);
         }
-    })
+    });
 }
 function formatNumber(number) {
     return number.toLocaleString('vi-VN'); // Định dạng số kiểu Việt Nam

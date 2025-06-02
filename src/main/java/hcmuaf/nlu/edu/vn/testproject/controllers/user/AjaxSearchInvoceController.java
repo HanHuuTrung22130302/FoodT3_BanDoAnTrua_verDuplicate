@@ -20,7 +20,14 @@ public class AjaxSearchInvoceController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices();
+
+        int userId = acc.getAccountId();
+        int offset = 0;
+        if (request.getParameter("offset") != null) {
+            offset = Integer.parseInt(request.getParameter("offset"));
+            System.out.println(offset);
+        }
 
         String optionOrder = request.getParameter("text");
         if (optionOrder == null) {
@@ -28,7 +35,7 @@ public class AjaxSearchInvoceController extends HttpServlet {
         }
 
 
-        List<OrderInvoice> ois = invoiceOrderServices.getOption(optionOrder);
+        List<OrderInvoice> ois = invoiceOrderServices.getOptionInvoice(userId,optionOrder,offset);
         request.setAttribute("ois", ois);
 
         PrintWriter out = response.getWriter();

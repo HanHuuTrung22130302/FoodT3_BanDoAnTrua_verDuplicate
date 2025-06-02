@@ -22,8 +22,8 @@ public class PurchaseOrderDetail extends HttpServlet {
         String id = request.getParameter("id");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
-        OrderInvoice oi = invoiceOrderServices.getOrder(id);
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices();
+        OrderInvoice oi = invoiceOrderServices.getOrderInvoice(id);
         request.setAttribute("order", oi);
         CategoryService cs = new CategoryService();
         List<Category> categoryList = cs.getCategories();

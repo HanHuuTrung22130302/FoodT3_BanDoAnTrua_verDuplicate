@@ -23,8 +23,14 @@ public class PurchaseOrderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("currentUser");
-        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices(acc.getAccountId());
-
+        InvoiceOrderServices invoiceOrderServices = new InvoiceOrderServices();
+        int userId = acc.getAccountId();
+        int offset = 0;
+        if (request.getParameter("offset") != null) {
+            offset = Integer.parseInt(request.getParameter("offset"));
+            System.out.println(offset);
+        }
+        System.out.println(offset);
         if (acc == null)
             response.sendRedirect("home");
 
@@ -33,15 +39,13 @@ public class PurchaseOrderController extends HttpServlet {
         request.setAttribute("listC", categoryList);
 
         String id = request.getParameter("id");
-        if (id != null) {
-            invoiceOrderServices.cancelInvoice(id);
-        }
+
 
         String optionOrder = "0";
         if (optionOrder == null)
             optionOrder = request.getParameter("optionOrder");
 
-        List<OrderInvoice> ois = invoiceOrderServices.getOption(optionOrder);
+        List<OrderInvoice> ois = invoiceOrderServices.getOptionInvoice(userId,optionOrder,offset);
         request.setAttribute("ois", ois);
 
         request.getRequestDispatcher("views/PurchaseOrder.jsp").forward(request, response);
